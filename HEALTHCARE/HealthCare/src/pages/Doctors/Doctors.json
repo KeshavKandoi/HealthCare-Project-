@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "name": "Dr. Amit Sharma",
+    "speciality": "Cardiology",
+    "degree": "MBBS, MD (Cardiology)",
+    "experience": "15 Years",
+    "fee": 800,
+    "icon": "fa-solid fa-heart-pulse",
+    "about": "Dr. Amit Sharma is a senior cardiologist with over 15 years of experience in treating heart-related diseases using advanced and patient-focused care.",
+    "pic": "https://www.pngfind.com/pngs/m/34-349693_circled-user-icon-transparent-background-username-icon-hd.png",
+    "available":true
+  },
+  {
+    "id": 2,
+    "name": "Dr. Neha Verma",
+    "speciality": "Neurology",
+    "degree": "MBBS, DM (Neurology)",
+    "experience": "12 Years",
+    "fee": 900,
+    "icon": "fa-solid fa-brain",
+    "about": "Dr. Neha Verma specializes in neurological disorders and is known for her compassionate approach and accurate diagnosis.",
+    "pic": "https://www.pngfind.com/pngs/m/34-349693_circled-user-icon-transparent-background-username-icon-hd.png",
+    "available":true
+  },
+  {
+    "id": 3,
+    "name": "Dr. Rahul Mehta",
+    "speciality": "Orthopedics",
+    "degree": "MBBS, MS (Orthopedics)",
+    "experience": "10 Years",
+    "fee": 700,
+    "icon": "fa-solid fa-bone",
+    "about": "Dr. Rahul Mehta has extensive experience in joint replacement and sports injury treatments.",
+    "pic": "https://www.pngfind.com/pngs/m/34-349693_circled-user-icon-transparent-background-username-icon-hd.png",
+    "available":false
+  },
+  {
+    "id": 4,
+    "name": "Dr. Pooja Singh",
+    "speciality": "Gynecology",
+    "degree": "MBBS, MS (Gynecology)",
+    "experience": "11 Years",
+    "fee": 600,
+    "icon": "fa-solid fa-person-pregnant",
+    "about": "Dr. Pooja Singh provides comprehensive women’s healthcare with a focus on safe maternity and reproductive health.",
+    "pic": "https://www.pngfind.com/pngs/m/34-349693_circled-user-icon-transparent-background-username-icon-hd.png",
+    "available":false
+  },
+  {
+    "id": 5,
+    "name": "Dr. Anil Kumar",
+    "speciality": "General Medicine",
+    "degree": "MBBS, MD (Medicine)",
+    "experience": "18 Years",
+    "fee": 500,
+    "icon": "fa-solid fa-user-doctor",
+    "about": "Dr. Anil Kumar is a trusted physician offering holistic care for acute and chronic medical conditions.",
+    "pic": "https://www.pngfind.com/pngs/m/34-349693_circled-user-icon-transparent-background-username-icon-hd.png",
+    "available":false
+  },
+  {
+    "id": 6,
+    "name": "Dr. Ritu Malhotra",
+    "speciality": "Pediatrics",
+    "degree": "MBBS, MD (Pediatrics)",
+    "experience": "9 Years",
+    "fee": 500,
+    "icon": "fa-solid fa-child",
+    "about": "Dr. Ritu Malhotra is dedicated to child healthcare, focusing on growth, development, and preventive care.",
+    "pic": "https://www.pngfind.com/pngs/m/34-349693_circled-user-icon-transparent-background-username-icon-hd.png",
+    "available":false
+  },
+  {
+    "id": 7,
+    "name": "Dr. Sanjay Patel",
+    "speciality": "Dermatology",
+    "degree": "MBBS, MD (Dermatology)",
+    "experience": "8 Years",
+    "fee": 650,
+    "icon": "fa-solid fa-hand-dots",
+    "about": "Dr. Sanjay Patel specializes in skin, hair, and nail disorders with modern dermatological treatments.",
+    "pic": "https://www.pngfind.com/pngs/m/34-349693_circled-user-icon-transparent-background-username-icon-hd.png",
+    "available":false
+  },
+  {
+    "id": 8,
+    "name": "Dr. Kavita Joshi",
+    "speciality": "Ophthalmology",
+    "degree": "MBBS, MS (Ophthalmology)",
+    "experience": "14 Years",
+    "fee": 750,
+    "icon": "fa-solid fa-eye",
+    "about": "Dr. Kavita Joshi provides expert eye care services including vision correction and eye disease management.",
+    "pic": "https://www.pngfind.com/pngs/m/34-349693_circled-user-icon-transparent-background-username-icon-hd.png",
+    "available":true
+  }
+]

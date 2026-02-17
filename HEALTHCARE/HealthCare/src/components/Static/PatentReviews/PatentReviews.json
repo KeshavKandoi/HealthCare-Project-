@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "name": "Rahul Sharma",
+    "address": "Mumbai, India",
+    "commentTitle": "Excellent Service",
+    "commentDescription": "Doctors were very supportive and the staff was polite. Overall a great experience.",
+    "rating": 5,
+    "pic":"https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_hybrid&w=740&q=80"
+  },
+  {
+    "id": 2,
+    "name": "Anita Verma",
+    "address": "Delhi, India",
+    "commentTitle": "Very Caring Staff",
+    "commentDescription": "The nurses and doctors were extremely caring and attentive throughout my treatment.",
+    "rating": 4,
+    "pic":"https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_hybrid&w=740&q=80"
+  },
+  {
+    "id": 3,
+    "name": "Suresh Patel",
+    "address": "Ahmedabad, India",
+    "commentTitle": "Clean and Well Managed",
+    "commentDescription": "Hospital was very clean and well organized. Appointment process was smooth.",
+    "rating": 4,
+    "pic":"https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_hybrid&w=740&q=80"
+  },
+  {
+    "id": 4,
+    "name": "Neha Singh",
+    "address": "Lucknow, India",
+    "commentTitle": "Trusted Hospital",
+    "commentDescription": "I trust this hospital for my family. Doctors explain everything clearly.",
+    "rating": 5,
+    "pic":"https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_hybrid&w=740&q=80"
+  },
+  {
+    "id": 5,
+    "name": "Amit Kumar",
+    "address": "Patna, India",
+    "commentTitle": "Good Experience",
+    "commentDescription": "Overall experience was good. Waiting time could be improved.",
+    "rating": 3,
+    "pic":"https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_hybrid&w=740&q=80"
+  }
+]

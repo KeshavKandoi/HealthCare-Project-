@@ -1,0 +1,63 @@
+.FacilityHeading {
+  text-align: center;
+  padding: 40px 0;
+  font-weight: bold;
+  font-size: 32px;
+  color: rgb(6, 77, 77);
+}
+
+/* GRID LAYOUT */
+.facility-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  padding: 40px;
+  background-color: #b7c7cf;
+}
+
+/* CARD */
+.facility-card {
+  background-color: white;
+  border-radius: 6px;
+  padding: 30px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* ICON */
+.facility-card i {
+  font-size: 42px;
+  margin-bottom: 15px;
+  color: #000;
+}
+
+/* TEXT */
+.facility-card p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* HOVER EFFECT (same as image) */
+.facility-card:hover {
+  background-color: #4fa3a3;
+  color: white;
+}
+
+.facility-card:hover i {
+  color: white;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .facility-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .facility-container {
+    grid-template-columns: 1fr;
+  }
+}
