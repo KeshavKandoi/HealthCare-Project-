@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 // import DoctorData from "./Doctors.json"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 import{setHours,setMinutes} from "date-fns"
 import{useDispatch,useSelector} from "react-redux"
 import { getDoctorDetails } from '../../redux/actions/doctorAction';
+import { bookAppointment } from '../../redux/actions/authAction';
+import toast from "react-hot-toast"
+import { reset } from "../../redux/slice/authSlice"
 
 
 const Appointments=()=> {
@@ -13,9 +16,11 @@ const Appointments=()=> {
   const [docInfo,setDocInfo]=useState(null);
   const [SelectDateTime,setSelectDateTime]=useState(new Date())
   const dispatch=useDispatch()
+  const navigate=useNavigate()
 
   useEffect(()=>{
     dispatch(getDoctorDetails(id))
+    
   },[dispatch,id])
   
   const { doctor } = useSelector((state) => state.doctor);
@@ -27,6 +32,52 @@ const Appointments=()=> {
     }
 
   },[doctor]);
+
+  // get date and time
+
+  const extractDate=(dateObj)=>{
+    const day=String(dateObj.getDate()).padStart(2,'0')
+    const month=String(dateObj.getMonth()+1).padStart(2,'0')
+    const year=dateObj.getFullYear()
+    return `${day}-${month}-${year}`
+  }
+
+  const extractTime=(ObjectTime)=>{
+    let hours=ObjectTime.getHours();
+    const minutes=ObjectTime.getMinutes();
+    const second=ObjectTime.getSeconds();
+    const ampm=hours>=12?"PM":"AM";
+    hours=hours%12;
+    hours=hours? hours:12;
+    return `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,"0")}:${String(second).padStart(2,"0")}${ampm}`;
+
+
+  };
+
+
+
+const {success,error,user}=useSelector(state=>state.auth)
+const handleBooking=()=>{
+  const bookingData={
+    userId:user?._id,
+    doctorId:id,
+    amount:docInfo?.fees,
+    slotDate:extractDate(SelectDateTime),
+    slotTime:extractTime(SelectDateTime)
+  }
+ 
+  
+  dispatch(bookAppointment(bookingData))
+  if(success){
+    toast.success("Booking Successful")
+    navigate('/user/appointments')
+    dispatch(reset())
+  }
+  if(error){
+    toast.error(error)
+    dispatch(reset())
+  }
+}
 
   return (
 <>
@@ -44,7 +95,7 @@ const Appointments=()=> {
   <h6>Experience:{docInfo?.experience}</h6>
   <h6>About Doctor:</h6>
   <p>{docInfo?.about}</p>
-  <h5>Consultation Fee:{docInfo?.fee}</h5>
+  <h5>Consultation Fee:{docInfo?.fees}</h5>
 
   {/* date time */}
 
@@ -66,7 +117,6 @@ const Appointments=()=> {
 
   <p>
      Your Selected Booking:
-     <br />  <br />  
     &nbsp;{SelectDateTime ?  SelectDateTime.toLocaleString()
      :"Please select a date & time"}
 
@@ -77,7 +127,7 @@ const Appointments=()=> {
 
 
   <button className='btn btn-primary w-50'
-  disabled={!docInfo?.available}>
+  disabled={!docInfo?.available} onClick={handleBooking}>
     {docInfo?.available?"Book Now":"Doctor Not Available"}
   </button>
  </div>

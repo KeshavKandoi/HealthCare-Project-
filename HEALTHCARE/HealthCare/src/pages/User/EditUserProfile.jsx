@@ -25,7 +25,8 @@ const { user, success, error } = useSelector((state) => state.auth);
   const[phone,setPhone]=useState("")
   const[dob,setDob]=useState("")
   const[address,setAddress]=useState("")
-  const[image,setImage]=useState("")
+  const [image, setImage] = useState(null)
+
 
 
 
@@ -35,7 +36,6 @@ const { user, success, error } = useSelector((state) => state.auth);
       setPhone(user?.phone||'')
       setgender(user?.gender||'')
       setAddress(user?.address||'')
-      setImage(user?.image||'')
     }
   },[user])
 
@@ -43,7 +43,10 @@ const { user, success, error } = useSelector((state) => state.auth);
 
   const handleUpdate=()=>{
     const formData=new FormData()
-    formData.append('image',image)
+    if (image && image instanceof File) {
+      formData.append('image', image)
+    }
+    
     formData.append('name',name)
     formData.append('phone',phone)
     formData.append('address',address)

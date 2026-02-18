@@ -30,23 +30,24 @@ function ResetPassword() {
     dispatch(resetPassword({id,oldPassword,newPassword}))
     
     if(error){
-      toast.error(error)
-      dispatch(reset())
+      toast.error(error);
+      dispatch(reset());
     }
     if(success){
-      toast.success("Your Passowrd Reset Please Login Again")
+      toast.success("Your Passowrd Reset Please Login Again");
 
       navigate("/login")
      
-      dispatch(logout())
+      dispatch(logout());
      
-      dispatch(reset())
+      dispatch(reset());
 
     }
   };
 
   useEffect(()=>{
-  
+    
+   
   },[dispatch,success,navigate,error])
 
   return (

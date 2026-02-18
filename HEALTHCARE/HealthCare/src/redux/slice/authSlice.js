@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loadToken, login,getUserData, register, getLoginUserDetails, updateUserData, getAllAppointments, cancelStatus, resetPassword } from "../actions/authAction";
+import { loadToken, login,getUserData, register, getLoginUserDetails, updateUserData, getAllAppointments, cancelStatus, resetPassword, bookAppointment, sendWebMessage } from "../actions/authAction";
 
 
 const authSlice=createSlice({
@@ -146,6 +146,38 @@ state.error=action.payload
  
 })
 .addCase(resetPassword.rejected,(state,action)=>{
+state.loading=false;
+state.error=action.payload
+})
+
+// Booking appointment
+
+.addCase(bookAppointment.pending,(state)=>{
+  state.loading=true;
+})
+.addCase(bookAppointment.fulfilled,(state)=>{
+  state.loading=false;
+  state.success=true;
+
+})
+.addCase(bookAppointment.rejected,(state,action)=>{
+state.loading=false;
+state.error=action.payload
+})
+
+
+
+// send web message action
+
+.addCase(sendWebMessage.pending,(state)=>{
+  state.loading=true;
+})
+.addCase(sendWebMessage.fulfilled,(state)=>{
+  state.loading=false;
+  state.success=true;
+
+})
+.addCase(sendWebMessage.rejected,(state,action)=>{
 state.loading=false;
 state.error=action.payload
 })

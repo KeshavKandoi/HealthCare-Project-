@@ -102,35 +102,87 @@ res.status(500).send({
 }
 
 
-// update user details
+// update user details 
 
-export const updateUser=async(req,res)=>{
-  try{
-    const {id}=req.params
-    if(!id){
+// export const updateUser=async(req,res)=>{
+//   try{
+//     const {id}=req.params
+//     if(!id){
+//       return res.status(404).send({
+//         success:false,
+//         message:"user id Not found"
+//       });
+//     }
+//     const {name,phone,dob,image,gender,address}=req.body
+//     const photoToBase64=req.file&&req.file.buffer.toString("base64")
+
+// const user=await userModel.findByIdAndUpdate(id,{
+//   $set:{name,dob,address,phone,gender,image:photoToBase64}
+// },{returnOriginal:false})
+// res.status(200).send({
+//   success:true,
+//   message:"Profile Updated Successfully",
+//   user,
+// })
+//   }catch(error){
+//     console.log(error);
+//     res.status(500).send({
+//       success:false,
+//       message:"something went wrong in update user api"
+//     })
+//   }
+// }
+
+// after changing  some part
+
+// user details update
+
+export const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
       return res.status(404).send({
-        success:false,
-        message:"user id Not found"
-      })
+        success: false,
+        message: "User ID not found",
+      });
     }
-    const {name,phone,dob,image,gender,address}=req.body
-    const photoToBase64=req.file&&req.file.buffer.toString("base64")
-const user=await userModel.findByIdAndUpdate(id,{
-  $set:{name,dob,address,phone,gender,image:photoToBase64}
-},{returnOriginal:false})
-res.status(200).send({
-  success:true,
-  message:"Profile Updated Successfully",
-  user,
-})
-  }catch(error){
+
+    const { name, phone, dob, gender, address } = req.body;
+
+    const updateData = {
+      name,
+      phone,
+      dob,
+      gender,
+      address,
+    };
+
+    // Only update image if file is uploaded
+    if (req.file) {
+      updateData.image = req.file.buffer.toString("base64");
+    }
+
+    const user = await userModel.findByIdAndUpdate(
+      id,
+      { $set: updateData },
+      { returnDocument: "after" }  // ✅ fixed warning
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "Profile Updated Successfully",
+      user,
+    });
+
+  } catch (error) {
     console.log(error);
     res.status(500).send({
-      success:false,
-      message:"something went wrong in update user api"
-    })
+      success: false,
+      message: "Something went wrong in update user API",
+    });
   }
-}
+};
 
 // update password
 

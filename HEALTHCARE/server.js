@@ -21,6 +21,7 @@ connectDB();
 // rest object
 const app=express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // react se connect kar rahe hai
 

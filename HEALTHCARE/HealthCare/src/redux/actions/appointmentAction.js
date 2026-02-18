@@ -23,8 +23,8 @@ export const getAppointmentDetails=createAsyncThunk(
   "appointment/getAppointmentDetails",
   async(id,thunkApi)=>{
     try{
-      const res=await API.get(`/appointment/get-appointment-details/${id}`);
-      return res.data.appointmentDetails;
+      const res=await API.get(`/appointment/get-details/${id}`);
+      return res.data;
 
     }catch(error){
       const message=error?.response?.data?.message||error.message||"doctor details  error";

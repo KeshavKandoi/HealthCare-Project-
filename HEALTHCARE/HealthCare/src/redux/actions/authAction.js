@@ -151,3 +151,43 @@ export const resetPassword=createAsyncThunk(
   
 
 
+
+
+//  Booking Appointment
+
+export const bookAppointment=createAsyncThunk(
+  "user/bookAppointment",
+  async(bookingData,thunkApi)=>{
+    try{
+      const res=await API.post(`/appointment/create`,
+       bookingData
+);
+      return res.data
+    }catch(error){
+      const message=error?.response?.data?.message||error.message||"Booking Appointmnet Error";
+      return thunkApi.rejectWithValue(message);
+    }
+  }
+)
+  
+
+
+
+
+//  Send web message
+
+export const sendWebMessage=createAsyncThunk(
+  "user/sendWebMessage",
+  async(msgData,thunkApi)=>{
+    try{
+      const res=await API.post(`/webmessage/create`,
+       msgData
+);
+      return res.data
+    }catch(error){
+      const message=error?.response?.data?.message||error.message||"send web message  Error";
+      return thunkApi.rejectWithValue(message);
+    }
+  }
+)
+  
