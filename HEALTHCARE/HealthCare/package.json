@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
-    "axios": "^1.13.5",
+    "axios": "^1.13.6",
     "date-fns": "^4.1.0",
     "react": "^19.2.0",
     "react-datepicker": "^9.1.0",
@@ -20,6 +20,7 @@
     "react-photo-album": "^3.1.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.13.0",
+    "recharts": "^3.7.0",
     "swiper": "^12.1.0",
     "yet-another-react-lightbox": "^1.1.1"
   },

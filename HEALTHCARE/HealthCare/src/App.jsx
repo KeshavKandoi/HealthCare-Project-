@@ -21,6 +21,10 @@ import { reset } from './redux/slice/authSlice';
 import { getLoginUserDetails } from './redux/actions/authAction';
 import AppointmentsDetails from './pages/User/AppointmentsDetails';
 import ResetPassword from './pages/User/ResetPassword';
+import HealthMonitor from "./pages/HealthMonitor";
+import HealthHistory from "./pages/HealthHistory";
+import AiDoctor from "./pages/AiDoctor";
+
 
 
 
@@ -56,6 +60,11 @@ function App() {
       <Route path="/user/appointments" element={<MyAppointments/>}/>
       <Route path="/user/appointments/:id" element={<AppointmentsDetails/>}/>
       <Route path="/user/reset-password/:id" element={<ResetPassword/>}/>
+      <Route path="/health-monitor" element={<HealthMonitor />} />
+      <Route path="/health-history" element={<HealthHistory />} />
+      <Route path="/ai-doctor" element={<AiDoctor />} />
+
+
 
 
 

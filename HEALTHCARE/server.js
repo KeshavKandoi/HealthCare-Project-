@@ -9,6 +9,10 @@ import userRoutes from "./routes/userRoutes.js"
 import webMessageRoutes from "./routes/webMessageRoutes.js"
 import doctorRoutes from "./routes/doctorRoutes.js"
 import appointmentRoutes from "./routes/appointmentRoutes.js"
+import healthRoutes from "./routes/healthRoutes.js";
+import aiDoctorRoutes from "./routes/aiDoctorRoutes.js";
+
+
 // config
 dotenv.config()
 
@@ -38,6 +42,8 @@ app.use("/api/v1/user",userRoutes)
 app.use("/api/v1/webMessage",webMessageRoutes)
 app.use("/api/v1/doctor",doctorRoutes)
 app.use("/api/v1/appointment",appointmentRoutes)
+app.use("/api/v1/health", healthRoutes);
+app.use("/api/v1/ai-doctor", aiDoctorRoutes);
 
 
 app.get("/",(req,res)=>{
