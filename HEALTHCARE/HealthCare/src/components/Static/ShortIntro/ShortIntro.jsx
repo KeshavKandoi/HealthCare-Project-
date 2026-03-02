@@ -12,18 +12,18 @@ const ShortIntro = () => {
           </div>
 
           <div className="col-md-6 info-container">
-            <h1> KANDOI &nbsp; HOSPITAL </h1>
+            <h1> NARAYANA &nbsp; HOSPITAL </h1>
             <br/>
 
             <p>
-              Kandoi Hospital is a trusted healthcare center committed to
+              NARAYANA Hospital is a trusted healthcare center committed to
               providing quality medical services with care and compassion. We
               offer modern facilities, experienced doctors, and patient-focused
               treatment to ensure the best health outcomes.
             </p>
            <br/>
             <p>
-              Kandoi Hospital stands as a symbol of excellence in healthcare,
+              NARAYANA Hospital stands as a symbol of excellence in healthcare,
               offering comprehensive medical services across multiple
               specialties. With state-of-the-art infrastructure and a skilled
               medical team, we focus on personalized patient care.
