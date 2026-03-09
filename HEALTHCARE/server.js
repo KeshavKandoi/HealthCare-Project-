@@ -11,6 +11,7 @@ import doctorRoutes from "./routes/doctorRoutes.js"
 import appointmentRoutes from "./routes/appointmentRoutes.js"
 import healthRoutes from "./routes/healthRoutes.js";
 import aiDoctorRoutes from "./routes/aiDoctorRoutes.js";
+import mentalHealthRoutes from "./routes/mentalHealthRoutes.js";
 
 
 // config
@@ -44,6 +45,11 @@ app.use("/api/v1/doctor",doctorRoutes)
 app.use("/api/v1/appointment",appointmentRoutes)
 app.use("/api/v1/health", healthRoutes);
 app.use("/api/v1/ai-doctor", aiDoctorRoutes);
+
+app.use("/api/v1/mental-health",mentalHealthRoutes);
+
+
+
 
 
 app.get("/",(req,res)=>{

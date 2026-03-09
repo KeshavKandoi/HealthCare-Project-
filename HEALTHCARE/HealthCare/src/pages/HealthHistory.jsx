@@ -70,8 +70,11 @@ const HealthHistory = () => {
               <th>Oxygen</th>
               <th>Risk Score</th>
               <th>ICU Risk</th>
+              <th>Mental Score</th>
+              <th>Mental Level</th>
             </tr>
           </thead>
+
           <tbody>
             {formattedData.map((item, index) => (
               <tr
@@ -82,6 +85,8 @@ const HealthHistory = () => {
                       ? "#ffcccc"
                       : item.icuRisk === "Moderate"
                       ? "#fff3cd"
+                      : item.mentalLevel === "Severe"
+                      ? "#ffe0e0"
                       : "white",
                 }}
               >
@@ -89,21 +94,24 @@ const HealthHistory = () => {
                 <td>{item.age || "N/A"}</td>
                 <td>{item.gender || "N/A"}</td>
                 <td>{item.medicalHistory || "None"}</td>
-                <td>{item.bp}</td>
-                <td>{item.sugar}</td>
-                <td>{item.heartRate}</td>
-                <td>{item.oxygen}</td>
+                <td>{item.bp || "N/A"}</td>
+                <td>{item.sugar || "N/A"}</td>
+                <td>{item.heartRate || "N/A"}</td>
+                <td>{item.oxygen || "N/A"}</td>
                 <td>{item.riskScore ? item.riskScore + "%" : "N/A"}</td>
                 <td>{item.icuRisk || "N/A"}</td>
+                <td>{item.mentalScore || "N/A"}</td>
+                <td>{item.mentalLevel || "N/A"}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <br /><br />
+      <br />
+      <br />
 
-      {/* 📈 Risk Trend Line Chart */}
+      {/* 📈 Risk Trend Chart */}
       <h3>Risk Score Trend</h3>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={formattedData}>
@@ -115,9 +123,10 @@ const HealthHistory = () => {
         </LineChart>
       </ResponsiveContainer>
 
-      <br /><br />
+      <br />
+      <br />
 
-      {/* 📊 BP Bar Chart */}
+      {/* 📊 Blood Pressure Chart */}
       <h3>Blood Pressure Trend</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={formattedData}>
@@ -127,6 +136,21 @@ const HealthHistory = () => {
           <Tooltip />
           <Bar dataKey="bp" fill="#007bff" />
         </BarChart>
+      </ResponsiveContainer>
+
+      <br />
+      <br />
+
+      {/* 🧠 Mental Health Trend */}
+      <h3>Mental Health Score Trend</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={formattedData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip />
+          <Line type="monotone" dataKey="mentalScore" stroke="#8e44ad" />
+        </LineChart>
       </ResponsiveContainer>
     </div>
   );

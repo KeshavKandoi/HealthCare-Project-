@@ -1,4 +1,4 @@
-import HealthRecord from "../models/healthRecord.js";
+import HealthRecord from "../models/healthModel.js";
 
 export const addHealthRecord = async (req, res) => {
   try {
