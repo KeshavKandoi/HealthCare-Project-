@@ -9,8 +9,8 @@ import joblib
 
 # ── training/ is inside ai_models/ so go one level up ──
 BASE_DIR     = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATASET_PATH = os.path.join(BASE_DIR, "datasets", "spiral", "training")
-MODEL_PATH   = os.path.join(BASE_DIR, "saved_models", "spiral_model.pkl")
+DATASET_PATH = os.path.join(BASE_DIR, "datasets", "wave", "training")
+MODEL_PATH   = os.path.join(BASE_DIR, "saved_models", "wave_model.pkl")
 
 print(f"📂 Dataset path: {DATASET_PATH}")
 print(f"💾 Model will save to: {MODEL_PATH}")
@@ -50,6 +50,10 @@ for label in ["healthy", "parkinson"]:
 
 print(f"📁 Loaded {len(X)} images (with augmentation) — {y.count(0)} healthy, {y.count(1)} parkinson")
 
+if len(X) == 0:
+    print("❌ No images found. Check that datasets/wave/training/healthy and datasets/wave/training/parkinson exist.")
+    exit(1)
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
 model = RandomForestClassifier(n_estimators=200, max_depth=10, random_state=42)
@@ -58,10 +62,10 @@ model.fit(X_train, y_train)
 preds    = model.predict(X_test)
 accuracy = accuracy_score(y_test, preds)
 
-print(f"\n✅ Spiral model accuracy: {accuracy * 100:.2f}%")
+print(f"\n✅ Wave model accuracy: {accuracy * 100:.2f}%")
 print("\n📊 Classification Report:")
 print(classification_report(y_test, preds, target_names=["Healthy", "Parkinson"]))
 
 os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
 joblib.dump(model, MODEL_PATH)
-print(f"💾 Spiral model saved to: {MODEL_PATH}")
+print(f"💾 Wave model saved to: {MODEL_PATH}")

@@ -11,7 +11,7 @@ import doctorRoutes from "./routes/doctorRoutes.js"
 import appointmentRoutes from "./routes/appointmentRoutes.js"
 import healthRoutes from "./routes/healthRoutes.js";
 import aiDoctorRoutes from "./routes/aiDoctorRoutes.js";
-import parkinsonRoutes from "./routes/parkinsonRoutes.js";
+import parkinsonRoutes from "./routes/parkinson_routes.js";
 
 
 
