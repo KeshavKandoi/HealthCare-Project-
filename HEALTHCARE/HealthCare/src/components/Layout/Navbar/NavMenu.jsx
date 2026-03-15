@@ -7,11 +7,11 @@ function NavMenu() {
 
   const dispatch = useDispatch();
 
-  useEffect(()=>{
-    dispatch(getUserData())
-  },[dispatch])
+  useEffect(() => {
+    dispatch(getUserData());
+  }, [dispatch]);
 
-  const { user } = useSelector((state)=>state.auth)
+  const { user } = useSelector((state) => state.auth);
 
   return (
 
@@ -73,8 +73,8 @@ Health History
 </li>
 
 <li className="nav-item">
-<NavLink to="/mental-health" className="nav-link">
-🧠 Mental Health
+<NavLink to="/parkinson-test" className="nav-link">
+🧠 Parkinson AI Test
 </NavLink>
 </li>
 
@@ -109,8 +109,7 @@ LOGIN
 </div>
 </nav>
 
-  )
-
+  );
 }
 
-export default NavMenu
+export default NavMenu;

@@ -23,3 +23,26 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python virtual environment
+venv/
+ai_models/venv/
+
+# Dataset
+ai_models/datasets/
+
+# Trained models
+ai_models/saved_models/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Node modules
+node_modules/
+
+# Environment variables
+.env
