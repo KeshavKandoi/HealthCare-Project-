@@ -12,7 +12,7 @@ router.get("/get-all",userAuth,isAdmin, getAllAppointments)
 
 
 //GET Details ||GET
-router.get("/get-details/:id",userAuth,isAdmin, getAppointmentDetails)
+router.get("/get-details/:id",userAuth, getAppointmentDetails)
 
 
 // Update status||PATCH

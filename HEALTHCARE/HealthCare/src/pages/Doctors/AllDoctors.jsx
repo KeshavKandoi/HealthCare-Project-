@@ -27,7 +27,7 @@ const AllDoctors=()=> {
       {doctors?.map((d)=>(
         <div className='card' key={d._id}style={{width:"15rem"}}>
           <NavLink to={`/doctors/${d._id}`}>
-            <img src={`data:image/jpeg;base64,${d?.image}`}
+            <img src={d?.image?.startsWith("http") ? d.image : `data:image/jpeg;base64,${d?.image}`}
             alt="picture"
             width={150}
             height={150}

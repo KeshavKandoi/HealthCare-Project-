@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 90">
+  <defs>
+    <radialGradient id="heartGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#e53e3e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9b1c1c;stop-opacity:1" />
+    </radialGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#e53e3e" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  <path filter="url(#shadow)" fill="url(#heartGrad)"
+    d="M50 85 C50 85 5 55 5 28 C5 12 17 2 30 2 C38 2 45 6 50 13 C55 6 62 2 70 2 C83 2 95 12 95 28 C95 55 50 85 50 85Z"/>
+  <path fill="rgba(255,255,255,0.2)"
+    d="M30 10 C22 10 14 17 13 26 C12 20 20 10 30 10Z"/>
+</svg>

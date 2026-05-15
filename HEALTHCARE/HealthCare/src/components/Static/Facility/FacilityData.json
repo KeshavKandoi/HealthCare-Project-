@@ -1,34 +1,50 @@
 [
   {
-    "title": "General Care",
-    "icon": "fa-solid fa-user-doctor"
+    "title": "Coronary Artery Disease",
+    "icon": "fa-solid fa-heart-pulse",
+    "image": "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?w=400&q=80",
+    "description": "Coronary artery disease occurs when the major blood vessels supplying the heart become damaged or diseased. Cholesterol deposits and inflammation are usually to blame. We provide advanced diagnosis and treatment including angioplasty and stenting."
   },
   {
-    "title": "Pathology Lab",
-    "icon": "fa-solid fa-flask-vial"
+    "title": "Heart Attack",
+    "icon": "fa-solid fa-heart-crack",
+    "image": "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=400&q=80",
+    "description": "A heart attack occurs when blood flow to part of the heart is blocked. Every second counts. Our 24/7 cardiac emergency team provides immediate clot-busting therapy, primary angioplasty, and intensive care management."
   },
   {
-    "title": "Dental Care",
-    "icon": "fa-solid fa-tooth"
+    "title": "Heart Failure",
+    "icon": "fa-solid fa-heart-circle-exclamation",
+    "image": "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&q=80",
+    "description": "Heart failure means your heart isn't pumping blood as well as it should. Our specialists manage heart failure with advanced medications, cardiac resynchronization therapy, and ventricular assist devices when needed."
   },
   {
-    "title": "24×7 Emergency",
-    "icon": "fa-solid fa-truck-medical"
+    "title": "Arrhythmia",
+    "icon": "fa-solid fa-wave-square",
+    "image": "https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=400&q=80",
+    "description": "Arrhythmia is an irregular heartbeat — too fast, too slow, or erratic. Our ECG monitoring system detects arrhythmias in real time. Treatment includes ablation therapy, pacemakers, and antiarrhythmic medications."
   },
   {
-    "title": "Heart Issues",
-    "icon": "fa-solid fa-heart-pulse"
+    "title": "Valve Disease",
+    "icon": "fa-solid fa-droplet",
+    "image": "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=400&q=80",
+    "description": "Heart valve disease occurs when one or more valves don't work properly. We offer minimally invasive valve repair and replacement surgeries including TAVR (Transcatheter Aortic Valve Replacement)."
   },
   {
-    "title": "Neurology",
-    "icon": "fa-solid fa-brain"
+    "title": "Hypertension",
+    "icon": "fa-solid fa-gauge-high",
+    "image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=80",
+    "description": "High blood pressure silently damages your heart and arteries over time. Our cardiologists provide personalized hypertension management plans including lifestyle modification, medication, and continuous BP monitoring."
   },
   {
-    "title": "Rheumatology",
-    "icon": "fa-solid fa-bone"
+    "title": "Congenital Heart",
+    "icon": "fa-solid fa-baby",
+    "image": "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=400&q=80",
+    "description": "Congenital heart defects are structural problems present from birth. Our pediatric cardiology team specializes in diagnosing and treating complex congenital defects with catheter-based and surgical interventions."
   },
   {
-    "title": "Eye Care",
-    "icon":"fa-solid fa-eye"
+    "title": "ECG Monitoring",
+    "icon": "fa-solid fa-display",
+    "image": "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=400&q=80",
+    "description": "Our wearable ECG service lets you monitor your heart 24/7 from home. The device streams real-time data to our platform where AI and doctors analyze your heart rhythm and alert you instantly if something is wrong."
   }
 ]

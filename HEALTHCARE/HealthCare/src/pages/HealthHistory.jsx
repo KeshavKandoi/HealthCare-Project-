@@ -111,7 +111,7 @@ const HealthHistory = () => {
       <br />
       <br />
 
-      {/* 📈 Risk Trend Chart */}
+      {/*  Risk Trend Chart */}
       <h3>Risk Score Trend</h3>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={formattedData}>
@@ -126,7 +126,7 @@ const HealthHistory = () => {
       <br />
       <br />
 
-      {/* 📊 Blood Pressure Chart */}
+      {/* Blood Pressure Chart */}
       <h3>Blood Pressure Trend</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={formattedData}>
@@ -141,7 +141,7 @@ const HealthHistory = () => {
       <br />
       <br />
 
-      {/* 🧠 Mental Health Trend */}
+      {/*  Mental Health Trend */}
       <h3>Mental Health Score Trend</h3>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={formattedData}>

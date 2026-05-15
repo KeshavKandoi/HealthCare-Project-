@@ -84,7 +84,7 @@ const handleBooking=()=>{
 <div className='container docinfo-container'>
   <div className='row m-3'>
     <div className='col-md-3 d-flex flex-column justify-content-center align-items-center'>
-    <img src={`data:image/jpeg;base64,${docInfo?.image}`} alt="docImage" height={200} width={200}/>
+    <img src={docInfo?.image?.startsWith("http") ? docInfo.image : `data:image/jpeg;base64,${docInfo?.image}`} alt="docImage" height={200} width={200}/>
       <h6>{docInfo?.name}</h6>
       <h6 className={`${docInfo?.available? "text-success":"text-danger"}`}>
         {docInfo?.available?"Available":"Not Available"}

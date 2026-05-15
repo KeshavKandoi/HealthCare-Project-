@@ -24,7 +24,8 @@ import ResetPassword from './pages/User/ResetPassword';
 import HealthMonitor from "./pages/HealthMonitor";
 import HealthHistory from "./pages/HealthHistory";
 import AiDoctor from "./pages/AiDoctor";
-import ParkinsonTest from "./pages/ParkinsonTest";
+import Subscription from "./pages/Subscription";
+import ECGDashboard from "./pages/ECGDashboard";
 
 
 
@@ -53,7 +54,6 @@ function App() {
       <Route path="/" element={<Home/>}/>
       <Route path="/about" element={<About/>}/>
       <Route path="/contact" element={<Contact/>}/>
-      <Route path="/gallery" element={<GalleryPage/>}/>
       <Route path="/register" element={<Register/>}/>
       <Route path="/login" element={<Login/>}/>
       <Route path="/doctors" element={<AllDoctors/>}/>
@@ -65,8 +65,9 @@ function App() {
       <Route path="/health-monitor" element={<HealthMonitor />} />
       <Route path="/health-history" element={<HealthHistory />} />
       <Route path="/ai-doctor" element={<AiDoctor />} />
+      <Route path="/subscription" element={<Subscription />} />
+      <Route path="/ecg-monitor" element={<ECGDashboard />} />
 
-      <Route path="/parkinson-test" element={<ParkinsonTest />} />
 
 
 

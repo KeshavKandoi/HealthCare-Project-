@@ -45,7 +45,6 @@ data-bs-target="#navbarSupportedContent"
 </li>
 
 <li className="nav-item">
-<NavLink to="/gallery" className="nav-link">Gallery</NavLink>
 </li>
 
 <li className="nav-item">
@@ -67,14 +66,18 @@ Health History
 </li>
 
 <li className="nav-item">
-<NavLink to="/ai-doctor" className="nav-link">
-🤖 AI Doctor
+<NavLink to="/ecg-monitor" className="nav-link">
+ECG Monitor
 </NavLink>
 </li>
-
 <li className="nav-item">
-<NavLink to="/parkinson-test" className="nav-link">
-🧠 Parkinson AI Test
+<NavLink to="/subscription" className="nav-link">
+Plans
+</NavLink>
+</li>
+<li className="nav-item">
+<NavLink to="/ai-doctor" className="nav-link">
+🤖 AI Doctor
 </NavLink>
 </li>
 

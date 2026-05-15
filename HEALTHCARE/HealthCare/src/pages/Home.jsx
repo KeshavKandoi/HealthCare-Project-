@@ -1,5 +1,6 @@
 import React from 'react'
 import Slider from '../components/Slider/Slider'
+import HeartHero from '../components/Static/HeartHero/HeartHero'
 import Facility from '../components/Static/Facility/Facility'
 import ShortIntro from '../components/Static/ShortIntro/ShortIntro'
 import WhyChoose from '../components/Static/WhyChoose/WhyChoose'
@@ -10,6 +11,7 @@ const Home = () => {
   return (
   <>
   <Slider/>
+  <HeartHero/>
   <Facility/>
   <ShortIntro/>
   <WhyChoose/>

@@ -12,8 +12,11 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.13.6",
+    "chart.js": "^4.5.1",
     "date-fns": "^4.1.0",
+    "lottie-react": "^2.4.1",
     "react": "^19.2.0",
+    "react-chartjs-2": "^5.3.1",
     "react-datepicker": "^9.1.0",
     "react-dom": "^19.2.0",
     "react-hot-toast": "^2.6.0",
@@ -21,6 +24,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.13.0",
     "recharts": "^3.7.0",
+    "socket.io-client": "^4.8.3",
     "swiper": "^12.1.0",
     "yet-another-react-lightbox": "^1.1.1"
   },

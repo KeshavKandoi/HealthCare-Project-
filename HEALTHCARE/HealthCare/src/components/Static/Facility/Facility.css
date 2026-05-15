@@ -1,63 +1,312 @@
-.FacilityHeading {
-  text-align: center;
-  padding: 40px 0;
-  font-weight: bold;
-  font-size: 32px;
-  color: rgb(6, 77, 77);
+.facility-section {
+  background: linear-gradient(180deg, #f0f9f9 0%, #ffffff 100%);
+  padding: 60px 0 80px;
 }
 
-/* GRID LAYOUT */
+.facility-header {
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 0 20px;
+}
+
+.facility-tag {
+  background: #e0f5f5;
+  color: #0a7a7a;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 18px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-bottom: 14px;
+}
+
+.FacilityHeading {
+  font-size: 36px;
+  font-weight: 700;
+  color: #064d4d;
+  margin: 0 0 12px;
+}
+
+.facility-subtitle {
+  color: #666;
+  font-size: 16px;
+  margin: 0 auto 24px;
+  max-width: 500px;
+}
+
+.facility-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #e53e3e;
+  font-size: 20px;
+}
+
+.facility-divider span {
+  height: 2px;
+  width: 60px;
+  background: linear-gradient(90deg, transparent, #e53e3e);
+  border-radius: 2px;
+}
+
+.facility-divider span:last-child {
+  background: linear-gradient(90deg, #e53e3e, transparent);
+}
+
 .facility-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 25px;
-  padding: 40px;
-  background-color: #b7c7cf;
+  gap: 24px;
+  padding: 0 40px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* CARD */
 .facility-card {
-  background-color: white;
-  border-radius: 6px;
-  padding: 30px 20px;
-  text-align: center;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
   cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  transform: translateY(40px);
+  border: 1px solid #f0f0f0;
+}
+
+.facility-card.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+  animation: slideUp 0.5s ease forwards;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.facility-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(6, 77, 77, 0.15);
+  border-color: #4fa3a3;
+}
+
+.facility-card.expanded {
+  border-color: #0a7a7a;
+  box-shadow: 0 16px 40px rgba(6, 77, 77, 0.2);
+}
+
+.card-image-wrap {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.facility-card:hover .card-img {
+  transform: scale(1.08);
+}
+
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6,77,77,0.3) 0%, rgba(6,77,77,0.7) 100%);
+}
+
+.card-icon-wrap {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   transition: all 0.3s ease;
 }
 
-/* ICON */
-.facility-card i {
-  font-size: 42px;
-  margin-bottom: 15px;
-  color: #000;
+.facility-card:hover .card-icon-wrap {
+  background: #064d4d;
 }
 
-/* TEXT */
-.facility-card p {
-  margin: 0;
+.card-icon-wrap i {
+  font-size: 22px;
+  color: #064d4d;
+  transition: color 0.3s ease;
+}
+
+.facility-card:hover .card-icon-wrap i {
+  color: white;
+}
+
+.card-body {
+  padding: 20px 16px 14px;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #064d4d;
+  margin: 0 0 10px;
+}
+
+.card-desc {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.card-desc.show {
+  max-height: 200px;
+  opacity: 1;
+}
+
+.card-desc p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+
+.card-btn {
+  background: #064d4d;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.card-btn:hover {
+  background: #0a7a7a;
+}
+
+.card-arrow {
+  margin-top: 8px;
+  color: #4fa3a3;
+  font-size: 13px;
+  transition: transform 0.3s;
+}
+
+/* MODAL */
+.facility-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+  padding: 20px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal-content {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  max-width: 520px;
+  width: 100%;
+  animation: popIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.85); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   font-size: 16px;
-  font-weight: 500;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* HOVER EFFECT (same as image) */
-.facility-card:hover {
-  background-color: #4fa3a3;
+.modal-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.modal-body {
+  padding: 28px;
+  text-align: center;
+}
+
+.modal-icon {
+  font-size: 36px;
+  color: #e53e3e;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.modal-body h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #064d4d;
+  margin: 0 0 14px;
+}
+
+.modal-body p {
+  color: #555;
+  line-height: 1.7;
+  font-size: 15px;
+  margin: 0 0 20px;
+}
+
+.modal-btn {
+  background: linear-gradient(135deg, #064d4d, #0a7a7a);
   color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.3s;
 }
 
-.facility-card:hover i {
-  color: white;
-}
+.modal-btn:hover { opacity: 0.9; }
 
-/* RESPONSIVE */
-@media (max-width: 992px) {
-  .facility-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
+@media (max-width: 1100px) {
+  .facility-container { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 576px) {
-  .facility-container {
-    grid-template-columns: 1fr;
-  }
+  .facility-container { grid-template-columns: 1fr; padding: 0 20px; }
+  .FacilityHeading { font-size: 28px; }
 }
