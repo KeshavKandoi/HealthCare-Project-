@@ -1,0 +1,87 @@
+/* ============ NARAYANA DESIGN SYSTEM ============ */
+
+.btn-ds {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+.btn-ds-primary { background: #ef4444; color: #fff; }
+.btn-ds-primary:hover { background: #dc2626; transform: translateY(-1px); }
+.btn-ds-secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+.btn-ds-secondary:hover { background: rgba(255,255,255,0.18); }
+.btn-ds-danger { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+.btn-ds-danger:hover { background: #ef4444; color: #fff; }
+.btn-ds-light { background: #fff; color: #111; }
+.btn-ds-light:hover { background: #e5e5e5; }
+.btn-ds:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+.input-ds, select.input-ds, textarea.input-ds {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: #111;
+  color: #fff !important;
+  font-size: 14px;
+  margin-bottom: 16px;
+  font-family: inherit;
+}
+.input-ds::placeholder { color: rgba(255,255,255,0.4); }
+.input-ds:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
+select.input-ds option { background: #111; color: #fff; }
+
+.card-ds {
+  background: #0a0a0a;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.table-ds { width: 100%; border-collapse: collapse; background: #0a0a0a; border-radius: 12px; overflow: hidden; }
+.table-ds th {
+  background: #141414;
+  color: #fff;
+  text-align: left;
+  padding: 14px 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.table-ds td {
+  padding: 14px 16px;
+  color: rgba(255,255,255,0.85);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 14px;
+}
+.table-ds tr:hover td { background: rgba(255,255,255,0.03); }
+
+.status-pill { display: inline-block; padding: 4px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; text-transform: capitalize; }
+.status-pending { background: rgba(234,179,8,0.15); color: #eab308; }
+.status-cancelled { background: rgba(239,68,68,0.15); color: #ef4444; }
+.status-completed { background: rgba(34,197,94,0.15); color: #22c55e; }
+
+.modal-overlay-ds { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+.modal-box-ds { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; max-width: 460px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto; }
+.modal-header-ds { padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; }
+.modal-header-ds h5 { margin: 0; font-size: 18px; font-weight: 700; color: #fff; }
+.modal-close-ds { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; line-height: 1; }
+.modal-close-ds:hover { background: rgba(255,255,255,0.1); }
+.modal-body-ds { padding: 24px; display: flex; flex-direction: column; }
+.modal-footer-ds { padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: flex-end; gap: 10px; }
+
+.avatar-ds { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.1); background: #222; }
+
+.file-input-ds { color: rgba(255,255,255,0.7); font-size: 13px; margin-bottom: 16px; }
+.file-input-ds::file-selector-button {
+  background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 16px; border-radius: 999px; font-weight: 600; font-size: 13px; margin-right: 12px; cursor: pointer;
+}
