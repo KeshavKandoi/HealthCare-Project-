@@ -28,7 +28,7 @@ const Login =() =>{
   }
   useEffect(()=>{
     if(success){
-      toast.success("Register successfully");
+      toast.success("Login successful");
       navigate("/doctors");
       setEmail("");
       setPassword("");
