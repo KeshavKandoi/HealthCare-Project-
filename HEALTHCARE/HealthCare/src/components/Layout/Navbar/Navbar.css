@@ -174,18 +174,19 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(255,255,255,0.08);
-  padding: 4px 12px;
+  gap: 8px;
+  background: #fff;
+  padding: 7px 16px;
   border-radius: 999px;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-  color: rgba(255,255,255,0.8);
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
   user-select: none;
   transition: background 0.2s;
 }
-.lang-selector:hover { background: rgba(255,255,255,0.18); }
+.lang-selector i { color: #111; }
+.lang-selector:hover { background: #e5e5e5; }
 .lang-chevron { font-size: 10px; transition: transform 0.2s; }
 .lang-chevron.open { transform: rotate(180deg); }
 .lang-dropdown {
