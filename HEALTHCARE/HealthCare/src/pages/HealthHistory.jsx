@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./HealthHistory.css";
 import {
   LineChart,
   Line,
@@ -52,7 +53,7 @@ const HealthHistory = () => {
   }));
 
   return (
-    <div style={{ padding: "30px" }}>
+    <div className="health-history-page" style={{ padding: "30px" }}>
       <h2>Health History</h2>
 
       {/* TABLE */}
