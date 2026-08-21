@@ -1,7 +1,7 @@
 import React from 'react'
 
 const s = {
-  page:    { background: "#000", color: "#fff", fontFamily: "sans-serif" },
+  page:    { background: "#000", color: "#fff", fontFamily: "inherit" },
   hero:    { background: "#000", borderBottom: "1px solid rgba(255,255,255,0.08)", padding: "100px 60px", textAlign: "center" },
   heroTag: { background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.3)", color: "#fca5a5", padding: "6px 18px", borderRadius: "999px", fontSize: "12px", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase", display: "inline-block", marginBottom: "24px" },
   heroH1:  { fontSize: "56px", fontWeight: 900, color: "#fff", margin: "0 0 20px", lineHeight: 1.1, letterSpacing: "-1px" },
