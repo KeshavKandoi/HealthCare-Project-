@@ -1,6 +1,5 @@
 import React from 'react'
-import Slider from '../components/Slider/Slider'
-import HeartHero from '../components/Static/HeartHero/HeartHero'
+import HeartFlipbook from "../components/Static/HeartFlipbook/HeartFlipbook";
 import Facility from '../components/Static/Facility/Facility'
 import ShortIntro from '../components/Static/ShortIntro/ShortIntro'
 import WhyChoose from '../components/Static/WhyChoose/WhyChoose'
@@ -10,18 +9,13 @@ import PatentReviews from '../components/Static/PatentReviews/PatentReviews'
 const Home = () => {
   return (
   <>
-  <Slider/>
-  <HeartHero/>
+  <HeartFlipbook/>
   <Facility/>
   <ShortIntro/>
   <WhyChoose/>
   <PatentReviews/>
   <ContactMessage/>
-  
-
   </>
-    )
-  
+  )
 }
-
 export default Home
