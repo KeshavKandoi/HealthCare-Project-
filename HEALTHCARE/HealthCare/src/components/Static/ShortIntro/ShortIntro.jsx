@@ -11,8 +11,8 @@ const ShortIntro = () => {
         </div>
         <div className="intro-text">
           <span className="intro-tag">About Us</span>
-          <h1>NARAYANA HOSPITAL</h1>
-          <p>NARAYANA Hospital is a trusted healthcare center committed to providing quality medical services with care and compassion. We offer modern facilities, experienced doctors, and patient-focused treatment to ensure the best health outcomes.</p>
+          <h1>HEARTSYNC</h1>
+          <p>HEARTSYNC Hospital is a trusted healthcare center committed to providing quality medical services with care and compassion. We offer modern facilities, experienced doctors, and patient-focused treatment to ensure the best health outcomes.</p>
           <p>We stand as a symbol of excellence in healthcare, offering comprehensive medical services across multiple specialties with state-of-the-art infrastructure and a skilled medical team focused on personalized patient care.</p>
           <a href="/doctors" className="intro-btn">Book an Appointment</a>
         </div>
