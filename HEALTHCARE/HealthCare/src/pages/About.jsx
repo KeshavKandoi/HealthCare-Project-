@@ -48,7 +48,7 @@ function About() {
       {/* HERO */}
       <div style={s.hero}>
         <div style={s.heroTag}>Advanced Cardiac Care</div>
-        <h1 style={s.heroH1}>About NARAYANA Hospital</h1>
+        <h1 style={s.heroH1}>About HEARTSYNC Hospital</h1>
         <p style={s.heroP}>
           India's most advanced cardiac care platform — combining wearable ECG technology,
           AI diagnosis, and world-class cardiologists for 24/7 heart monitoring.
@@ -66,7 +66,7 @@ function About() {
           <div style={{ flex: 1, minWidth: "280px" }}>
             <div style={s.tag}>Our Mission</div>
             <h2 style={s.h2}>Bringing Hospital-Grade<br/>Care To Your Home</h2>
-            <p style={s.p}>NARAYANA Hospital was founded with a single vision — make world-class cardiac care accessible to every Indian, regardless of location. We provide wearable ECG devices that stream real-time heart data to our platform, where AI models and specialist doctors monitor your heart 24/7.</p>
+            <p style={s.p}>HEARTSYNC Hospital was founded with a single vision — make world-class cardiac care accessible to every Indian, regardless of location. We provide wearable ECG devices that stream real-time heart data to our platform, where AI models and specialist doctors monitor your heart 24/7.</p>
             <p style={s.p}>When something is wrong, our system alerts you, your family, and your doctor instantly — so you get help before a crisis becomes a catastrophe.</p>
           </div>
         </div>
@@ -119,10 +119,10 @@ function About() {
         </div>
         <div style={s.teamWrap}>
           {[
-            { name: "Dr. Devi Shetty",     role: "Cardiothoracic Surgeon",            hospital: "Narayana Health, Bangalore",    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3fSZ6VNO9G5I0BeJ6iEBblDqRaaORnpfSHw&s" },
+            { name: "Dr. Devi Shetty",     role: "Cardiothoracic Surgeon",            hospital: "HeartSync Health, Bangalore",    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3fSZ6VNO9G5I0BeJ6iEBblDqRaaORnpfSHw&s" },
             { name: "Dr. Ramakanta Panda", role: "Cardiothoracic & Vascular Surgeon", hospital: "Asian Heart Institute, Mumbai",  img: "https://upload.wikimedia.org/wikipedia/commons/7/76/Dr._Ramakanta_Panda.jpg" },
             { name: "Dr. Rajesh Sharma",   role: "Interventional Cardiologist",       hospital: "AIIMS, New Delhi",              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmgtKqc_hKmFRu0VXmpE1Y8DWl5Yk6BLqhXw&s" },
-            { name: "Dr. Priya Nair",      role: "Cardiac Electrophysiologist",       hospital: "Narayana Health, Bangalore",    img: "https://images1-fabric.practo.com/doctor/785896/dr-priya-r-nair-5f40e6306a702.jpeg" },
+            { name: "Dr. Priya Nair",      role: "Cardiac Electrophysiologist",       hospital: "HeartSync Health, Bangalore",    img: "https://images1-fabric.practo.com/doctor/785896/dr-priya-r-nair-5f40e6306a702.jpeg" },
           ].map((doc, i) => (
             <div key={i} style={s.docCard}>
               <img src={doc.img} alt={doc.name} style={s.docImg} />
