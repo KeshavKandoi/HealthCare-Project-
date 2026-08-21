@@ -98,12 +98,12 @@ function Navbar() {
               <li><NavLink to="/ecg-monitor" onClick={() => setMenuOpen(false)}>ECG Monitor</NavLink></li>
               <li>
                 <NavLink to="/subscription" className="sub-link" onClick={() => setMenuOpen(false)}>
-                  💳 Subscription
+                  Subscription
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/ai-doctor" className="ai-link" onClick={() => setMenuOpen(false)}>
-                  🤖 AI Doctor
+                  AI Doctor
                 </NavLink>
               </li>
             </>
