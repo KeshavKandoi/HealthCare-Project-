@@ -63,9 +63,6 @@ function AIDoctor() {
     <div className="aidoc-page">
       <div className="aidoc-container">
         <div className="aidoc-header">
-          <div className="aidoc-header-icon">
-            <i className="fa-solid fa-robot" style={{ color: '#fca5a5' }}></i>
-          </div>
           <h3>AI Doctor Assistant</h3>
         </div>
 
