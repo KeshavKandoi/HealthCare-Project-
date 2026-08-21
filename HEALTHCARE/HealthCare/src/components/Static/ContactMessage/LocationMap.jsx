@@ -5,7 +5,7 @@ const LocationMap = () => {
     <div style={{ paddingRight: "30px" }}>
       <div style={{ marginBottom: "20px" }}>
         <h3 style={{ fontSize: "22px", fontWeight: 800, color: "#fff", margin: "0 0 8px" }}>Find Us Here</h3>
-        <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.4)", margin: 0 }}>HEARTSYNC Hospital, Bangalore, Karnataka</p>
+        <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.4)", margin: 0 }}>HeartSync, Bangalore, Karnataka</p>
       </div>
       <div style={{
         borderRadius: "20px",
