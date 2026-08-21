@@ -104,7 +104,7 @@ function Subscription() {
         <h2 style={{ fontSize: "30px", fontWeight: 800, textAlign: "center", marginBottom: "40px" }}>Frequently Asked Questions</h2>
         {[
           { q: "What is included in the $10 starter pack?", a: "You get the physical ECG machine (AD8232 + ESP32) delivered to your home, plus 2 months of full service — 24/7 ECG monitoring, AI analysis, free doctor consultations, and emergency alerts." },
-          { q: "How does the ECG machine work?", a: "You attach small electrode pads to your chest. The AD8232 sensor captures your heart's electrical signals, the ESP32 connects to your WiFi, and streams live data to your HEARTSYNC dashboard." },
+          { q: "How does the ECG machine work?", a: "You attach small electrode pads to your chest. The AD8232 sensor captures your heart's electrical signals, the ESP32 connects to your WiFi, and streams live data to your HeartSync dashboard." },
           { q: "What happens after 2 months?", a: "After the free 2-month period, your plan automatically continues at just $2/month. You can cancel anytime before the billing date — no penalties." },
           { q: "What if something critical is detected?", a: "Our AI model instantly detects abnormal ECG patterns. It sends an alert to you, your emergency contact, and your assigned cardiologist within seconds." },
           { q: "Is the ECG machine easy to set up?", a: "Yes. Our team will guide you through setup via video call. Most patients are up and running within 15 minutes of receiving the device." },
