@@ -54,26 +54,15 @@ function Navbar() {
 
       {/* TOPBAR */}
       <div className="topbar-container">
-        <div className="lang-selector" onClick={() => setLangOpen(!langOpen)}>
-          <i className="fa-solid fa-globe"></i>
-          <span>{selectedLang.native}</span>
-          <i className={`fa-solid fa-chevron-down lang-chevron ${langOpen ? 'open' : ''}`}></i>
-
-          {langOpen && (
-            <div className="lang-dropdown">
-              {LANGUAGES.map((lang) => (
-                <div
-                  key={lang.code}
-                  className={`lang-option ${selectedLang.code === lang.code ? 'active' : ''}`}
-                  onClick={(e) => { e.stopPropagation(); handleLangSelect(lang) }}
-                >
-                  <span className="lang-native">{lang.native}</span>
-                  <span className="lang-label">{lang.label}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        {user ? (
+          <NavLink to="/user/profile" className="nav-account-btn">
+            <i className="fa-solid fa-circle-user"></i> {user.name?.split(' ')[0] || 'My Account'}
+          </NavLink>
+        ) : (
+          <NavLink to="/login" className="nav-account-btn">
+            Login
+          </NavLink>
+        )}
       </div>
 
       {/* MAIN NAV */}
@@ -111,19 +100,28 @@ function Navbar() {
 
           <li><span className="nav-divider"></span></li>
 
-          {user ? (
-            <li>
-              <NavLink to="/user/profile" className="nav-account-btn" onClick={() => setMenuOpen(false)}>
-                <i className="fa-solid fa-circle-user"></i> {user.name?.split(' ')[0] || 'My Account'}
-              </NavLink>
-            </li>
-          ) : (
-            <li>
-              <NavLink to="/login" className="nav-account-btn" onClick={() => setMenuOpen(false)}>
-                Login
-              </NavLink>
-            </li>
-          )}
+          <li>
+            <div className="lang-selector" onClick={() => setLangOpen(!langOpen)}>
+              <i className="fa-solid fa-globe"></i>
+              <span>{selectedLang.native}</span>
+              <i className={`fa-solid fa-chevron-down lang-chevron ${langOpen ? 'open' : ''}`}></i>
+
+              {langOpen && (
+                <div className="lang-dropdown">
+                  {LANGUAGES.map((lang) => (
+                    <div
+                      key={lang.code}
+                      className={`lang-option ${selectedLang.code === lang.code ? 'active' : ''}`}
+                      onClick={(e) => { e.stopPropagation(); handleLangSelect(lang) }}
+                    >
+                      <span className="lang-native">{lang.native}</span>
+                      <span className="lang-label">{lang.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </li>
         </ul>
       </div>
 
