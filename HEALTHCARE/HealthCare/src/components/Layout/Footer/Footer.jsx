@@ -6,7 +6,7 @@ function Footer() {
     <footer className="site-footer">
       <div className="footer-top">
         <div className="footer-brand">
-          <h2>HEARTSYNC</h2>
+          <h2>HeartSync</h2>
           <p>Advanced cardiac care powered by technology and compassion. Available 24/7 for you and your family.</p>
         </div>
         <div className="footer-links">
@@ -30,7 +30,7 @@ function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <p>© HEARTSYNC 2026 — All Rights Reserved</p>
+        <p>© HeartSync 2026 — All Rights Reserved</p>
         <p style={{fontFamily:"cursive"}}>
           Made with <i className="fas fa-heart" style={{color:"#ef4444"}}></i> from India
         </p>
