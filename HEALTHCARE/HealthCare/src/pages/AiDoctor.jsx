@@ -41,6 +41,9 @@ function AIDoctor() {
     setLoading(true);
     setMessage("");
     setImage(null);
+    setTimeout(() => {
+      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 50);
 
     try {
       const res = await axios.post(
