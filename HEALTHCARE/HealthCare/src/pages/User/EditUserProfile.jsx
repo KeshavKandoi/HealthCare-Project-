@@ -7,120 +7,94 @@ import { getLoginUserDetails, updateUserData } from '../../redux/actions/authAct
 import { reset } from '../../redux/slice/authSlice';
 import toast from 'react-hot-toast';
 
+const EditUserProfile = ({ isOpen, onClose }) => {
+  const { user, success, error } = useSelector((state) => state.auth);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-const EditUserProfile=({isOpen,onClose})=> {
-
-const { user, success, error } = useSelector((state) => state.auth);
-
-
-
-
-
-  const dispatch=useDispatch()
-  const navigate=useNavigate()
-
-
-  const[name,setName]=useState("")
-  const[gender,setgender]=useState("")
-  const[phone,setPhone]=useState("")
-  const[dob,setDob]=useState("")
-  const[address,setAddress]=useState("")
+  const [name, setName] = useState("")
+  const [gender, setgender] = useState("")
+  const [phone, setPhone] = useState("")
+  const [dob, setDob] = useState("")
+  const [address, setAddress] = useState("")
   const [image, setImage] = useState(null)
 
-
-
-
-  useEffect(()=>{
-    if(user){
+  useEffect(() => {
+    if (user) {
       setName(user?.name)
-      setPhone(user?.phone||'')
-      setgender(user?.gender||'')
-      setAddress(user?.address||'')
+      setPhone(user?.phone || '')
+      setgender(user?.gender || '')
+      setAddress(user?.address || '')
     }
-  },[user])
+  }, [user])
 
-  // handle update
-
-  const handleUpdate=()=>{
-    const formData=new FormData()
+  const handleUpdate = () => {
+    const formData = new FormData()
     if (image && image instanceof File) {
       formData.append('image', image)
     }
-    
-    formData.append('name',name)
-    formData.append('phone',phone)
-    formData.append('address',address)
-    formData.append('gender',gender)
-    dispatch(updateUserData({id:user._id,formData}))
-
-
+    formData.append('name', name)
+    formData.append('phone', phone)
+    formData.append('address', address)
+    formData.append('gender', gender)
+    dispatch(updateUserData({ id: user._id, formData }))
   };
-   useEffect(()=>{
-    if(success){
+
+  useEffect(() => {
+    if (success) {
       toast.success('user updated!')
       dispatch(getLoginUserDetails(user?._id))
       dispatch(reset())
       onClose();
     }
-    if(error){
+    if (error) {
       toast.error(error);
     }
-   },[dispatch,success,error,onClose,user])
+  }, [dispatch, success, error, onClose, user])
 
-
-  if(!isOpen)return null;
+  if (!isOpen) return null;
   return (
-   <>
-<div className=" editModal modal d-block" tabIndex="-1">
-  <div className="modal-dialog">
-    <div className="modal-content">
-      <div className="modal-header">
-        <h5 className="modal-title">Edit Your Profile</h5>
-        <button 
-        type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"
-        onClick={onClose}
-        />
-      </div>
+    <div className="modal-overlay-ds" onClick={onClose}>
+      <div className="modal-box-ds" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header-ds">
+          <h5>Edit Your Profile</h5>
+          <button type="button" className="modal-close-ds" onClick={onClose}>✕</button>
+        </div>
 
-     <div className='modal-body'>
-      <div className='mod-details d-flex flex-column'>
-      <img src={`data:image/jpeg;base64,${user?.image}`} alt="userPic" height={80} width={100}/>
-      <br/>  
+        <div className="modal-body-ds">
+          <img
+            src={user?.image ? `data:image/jpeg;base64,${user.image}` : undefined}
+            alt="userPic"
+            className="avatar-ds"
+            style={{ marginBottom: 16, alignSelf: 'center' }}
+          />
 
-      <input type="file" onChange={(e)=>setImage(e.target.files[0])}/>
+          <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Profile Photo</label>
+          <input type="file" className="file-input-ds" onChange={(e) => setImage(e.target.files[0])} />
 
-      <br/>
+          <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Name</label>
+          <input type="text" className="input-ds" name="name" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
 
-      <input type="text" name="name" placeholder="Name" value={name} onChange={(e)=>setName(e.target.value)}/>
+          <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Gender</label>
+          <select className="input-ds" value={gender} onChange={(e) => setgender(e.target.value)}>
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
 
-      <br/>
+          <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Phone</label>
+          <input type="tel" className="input-ds" placeholder="Phone number" value={phone} onChange={(e) => setPhone(e.target.value)} />
 
-      <div className='d-flex flex-row'>
-      <select className="m-1"value={gender} onChange={(e)=>setgender(e.target.value)}>
-   
-  <option value="male">Male</option>
-  <option value="female">Female</option>
+          <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Address</label>
+          <input type="text" className="input-ds" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} style={{ marginBottom: 0 }} />
+        </div>
 
-</select>
-        {/* <input type="date" placeholder="dob"/> */}
-      </div>
-      <br/>
-      <input type="tel" placeholder="Phone number"value={phone} onChange={(e)=>setPhone(e.target.value)}/>
-
-      <br/>   
-      <input type="text" placeholder="address"value={address} onChange={(e)=>setAddress(e.target.value)}/>
-     </div>
-      </div>
-      <div className="modal-footer">
-        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal"onClick={onClose}>Close</button>
-        <button type="button" className="btn btn-primary" onClick={()=>handleUpdate(user?._id)}>Save changes</button>
+        <div className="modal-footer-ds">
+          <button type="button" className="btn-ds btn-ds-secondary" onClick={onClose}>Close</button>
+          <button type="button" className="btn-ds btn-ds-primary" onClick={() => handleUpdate(user?._id)}>Save changes</button>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
-   
-   </>
   )
 }
 
