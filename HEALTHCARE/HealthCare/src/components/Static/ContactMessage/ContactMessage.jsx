@@ -1,29 +1,21 @@
 import React from 'react'
-import "./ContactMessage.css"
 import LocationMap from './LocationMap'
 import MessageForm from './MessageForm'
 
-
-
-const ContactMessage=()=> {
+const ContactMessage = () => {
   return (
-
-    <>
-    <div className='row message-container'>
-   <div className='col-md-4'>
-    <LocationMap/>
-</div>
-
-<div className='col-md-6'>
-
-<MessageForm/>
-
-</div>
-
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: "0",
+      maxWidth: "1200px",
+      margin: "60px auto",
+      padding: "0 40px",
+      alignItems: "start"
+    }}>
+      <LocationMap />
+      <MessageForm />
     </div>
-
-
-    </>
   )
 }
 
