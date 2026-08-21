@@ -48,7 +48,7 @@ function About() {
       {/* HERO */}
       <div style={s.hero}>
         <div style={s.heroTag}>Advanced Cardiac Care</div>
-        <h1 style={s.heroH1}>About HEARTSYNC Hospital</h1>
+        <h1 style={s.heroH1}>About HeartSync</h1>
         <p style={s.heroP}>
           India's most advanced cardiac care platform — combining wearable ECG technology,
           AI diagnosis, and world-class cardiologists for 24/7 heart monitoring.
@@ -66,7 +66,7 @@ function About() {
           <div style={{ flex: 1, minWidth: "280px" }}>
             <div style={s.tag}>Our Mission</div>
             <h2 style={s.h2}>Bringing Hospital-Grade<br/>Care To Your Home</h2>
-            <p style={s.p}>HEARTSYNC Hospital was founded with a single vision — make world-class cardiac care accessible to every Indian, regardless of location. We provide wearable ECG devices that stream real-time heart data to our platform, where AI models and specialist doctors monitor your heart 24/7.</p>
+            <p style={s.p}>HeartSync was founded with a single vision — make world-class cardiac care accessible to every Indian, regardless of location. We provide wearable ECG devices that stream real-time heart data to our platform, where AI models and specialist doctors monitor your heart 24/7.</p>
             <p style={s.p}>When something is wrong, our system alerts you, your family, and your doctor instantly — so you get help before a crisis becomes a catastrophe.</p>
           </div>
         </div>
