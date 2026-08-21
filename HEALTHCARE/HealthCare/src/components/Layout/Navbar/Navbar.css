@@ -93,29 +93,21 @@
   color: #fff;
 }
 
-/* SPECIAL LINKS */
-.ai-link {
-  background: rgba(239,68,68,0.15) !important;
-  color: #fca5a5 !important;
-  border: 1px solid rgba(239,68,68,0.3) !important;
-  border-radius: 999px !important;
-  padding: 7px 16px !important;
+/* SPECIAL LINKS — same style as regular nav links now */
+.ai-link, .sub-link {
+  background: transparent !important;
+  color: rgba(255,255,255,0.75) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 8px 14px !important;
 }
-.ai-link:hover {
-  background: #ef4444 !important;
-  color: white !important;
+.ai-link:hover, .sub-link:hover {
+  background: rgba(255,255,255,0.08) !important;
+  color: #fff !important;
 }
-.sub-link {
-  background: rgba(239,68,68,0.1) !important;
-  color: #fca5a5 !important;
-  border: 1.5px solid rgba(239,68,68,0.3) !important;
-  border-radius: 999px !important;
-  padding: 6.5px 16px !important;
-}
-.sub-link:hover {
-  background: #ef4444 !important;
-  color: white !important;
-  border-color: #ef4444 !important;
+.ai-link.active, .sub-link.active {
+  background: rgba(255,255,255,0.1) !important;
+  color: #fff !important;
 }
 .nav-account-btn {
   background: #fff !important;
