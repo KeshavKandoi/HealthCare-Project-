@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import "./AiDoctor.css";
 
 function AIDoctor() {
   const [message, setMessage] = useState("");
@@ -10,20 +11,20 @@ function AIDoctor() {
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chat]);
+  }, [chat, loading]);
 
-  // 🎤 Voice
   const startVoice = () => {
-    const recognition =
-      new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Voice not supported in this browser");
+      return;
+    }
+    const recognition = new SpeechRecognition();
     recognition.lang = "en-US";
     recognition.start();
-
     recognition.onresult = (event) => {
       setMessage(event.results[0][0].transcript);
     };
-
     recognition.onerror = () => {
       alert("Voice not supported in this browser");
     };
@@ -38,6 +39,8 @@ function AIDoctor() {
 
     setChat((prev) => [...prev, { sender: "user", text: message }]);
     setLoading(true);
+    setMessage("");
+    setImage(null);
 
     try {
       const res = await axios.post(
@@ -45,94 +48,45 @@ function AIDoctor() {
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-
-      setChat((prev) => [
-        ...prev,
-        { sender: "bot", text: res.data.reply },
-      ]);
+      setChat((prev) => [...prev, { sender: "bot", text: res.data.reply }]);
     } catch (error) {
-      setChat((prev) => [
-        ...prev,
-        { sender: "bot", text: "⚠ Something went wrong." },
-      ]);
+      setChat((prev) => [...prev, { sender: "bot", text: "Something went wrong. Please try again." }]);
     }
 
     setLoading(false);
-    setMessage("");
-    setImage(null);
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #4e73df, #1cc88a)",
-        padding: "40px 0",
-      }}
-    >
-      <div
-        className="container"
-        style={{
-          maxWidth: "700px",
-          background: "rgba(255,255,255,0.9)",
-          borderRadius: "20px",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-          padding: "20px",
-        }}
-      >
-        <h3 className="text-center mb-3 text-primary">
-          🤖 AI Doctor Assistant
-        </h3>
+    <div className="aidoc-page">
+      <div className="aidoc-container">
+        <div className="aidoc-header">
+          <div className="aidoc-header-icon">
+            <i className="fa-solid fa-robot" style={{ color: '#fca5a5' }}></i>
+          </div>
+          <h3>AI Doctor Assistant</h3>
+        </div>
 
-        {/* Chat Area */}
-        <div
-          style={{
-            height: "400px",
-            overflowY: "auto",
-            padding: "15px",
-            borderRadius: "15px",
-            background: "#f8f9fc",
-            marginBottom: "15px",
-          }}
-        >
+        <div className="aidoc-chat">
+          {chat.length === 0 && !loading && (
+            <div className="aidoc-empty">
+              <i className="fa-solid fa-comment-medical"></i>
+              <p>Describe your symptoms to get started.</p>
+              <p style={{ fontSize: 12, opacity: 0.7 }}>This assistant does not replace professional medical advice.</p>
+            </div>
+          )}
+
           {chat.map((msg, index) => (
-            <div
-              key={index}
-              style={{
-                textAlign: msg.sender === "user" ? "right" : "left",
-                marginBottom: "12px",
-              }}
-            >
-              <div
-                style={{
-                  display: "inline-block",
-                  padding: "12px 18px",
-                  borderRadius: "20px",
-                  background:
-                    msg.sender === "user"
-                      ? "linear-gradient(135deg,#4e73df,#224abe)"
-                      : "#e2e6ea",
-                  color: msg.sender === "user" ? "white" : "#333",
-                  maxWidth: "75%",
-                  animation: "fadeIn 0.3s ease-in-out",
-                }}
-              >
-                {msg.text}
-              </div>
+            <div key={index} className={`aidoc-row ${msg.sender}`}>
+              <div className={`aidoc-bubble ${msg.sender}`}>{msg.text}</div>
             </div>
           ))}
 
           {loading && (
-            <div style={{ textAlign: "left" }}>
-              <div
-                style={{
-                  display: "inline-block",
-                  padding: "10px 15px",
-                  borderRadius: "20px",
-                  background: "#e2e6ea",
-                }}
-              >
-                🤖 Typing...
+            <div className="aidoc-row bot">
+              <div className="aidoc-bubble bot">
+                <div className="aidoc-typing">
+                  <span></span><span></span><span></span>
+                </div>
               </div>
             </div>
           )}
@@ -140,70 +94,37 @@ function AIDoctor() {
           <div ref={chatEndRef} />
         </div>
 
-        {/* Selected Image Preview */}
         {image && (
-          <div className="mb-2 text-center">
-            <small className="text-muted">Image Selected:</small>
-            <div>
-              <img
-                src={URL.createObjectURL(image)}
-                alt="preview"
-                style={{
-                  maxWidth: "120px",
-                  borderRadius: "10px",
-                  marginTop: "5px",
-                }}
-              />
-            </div>
+          <div className="aidoc-preview">
+            <div className="aidoc-preview-label">Image attached</div>
+            <img src={URL.createObjectURL(image)} alt="preview" />
           </div>
         )}
 
-        {/* Input Area */}
-        <div className="d-flex align-items-center gap-2">
-          <button
-            className="btn btn-light"
-            onClick={startVoice}
-            title="Speak"
-          >
-            🎤
+        <div className="aidoc-input-bar">
+          <button className="aidoc-icon-btn" onClick={startVoice} title="Speak">
+            <i className="fa-solid fa-microphone"></i>
           </button>
 
-          <label className="btn btn-light mb-0" title="Upload Image">
-            📎
-            <input
-              type="file"
-              hidden
-              onChange={(e) => setImage(e.target.files[0])}
-            />
+          <label className="aidoc-icon-btn" title="Upload Image" style={{ marginBottom: 0 }}>
+            <i className="fa-solid fa-paperclip"></i>
+            <input type="file" hidden onChange={(e) => setImage(e.target.files[0])} />
           </label>
 
           <input
             type="text"
-            className="form-control"
+            className="aidoc-text-input"
             placeholder="Type your symptoms..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
           />
 
-          <button
-            className="btn btn-primary"
-            onClick={handleSend}
-          >
+          <button className="aidoc-send-btn" onClick={handleSend} disabled={!message && !image}>
             Send
           </button>
         </div>
       </div>
-
-      {/* Animation */}
-      <style>
-        {`
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-        `}
-      </style>
     </div>
   );
 }
