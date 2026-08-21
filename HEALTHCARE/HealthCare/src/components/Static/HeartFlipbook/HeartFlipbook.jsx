@@ -169,7 +169,7 @@ const HeartFlipbook = () => {
         {loaded && (
           <>
             <div className="fb-vignette"></div>
-            <div className="fb-watermark-cover"><span>Live 3D<br/>Visualization</span></div>
+            <div className="fb-watermark-cover"><span>Myocardium<br/>Cross-Section</span></div>
 
             <div className="fb-annotation" key={currentAnnotation}>
               <div className="fb-ann-dot" style={{ background: ann.color }}></div>
