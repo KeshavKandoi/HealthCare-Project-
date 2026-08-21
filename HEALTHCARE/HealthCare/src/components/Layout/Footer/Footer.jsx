@@ -31,7 +31,7 @@ function Footer() {
       </div>
       <div className="footer-bottom">
         <p>© HeartSync 2026 — All Rights Reserved</p>
-        <p style={{fontFamily:"cursive"}}>
+        <p>
           Made with <i className="fas fa-heart" style={{color:"#ef4444"}}></i> from India
         </p>
       </div>
