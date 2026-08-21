@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
 @import url("./components/Layout/Navbar/Navbar.css");
 @import url("./design-system.css");
 
@@ -6,10 +7,14 @@
 body {
   background: #000;
   color: #fff;
-  font-family: 'Gill Sans', 'Segoe UI', sans-serif;
+  font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6, p, span, a, li { color: #fff; }
+h1 { font-weight: 800; letter-spacing: -0.5px; }
+h2 { font-weight: 700; letter-spacing: -0.3px; }
+h3, h4, h5, h6 { font-weight: 700; }
+body { line-height: 1.5; }
 
 a { text-decoration: none; }
 
