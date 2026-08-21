@@ -6,7 +6,8 @@
   background: #111;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   color: #fff;
-  padding: 8px 40px;
+  padding: 6px 24px;
+  min-height: 34px;
 }
 .topbar-container h6 {
   margin: 0;
@@ -181,14 +182,14 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 7px;
-  background: rgba(255,255,255,0.1);
-  padding: 5px 14px;
+  gap: 6px;
+  background: rgba(255,255,255,0.08);
+  padding: 4px 12px;
   border-radius: 999px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  color: #fff;
+  color: rgba(255,255,255,0.8);
   user-select: none;
   transition: background 0.2s;
 }
