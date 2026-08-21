@@ -54,10 +54,6 @@ function Navbar() {
 
       {/* TOPBAR */}
       <div className="topbar-container">
-        <h6><i className="fa-solid fa-phone"></i> Emergency: 08043420100</h6>
-        <h6><i className="fa-solid fa-clock"></i> 10:00am – 10:00pm</h6>
-        <h6><i className="fa-solid fa-envelope"></i> help@narayana.com</h6>
-
         <div className="lang-selector" onClick={() => setLangOpen(!langOpen)}>
           <i className="fa-solid fa-globe"></i>
           <span>{selectedLang.native}</span>
@@ -82,9 +78,7 @@ function Navbar() {
 
       {/* MAIN NAV */}
       <div className="main-nav">
-        <NavLink to="/">
-          <img src={logo} alt="Narayana" className="brand-logo" />
-        </NavLink>
+        <NavLink to="/" className="brand-text"></NavLink>
 
         <button className="nav-toggle" onClick={() => setMenuOpen(!menuOpen)}>
           <i className={menuOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars"}></i>
