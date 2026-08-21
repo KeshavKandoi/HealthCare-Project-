@@ -22,6 +22,15 @@
 }
 .doc-container h6{
   font-weight: bold;
+  color: #111 !important;
+}
+.doc-container .card-body,
+.doc-container .card-body p,
+.doc-container .card-body span,
+.doc-container .card-footer,
+.doc-container .card-footer p,
+.doc-container .card-footer span {
+  color: #333 !important;
 }
 
 .doc-container .card-footer{
