@@ -175,18 +175,20 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #fff;
+  background: #fff !important;
   padding: 7px 16px;
   border-radius: 999px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 700;
-  color: #111;
   user-select: none;
   transition: background 0.2s;
 }
-.lang-selector i { color: #111; }
-.lang-selector:hover { background: #e5e5e5; }
+.lang-selector i,
+.lang-selector span {
+  color: #111 !important;
+}
+.lang-selector:hover { background: #e5e5e5 !important; }
 .lang-chevron { font-size: 10px; transition: transform 0.2s; }
 .lang-chevron.open { transform: rotate(180deg); }
 .lang-dropdown {
