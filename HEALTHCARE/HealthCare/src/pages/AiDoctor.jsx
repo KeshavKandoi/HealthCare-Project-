@@ -8,9 +8,16 @@ function AIDoctor() {
   const [chat, setChat] = useState([]);
   const [loading, setLoading] = useState(false);
   const chatEndRef = useRef(null);
+  const chatBoxRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (chatBoxRef.current) {
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+    }
+  };
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollToBottom();
   }, [chat, loading]);
 
   const startVoice = () => {
@@ -41,9 +48,7 @@ function AIDoctor() {
     setLoading(true);
     setMessage("");
     setImage(null);
-    setTimeout(() => {
-      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 50);
+    setTimeout(scrollToBottom, 50);
 
     try {
       const res = await axios.post(
@@ -66,7 +71,7 @@ function AIDoctor() {
           <h3>AI Doctor Assistant</h3>
         </div>
 
-        <div className="aidoc-chat">
+        <div className="aidoc-chat" ref={chatBoxRef}>
           {chat.length === 0 && !loading && (
             <div className="aidoc-empty">
               <i className="fa-solid fa-comment-medical"></i>
