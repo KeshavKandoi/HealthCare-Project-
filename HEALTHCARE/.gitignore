@@ -46,3 +46,9 @@ node_modules/
 
 # Environment variables
 .env
+
+# Heart animation frames
+HealthCare/src/assets/frames/
+
+# Website videos
+HealthCare/src/assets/Video/
