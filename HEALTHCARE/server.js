@@ -15,7 +15,7 @@ import aiDoctorRoutes from "./routes/aiDoctorRoutes.js"
 import ecgRoutes from "./routes/ecg_routes.js"
 
 dotenv.config()
-connectDB()
+await connectDB()
 
 const app = express()
 const httpServer = createServer(app)
@@ -45,7 +45,7 @@ app.get("/", (req, res) => {
   res.send("node is running")
 })
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 4000
 
 httpServer.listen(PORT, () => {
   console.log("server is running".green)

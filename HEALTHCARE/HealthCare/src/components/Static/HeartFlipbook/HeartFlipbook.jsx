@@ -13,7 +13,7 @@ const annotations = [
   { frame: 29,  title: "Coronary Arteries",        desc: "Deliver oxygen-rich blood directly to the heart muscle itself",    color: "#f97316" },
   { frame: 58,  title: "Four Chambers",            desc: "Two atria receive blood. Two ventricles pump it across the body",  color: "#eab308" },
   { frame: 87,  title: "Heart Valves",             desc: "Four valves open and close preventing backflow with every beat",   color: "#22c55e" },
-  { frame: 116, title: "Cardiac Care at HeartSync", desc: "ECG Monitoring · Angioplasty · Bypass Surgery · 24/7 Support",    color: "#3b82f6" },
+  { frame: 116, title: "Cardiac Care at Heartline", desc: "ECG Monitoring · Angioplasty · Bypass Surgery · 24/7 Support",    color: "#3b82f6" },
 ];
 
 const HeartFlipbook = () => {

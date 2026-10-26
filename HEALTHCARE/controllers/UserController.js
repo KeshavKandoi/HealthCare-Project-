@@ -24,7 +24,7 @@ export const userRegister =async(req,res)=>{
  
     const userData={name,email,password:hashedPassword}
     // save user
-    const newUser=userModel(userData);
+    const newUser=new userModel(userData);
     const user=await newUser.save();
     res.status(201).send({
       success:true,

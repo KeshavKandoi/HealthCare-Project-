@@ -26,16 +26,17 @@ const doctorSlice=createSlice({
 
     .addCase(getAllDoctors.pending,(state)=>{
       state.loading=true;
+      state.error=null;
     })
     .addCase(getAllDoctors.fulfilled,(state,action)=>{
       state.loading=false;
       state.success=true;
-      state.doctors=action.payload.doctors;
+      state.doctors=Array.isArray(action.payload.doctors) ? action.payload.doctors : [];
       
     })
     .addCase(getAllDoctors.rejected,(state,action)=>{
     state.loading=false;
-    state.error=action.payload
+    state.error=action.payload || "Could not load doctors."
   })
   //get doctor details
 

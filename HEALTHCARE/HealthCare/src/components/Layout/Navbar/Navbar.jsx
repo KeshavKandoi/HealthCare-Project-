@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { getUserData } from '../../../redux/actions/authAction'
-import logo from '../../../assets/logo.png'
 import './Navbar.css'
 
 const LANGUAGES = [
@@ -14,62 +13,36 @@ const LANGUAGES = [
   { code: 'mr', label: 'Marathi', native: 'मराठी' },
 ]
 
+function applyLanguageCookie(code) {
+  document.cookie = `googtrans=/en/${code}; path=/`
+  document.cookie = `googtrans=/en/${code}; path=/; domain=${window.location.hostname}`
+  window.location.reload()
+}
+
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [langOpen, setLangOpen] = useState(false)
-  const [selectedLang, setSelectedLang] = useState(LANGUAGES[0])
+  const [selectedLang, setSelectedLang] = useState(() => {
+    const code = document.cookie.match(/googtrans=\/en\/([a-z]+)/)?.[1]
+    return LANGUAGES.find(lang => lang.code === code) || LANGUAGES[0]
+  })
   const dispatch = useDispatch()
   useEffect(() => { dispatch(getUserData()) }, [dispatch])
   const { user } = useSelector((state) => state.auth)
-
-  // Detect current language from cookie on load
-  useEffect(() => {
-    const match = document.cookie.match(/googtrans=\/en\/([a-z]+)/)
-    if (match) {
-      const found = LANGUAGES.find(l => l.code === match[1])
-      if (found) setSelectedLang(found)
-    }
-  }, [])
 
   const handleLangSelect = (lang) => {
     setSelectedLang(lang)
     setLangOpen(false)
 
-    if (lang.code === 'en') {
-      // Clear translation cookies and reload
-      document.cookie = 'googtrans=/en/en; path=/'
-      document.cookie = `googtrans=/en/en; path=/; domain=${window.location.hostname}`
-      window.location.reload()
-      return
-    }
-
-    // Set cookie and reload — Google Translate reads this cookie automatically
-    document.cookie = `googtrans=/en/${lang.code}; path=/`
-    document.cookie = `googtrans=/en/${lang.code}; path=/; domain=${window.location.hostname}`
-    window.location.reload()
+    applyLanguageCookie(lang.code)
   }
 
   return (
-    <div className="navbar-container">
+    <header className="navbar-container">
+      <nav className="main-nav" aria-label="Main navigation">
+        <NavLink to="/" className="brand-text" onClick={() => setMenuOpen(false)}><span className="brand-pulse" aria-hidden="true">♥</span>Heartline</NavLink>
 
-      {/* TOPBAR */}
-      <div className="topbar-container">
-        {user ? (
-          <NavLink to="/user/profile" className="nav-account-btn">
-            <i className="fa-solid fa-circle-user"></i> {user.name?.split(' ')[0] || 'My Account'}
-          </NavLink>
-        ) : (
-          <NavLink to="/login" className="nav-account-btn">
-            Login
-          </NavLink>
-        )}
-      </div>
-
-      {/* MAIN NAV */}
-      <div className="main-nav">
-        <NavLink to="/" className="brand-text"></NavLink>
-
-        <button className="nav-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+        <button className="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
           <i className={menuOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars"}></i>
         </button>
 
@@ -98,34 +71,31 @@ function Navbar() {
             </>
           )}
 
-          <li><span className="nav-divider"></span></li>
-
-          <li>
-            <div className="lang-selector" onClick={() => setLangOpen(!langOpen)}>
-              <i className="fa-solid fa-globe"></i>
-              <span>{selectedLang.native}</span>
-              <i className={`fa-solid fa-chevron-down lang-chevron ${langOpen ? 'open' : ''}`}></i>
-
-              {langOpen && (
-                <div className="lang-dropdown">
-                  {LANGUAGES.map((lang) => (
-                    <div
-                      key={lang.code}
-                      className={`lang-option ${selectedLang.code === lang.code ? 'active' : ''}`}
-                      onClick={(e) => { e.stopPropagation(); handleLangSelect(lang) }}
-                    >
-                      <span className="lang-native">{lang.native}</span>
-                      <span className="lang-label">{lang.label}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </li>
         </ul>
-      </div>
-
-    </div>
+        <div className="nav-actions">
+          <div className="lang-wrap">
+            <button type="button" className="lang-selector" aria-label="Select language" aria-expanded={langOpen} onClick={() => setLangOpen(!langOpen)}>
+              <i className="fa-solid fa-globe" aria-hidden="true"></i>
+              <span>{selectedLang.label}</span>
+              <i className={`fa-solid fa-chevron-down lang-chevron ${langOpen ? 'open' : ''}`} aria-hidden="true"></i>
+            </button>
+            {langOpen && (
+              <div className="lang-dropdown" role="menu" aria-label="Languages">
+                {LANGUAGES.map((lang) => (
+                  <button type="button" role="menuitem" key={lang.code} className={`lang-option ${selectedLang.code === lang.code ? 'active' : ''}`} onClick={() => handleLangSelect(lang)}>
+                    <span className="lang-native">{lang.native}</span>
+                    <span className="lang-label">{lang.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <NavLink to={user ? "/user/profile" : "/login"} className="nav-account-btn" aria-label={user ? "Open profile" : "Log in"}>
+            <i className="fa-solid fa-circle-user" aria-hidden="true"></i><span>{user?.name?.split(' ')[0] || 'Login'}</span>
+          </NavLink>
+        </div>
+      </nav>
+    </header>
   )
 }
 

@@ -7,6 +7,16 @@ import { useSelector } from 'react-redux';
 import { getLoginUserDetails } from '../../redux/actions/authAction';
 import { useDispatch } from 'react-redux'
 import { logout } from '../../redux/slice/authSlice';
+import './User.css';
+
+function ProfileAvatar({ user }) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const image = user?.image;
+  const src = image?.startsWith('data:') ? image : image ? `data:image/jpeg;base64,${image}` : null;
+  return src && !imageFailed
+    ? <img src={src} alt={`${user?.name || 'Patient'} profile`} className="profile-avatar" onError={() => setImageFailed(true)} />
+    : <div className="profile-avatar profile-avatar-fallback" aria-label="Profile avatar">{user?.name?.charAt(0)?.toUpperCase() || 'P'}</div>;
+}
 
 const UserProfile = () => {
   const navigate = useNavigate();
@@ -31,50 +41,36 @@ const UserProfile = () => {
   }
 
   return (
-    <div style={{ padding: '50px 40px', maxWidth: 900, margin: '0 auto' }}>
-      <h2 style={{ marginBottom: 30 }}>Manage your Account & Appointments</h2>
-
-      <div className="card-ds" style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
-        <img
-          src={user?.image ? `data:image/jpeg;base64,${user.image}` : undefined}
-          alt="userPic"
-          className="avatar-ds"
-          style={{ width: 140, height: 140 }}
-        />
-
-        <div style={{ flex: 1, minWidth: 240 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 20px', marginBottom: 20 }}>
-            <p><strong>Name:</strong> {user?.name}</p>
-            <p><strong>Gender:</strong> {user?.gender || "NA"}</p>
-            <p><strong>Email:</strong> {user?.email}</p>
-            <p><strong>Phone:</strong> {user?.phone || "NA"}</p>
-            <p style={{ gridColumn: '1 / -1' }}><strong>Address:</strong> {user?.address || "NA"}</p>
+    <main className="profile-page">
+      <div className="profile-shell">
+        <div className="profile-heading"><span>YOUR ACCOUNT</span><h1>Profile & appointments</h1><p>Manage your details and care in one place.</p></div>
+        <section className="profile-card" aria-label="Your profile">
+          <div className="profile-identity">
+            <ProfileAvatar key={user?.image || 'no-image'} user={user} />
+            <div><span className="profile-kicker">PATIENT PROFILE</span><h2>{user?.name || 'Patient'}</h2><p>{user?.email || 'No email available'}</p></div>
           </div>
 
-          {user?._id && (
-            <Link to={`/user/reset-password/${user._id}`}>
-              <button className="btn-ds btn-ds-secondary" style={{ marginBottom: 24 }}>Reset Password</button>
-            </Link>
-          )}
-
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <button className="btn-ds btn-ds-light" onClick={() => setIsOpen(!isOpen)}>
-              <i className="fa-solid fa-pen-to-square"></i> Edit Profile
-            </button>
-            <button className="btn-ds btn-ds-secondary" onClick={() => navigate("/user/appointments")}>
-              <i className="fa-solid fa-list"></i> Appointments
-            </button>
-            <button className="btn-ds btn-ds-danger" onClick={handleLogout}>
-              <i className="fa-solid fa-power-off"></i> Logout
-            </button>
+          <div className="profile-details">
+            <div><span>Full name</span><strong>{user?.name || 'Not provided'}</strong></div>
+            <div><span>Email address</span><strong>{user?.email || 'Not provided'}</strong></div>
+            <div><span>Phone number</span><strong>{user?.phone || 'Not provided'}</strong></div>
+            <div><span>Gender</span><strong>{user?.gender || 'Not provided'}</strong></div>
+            <div className="profile-address"><span>Address</span><strong>{user?.address || 'Not provided'}</strong></div>
           </div>
-        </div>
+
+          <div className="profile-actions">
+            <button type="button" className="btn-ds btn-ds-light" onClick={() => setIsOpen(true)}><i className="fa-solid fa-pen-to-square"></i>Edit profile</button>
+            <button type="button" className="btn-ds btn-ds-secondary" onClick={() => navigate('/user/appointments')}><i className="fa-solid fa-list"></i>Appointments</button>
+            {user?._id && <Link to={`/user/reset-password/${user._id}`} className="btn-ds btn-ds-secondary">Reset password</Link>}
+            <button type="button" className="btn-ds btn-ds-danger profile-logout" onClick={handleLogout}><i className="fa-solid fa-power-off"></i>Logout</button>
+          </div>
+        </section>
       </div>
 
       {isOpen && (
         <EditUserProfile isOpen={isOpen} onClose={() => setIsOpen(false)} />
       )}
-    </div>
+    </main>
   )
 }
 
