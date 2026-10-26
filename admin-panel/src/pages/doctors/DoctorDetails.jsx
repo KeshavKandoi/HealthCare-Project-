@@ -4,8 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteDoctor, getDoctorDetails, updateDoctor, updateStatus } from '../../redux/actions/doctorAction'
 import InputForm from '../../components/Forms/InputForm'
-import InputSelect from '../../components/Forms/inputSelect'
-import { toast } from "react-toastify";
+import InputSelect from '../../components/Forms/InputSelect'
+import toast from 'react-hot-toast';
 
 
 function DoctorDetails() {
@@ -13,11 +13,7 @@ function DoctorDetails() {
   const dispatch=useDispatch()
   const navigate=useNavigate()
 
-  useEffect(()=>{
-    dispatch(getDoctorDetails(id))
-  },[dispatch,id])
-
-  const {doctor,success,error}=useSelector(state=>state.doctor)
+  const {doctor}=useSelector(state=>state.doctor)
   const [edit,setEdit]=useState(true)
 
   const [name, setName] = useState(doctor?.name)
@@ -32,8 +28,10 @@ function DoctorDetails() {
   const [gender, setGender] = useState(doctor?.gender)
   const [phone, setPhone] = useState(doctor?.phone)
 
-  useEffect(() => {
-    if (doctor) {
+  useEffect(()=>{
+    let active = true;
+    dispatch(getDoctorDetails(id)).unwrap().then(({doctor}) => {
+      if (!active || !doctor) return;
       setName(doctor.name);
       setEmail(doctor.email);
       setSpeciality(doctor.speciality);
@@ -44,15 +42,14 @@ function DoctorDetails() {
       setAddress(doctor.address);
       setGender(doctor.gender);
       setPhone(doctor.phone);
-      setImage(doctor.image); 
-    }
-  }, [doctor])
-
-
+      setImage(doctor.image);
+    }).catch(() => {});
+    return () => { active = false; };
+  },[dispatch,id])
 
 // update
 
-  const handleUpdate=()=>{
+  const handleUpdate=async()=>{
   const formData=new FormData()
   formData.append('name',name)
   formData.append('email',email)
@@ -64,45 +61,40 @@ function DoctorDetails() {
   formData.append('address',address)
   formData.append('gender',gender)
   formData.append('phone',phone)
-  formData.append('image',image)
+  if (image instanceof File) formData.append('image',image)
 
-dispatch(updateDoctor({id,formData}));
-
-if(success){
+try {
+  await dispatch(updateDoctor({id,formData})).unwrap();
   toast.success("Doctor updated");
   navigate("/all-doctors")
-}
-if(error){
-  toast.error(error)
+} catch (error) {
+  toast.error(typeof error === 'string' ? error : 'Could not update doctor')
 }
 
 };
  //delete doctor
 
-  const handleDelete=()=>{
+  const handleDelete=async()=>{
     const confirm=window.confirm("Are You Sure To Delete This Doctor? ");
     if(confirm){
-      dispatch(deleteDoctor(id));
+      try {
+        await dispatch(deleteDoctor(id)).unwrap();
+        toast.success("Doctor deleted");
+        navigate("/all-doctors");
+      } catch (error) {
+        toast.error(typeof error === 'string' ? error : 'Could not delete doctor')
+      }
     }
-    if(success){
-      toast.success("Doctor Deleted!");
-      navigate("/all-doctors");
-    }
-
-if(error){
-  toast.error(error)
-}
 
   };
 
-  const handleUpdateStatus=(id,availableStatus)=>{
-    dispatch(updateStatus({id,availableStatus}));
-    if(success){
+  const handleUpdateStatus=async(id,availableStatus)=>{
+    try {
+      await dispatch(updateStatus({id,availableStatus})).unwrap();
       toast.success("Doctor Status updated")
       navigate("/all-doctors")
-    }
-    if(error){
-      toast.error(error)
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Could not update doctor status')
     }
   }
 
@@ -118,8 +110,8 @@ if(error){
       </button>
       <button className='btn btn-danger ms-3' onClick={()=>handleDelete(doctor?._id)}>DELETE</button>
     </div>
-      
-    </div> 
+
+    </div>
   <div className='w-75'>
   <img src={`data:image/jpeg;base64,${doctor?.image}`} alt="docimage" className='bg-info rounded-3' height={250} width={250}/>
 
@@ -142,7 +134,7 @@ if(error){
     </div>
    <div className='flex' style={{marginBottom:'50px'}}>
 
-   <button 
+   <button
    className='btn btn-primary'
   onClick={()=>handleUpdate(doctor?.id)}>
     UPDATE DOCTOR
@@ -160,7 +152,7 @@ onClick={()=>handleUpdateStatus(doctor?._id,{availableStatus:"true"})}>MARK AS A
     </div>
     </Layout>
   )
-} 
+}
 
 export default DoctorDetails
-   
+

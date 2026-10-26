@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import "./User.css"
 import { useDispatch } from 'react-redux';
 import { useSelector } from "react-redux";
-import { getLoginUserDetails, updateUserData } from '../../redux/actions/authAction';
-import { reset } from '../../redux/slice/authSlice';
+import { updateUserData } from '../../redux/actions/authAction';
 import toast from 'react-hot-toast';
 
 const EditUserProfile = ({ isOpen, onClose }) => {
-  const { user, success, error } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch()
   const [name, setName] = useState(user?.name || "")
   const [gender, setgender] = useState(user?.gender || "")
@@ -15,7 +14,8 @@ const EditUserProfile = ({ isOpen, onClose }) => {
   const [address, setAddress] = useState(user?.address || "")
   const [image, setImage] = useState(null)
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
+    if (!user?._id) return;
     const formData = new FormData()
     if (image && image instanceof File) {
       formData.append('image', image)
@@ -24,20 +24,14 @@ const EditUserProfile = ({ isOpen, onClose }) => {
     formData.append('phone', phone)
     formData.append('address', address)
     formData.append('gender', gender)
-    dispatch(updateUserData({ id: user._id, formData }))
-  };
-
-  useEffect(() => {
-    if (success) {
-      toast.success('user updated!')
-      dispatch(getLoginUserDetails(user?._id))
-      dispatch(reset())
+    try {
+      await dispatch(updateUserData({ id: user._id, formData })).unwrap();
+      toast.success('Profile updated');
       onClose();
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Could not update profile');
     }
-    if (error) {
-      toast.error(error);
-    }
-  }, [dispatch, success, error, onClose, user])
+  };
 
   if (!isOpen) return null;
   return (
@@ -54,7 +48,7 @@ const EditUserProfile = ({ isOpen, onClose }) => {
             : <div className="avatar-ds profile-avatar-fallback" aria-label="Profile avatar" style={{ marginBottom: 16, alignSelf: 'center' }}>{user?.name?.charAt(0)?.toUpperCase() || 'P'}</div>}
 
           <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Profile Photo</label>
-          <input type="file" className="file-input-ds" onChange={(e) => setImage(e.target.files[0])} />
+          <input type="file" accept="image/*" className="file-input-ds" onChange={(e) => setImage(e.target.files[0])} />
 
           <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Name</label>
           <input type="text" className="input-ds" name="name" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />

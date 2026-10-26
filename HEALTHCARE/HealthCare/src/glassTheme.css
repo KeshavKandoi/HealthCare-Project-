@@ -1,0 +1,28 @@
+/* Shared patient workspace treatment: translucent surfaces over a quiet dark canvas. */
+#root .pw-shell,#root .dashboard-home,#root .care-shell{--pw-bg:#0b1118;--pw-card:#ffffff12;--pw-border:#ffffff2a;--pw-muted:#a9b9bd;--pw-accent:#8de4ce;background:radial-gradient(circle at 84% 2%,#3a706342,transparent 34%),radial-gradient(circle at 9% 55%,#6e49552b,transparent 36%),#0b1118}
+#root .pw-card,#root .care-card,#root .dashboard-metrics article,#root .dashboard-feature-card,#root .dashboard-aside-card,#root .ecg-metrics article,#root .ecg-panel,#root .ecg-bottom article,#root .ecg-list article,#root .doctor-card,#root .doctors-state{background:linear-gradient(135deg,#ffffff1b,#ffffff08);border-color:#ffffff2d;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 18px 55px #0003}
+#root .pw-card,#root .care-card{border-radius:22px}
+#root .pw-shell input,#root .pw-shell select,#root .pw-shell textarea{background:#0d1920ba;border-color:#ffffff38;color:#f3f8f7}
+#root .pw-shell input:focus,#root .pw-shell select:focus,#root .pw-shell textarea:focus{border-color:#8de4ce;outline:none;box-shadow:0 0 0 3px #69d2b327}
+#root .pw-shell button:not(.pw-tabs button){background:#2e665b9c;color:#e8fff7;border-color:#77cbb989;transition:background .2s,transform .2s,border-color .2s}
+#root .pw-shell button:hover:not(:disabled){background:#39796b;transform:translateY(-1px)}
+#root .pw-details>div{padding:12px 0;border-bottom:1px solid #ffffff16}
+#root .dashboard-hero,#root .study-report-hero{background:linear-gradient(125deg,#8de5cb25,#ffffff0b);border-color:#ffffff50;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+#root .dashboard-signal{background:repeating-linear-gradient(0deg,transparent 0 23px,#9adbd412 24px),repeating-linear-gradient(90deg,transparent 0 23px,#9adbd412 24px),#0c2425ad;border-color:#ffffff38}
+#root .dashboard-help{background:#77d6b91a;border-color:#79d2b962}
+#root .dashboard-feature-card:hover,#root .doctor-card:hover{border-color:#a3ead8}
+#root .doctors-page,#root .ecg-new{background:radial-gradient(circle at 86% 3%,#2b766543,transparent 35%),radial-gradient(circle at 8% 63%,#774a5b24,transparent 35%),#0b1118}
+#root .doctors-hero{background:linear-gradient(135deg,#ffffff15,#ffffff08);border-bottom-color:#ffffff2e}
+#root .doctor-card-photo,#root .doctor-avatar-fallback{width:96px;height:96px;border-radius:17px}
+#root .doctor-card-photo{border:1px solid #ffffff42}
+#root .app-topbar,#root .public-header{background:#0d151be3;border-color:#ffffff25;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+#root .app-sidebar{background:#0d141cdb;border-right-color:#ffffff25;backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px)}
+#root .app-sidebar a.active{background:linear-gradient(90deg,#68cdb92b,#ffffff0d);border-inline-start-color:#7ee2cb}
+#root .app-sidebar a:hover,#root .app-sidebar button:hover{background:#ffffff16}
+#root .app-avatar{background:#65d4b421;border-color:#81d9c381}
+#root .language-selector{background:#13252bcb;border-color:#ffffff39}
+#root .aidoc-container{background:#ffffff12;border-color:#ffffff36;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+#root .aidoc-sidebar{background:radial-gradient(circle at 30% 65%,#955e6857,#ffffff0d 66%);border-right-color:#ffffff30}
+#root .aidoc-chat,#root .aidoc-header,#root .aidoc-composer-area{background:#ffffff09;border-color:#ffffff2c}
+@media(prefers-reduced-motion:reduce){#root .dashboard-home *,#root .pw-shell *,#root .ecg-new *,#root .doctor-card{animation:none!important;transition:none!important}}
+@media print{#root .study-report-page,#root .study-report-page .ecg-panel,#root .study-report-page .ecg-metrics article,#root .study-report-page .study-report-hero{background:#fff!important;color:#142127!important;box-shadow:none!important;backdrop-filter:none!important}}

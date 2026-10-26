@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../Api/API";
 
-//  get all appointment 
+//  get all appointment
 export const getAllAppointments=createAsyncThunk(
   "appointment/getAllAppointments",
   async(_,thunkApi)=>{
@@ -14,16 +14,16 @@ export const getAllAppointments=createAsyncThunk(
     }
   }
  );
-  
 
 
-//  getappointments details 
+
+//  getappointments details
 
 export const getAppointmentDetails=createAsyncThunk(
   "appointment/getAppointmentDetails",
   async(id,thunkApi)=>{
     try{
-      const res=await API.get(`/appointment/get-details/${id}`);
+      const res=await API.get(`/appointment/admin/get-details/${id}`);
       return res.data
     }catch(error){
       const message=error?.response?.data?.message||error.message||"doctor details  error";
@@ -31,7 +31,7 @@ export const getAppointmentDetails=createAsyncThunk(
     }
   }
 )
-  
+
 
  //update status appointment
 
@@ -40,7 +40,7 @@ export const getAppointmentDetails=createAsyncThunk(
   async({id,appointmentStatus},thunkApi)=>{
     try{
       const res=await API.patch(`/appointment/update-status/${id}`,{appointmentStatus,})
-      
+
       return res.data
     }catch(error){
       const message=error?.response?.data?.message||error.message||"updateAppointment/ipdate-status error";
@@ -48,4 +48,4 @@ export const getAppointmentDetails=createAsyncThunk(
     }
   }
  )
-  
+

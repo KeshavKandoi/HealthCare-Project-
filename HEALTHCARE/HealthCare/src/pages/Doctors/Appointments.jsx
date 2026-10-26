@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-// import DoctorData from "./Doctors.json"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 import{setHours,setMinutes} from "date-fns"
@@ -13,7 +12,7 @@ import { reset } from "../../redux/slice/authSlice"
 
 const Appointments=()=> {
   const { id }=useParams();
-  const [docInfo,setDocInfo]=useState(null);
+
   const [SelectDateTime,setSelectDateTime]=useState(new Date())
   const dispatch=useDispatch()
   const navigate=useNavigate()
@@ -26,12 +25,7 @@ const Appointments=()=> {
   const { doctor } = useSelector((state) => state.doctor);
 
 
-  useEffect(()=>{
-    if(doctor){
-    setDocInfo(doctor)
-    }
-
-  },[doctor]);
+  const docInfo = doctor;
 
   // get date and time
 

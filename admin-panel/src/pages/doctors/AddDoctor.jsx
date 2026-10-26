@@ -1,11 +1,11 @@
-import React, { useState ,useEffect} from 'react'
+   import React, { useState } from 'react'
 import Layout from '../../components/Layouts/Layout'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { addDoctor } from '../../redux/actions/doctorAction'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 import InputForm from '../../components/Forms/InputForm'
-import InputSelect from '../../components/Forms/inputSelect'
+import InputSelect from '../../components/Forms/InputSelect'
 
 
 
@@ -27,7 +27,7 @@ function AddDoctor() {
   const dispatch=useDispatch()
   const navigate=useNavigate()
 
-  const handleAddDoctor=()=>{
+  const handleAddDoctor=async()=>{
     if(!name||!email||!about||!speciality||!fees||!experience||!degree||!address||!phone||!image||!gender){
       return toast.error("Please provide all fields")
     }
@@ -44,16 +44,14 @@ function AddDoctor() {
     formData.append('phone',phone)
     formData.append('image',image)
 
-    dispatch(addDoctor(formData));
-    if(success){
+    try {
+      await dispatch(addDoctor(formData)).unwrap();
       toast.success("Doctor Created")
       navigate("/all-doctors")
-    }
-    if(error){
-      toast.error(error)
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Could not create doctor')
     }
   }
-  const {success,error}=useSelector(state=>state.doctor)
   return (
    <Layout>
       <div className='d-flex p-3 justify-content-between bg-light'>

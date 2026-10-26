@@ -2,7 +2,7 @@
   "name": "healthcare",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "dist/server.js",
   "dependencies": {
     "@google/genai": "^1.43.0",
     "axios": "^1.13.6",
@@ -19,13 +19,18 @@
     "socket.io": "^4.8.3"
   },
   "scripts": {
-    "test": "node --test test/*.test.js",
+    "test": "npm run build && node --test test/*.test.js",
     "db:migrate": "node scripts/migrate.js",
     "ecg:simulate": "node scripts/simulate-ecg.js",
-    "start": "node server.js"
+    "ecg:gateway": "npm run build && node dist/scripts/offline-gateway.js watch",
+    "start": "npm run build && node dist/server.js",
+    "build": "tsc -p tsconfig.json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
 }

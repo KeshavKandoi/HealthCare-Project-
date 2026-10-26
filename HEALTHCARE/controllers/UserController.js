@@ -172,7 +172,7 @@ export const updateUser = async (req, res) => {
     res.status(200).send({
       success: true,
       message: "Profile Updated Successfully",
-      user,
+      user: user ? { ...user, password: undefined } : null,
     });
 
   } catch (error) {
@@ -297,7 +297,7 @@ export const getuserDetails =async(req,res)=>{
     res.status(200).send({
       success:true,
       message:"Details Fetched Successfully",
-      user,
+      user: { ...user, password: undefined },
       appointments,
     })
  
@@ -373,7 +373,7 @@ export const getLoginUser =async(req,res)=>{
     res.status(200).send({
       success:true,
       message:"login user details",
-      user,
+      user: { ...user, password: undefined },
     })
   } catch(error){
     console.log(error);

@@ -11,29 +11,24 @@ function AppointmentDetails() {
   const{id}=useParams();
   const dispatch=useDispatch();
   const navigate=useNavigate()
-  const [appointmentStatus,setAppointmentStatus]=useState("")
+  const [selectedStatus,setAppointmentStatus]=useState("")
 
   useEffect(()=>{
     dispatch(getAppointmentDetails(id));
   },[dispatch,id]);
 
-  const {appointment,error,success}=useSelector((state)=>state.appointments);
+  const {appointment}=useSelector((state)=>state.appointments);
 
-  useEffect(()=>{
-  if(appointment){
-    setAppointmentStatus(appointment?.bookingStatus);
-  }
-},[appointment]);
+  const appointmentStatus = selectedStatus || appointment?.bookingStatus || "";
 
 
-const handleUpdateStatus=()=>{
-  dispatch(updateAppointmentStatus({id,appointmentStatus}));
-  if(success){
+const handleUpdateStatus=async()=>{
+  try {
+    await dispatch(updateAppointmentStatus({id,appointmentStatus})).unwrap();
     toast.success("Status Updated");
     navigate("/all-appointments")
-  }
-  if(error){
-    toast.error(error)
+  } catch (error) {
+    toast.error(typeof error === 'string' ? error : 'Could not update status')
   }
 }
 
@@ -107,7 +102,7 @@ const handleUpdateStatus=()=>{
 
        <div className='mt-4 w-50'>
         <h4>Update Booking Status</h4>
-        <InputSelect value={appointmentStatus} setValue={setAppointmentStatus} options={['pending','completed','cancel']}/>
+        <InputSelect value={appointmentStatus} setValue={setAppointmentStatus} options={['pending','completed','cancelled']}/>
 
         <button className='btn btn-primary' onClick={handleUpdateStatus}>UpdateStatus</button>
        </div>

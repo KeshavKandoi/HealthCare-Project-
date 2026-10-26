@@ -1,0 +1,6 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import jwt from 'jsonwebtoken';import {patientAuth,authenticateSocket} from '../dist/middlewares/ecgAuth.js';
+const secret='test-secret';process.env.JWT_SECRET=secret;
+test('patient auth rejects absent and invalid tokens',()=>{for(const authorization of [undefined,'Bearer invalid']){let status;patientAuth({headers:{authorization}}, {status(s){status=s;return this},json(){}},()=>assert.fail('must not continue'));assert.equal(status,401)}});
+test('patient identity derives from verified JWT, not request body',()=>{const token=jwt.sign({id:'patient-a'},secret);const req={headers:{authorization:`Bearer ${token}`},body:{patientId:'patient-b'}};let called=false;patientAuth(req,{status(){assert.fail()}},()=>{called=true});assert.equal(called,true);assert.equal(req.patientId,'patient-a')});
+test('socket rejects supplied room identity without valid JWT',()=>{authenticateSocket({handshake:{auth:{patientId:'victim'}},data:{}},error=>assert.match(error.message,/Authentication required/))});
+test('socket identity uses JWT even if handshake supplies another patient',()=>{const socket={handshake:{auth:{token:jwt.sign({id:'owner'},secret),patientId:'victim'}},data:{}};authenticateSocket(socket,error=>assert.equal(error,undefined));assert.equal(socket.data.patientId,'owner')});

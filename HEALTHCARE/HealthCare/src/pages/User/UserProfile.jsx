@@ -7,7 +7,10 @@ import { useSelector } from 'react-redux';
 import { getLoginUserDetails } from '../../redux/actions/authAction';
 import { useDispatch } from 'react-redux'
 import { logout } from '../../redux/slice/authSlice';
+import { leaveDemoSession } from '../../demo/demoSession';
 import './User.css';
+import API from '../../Api/API';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 function ProfileAvatar({ user }) {
   const [imageFailed, setImageFailed] = useState(false);
@@ -22,20 +25,38 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false)
   const dispatch = useDispatch();
-  const { user } = useSelector(state => state.auth)
+  const { user, demo } = useSelector(state => state.auth)
+  const { code, setCode, languages, t, tr, locale } = useLanguage();
+  const [planRequest, setPlanRequest] = useState(null);
+  const [planLoading, setPlanLoading] = useState(true);
+  const userId = user?._id;
 
   useEffect(() => {
-    const localData = localStorage.getItem("appData");
-    const appData = JSON.parse(localData);
-    if (appData) {
-      const id = appData?.user?._id;
-      dispatch(getLoginUserDetails(id))
+    if (demo && user?._id) {
+      dispatch(getLoginUserDetails(user._id));
+      return;
     }
-  }, [dispatch]);
+    try {
+      const appData = JSON.parse(localStorage.getItem("appData") || "null");
+      if (appData?.user?._id) dispatch(getLoginUserDetails(appData.user._id));
+    } catch { /* Session restoration handles malformed data. */ }
+  }, [dispatch, demo, user?._id]);
+
+  useEffect(() => {
+    if (!userId || demo) return;
+    let active = true;
+    API.get('/plan-inquiries/mine').then(({ data }) => {
+      if (active) setPlanRequest(data.inquiries?.[0] || null);
+    }).catch(() => {
+      if (active) setPlanRequest(null);
+    }).finally(() => { if (active) setPlanLoading(false); });
+    return () => { active = false; };
+  }, [userId, demo]);
 
   const handleLogout = () => {
     dispatch(logout());
     localStorage.removeItem("appData");
+    leaveDemoSession();
     navigate("/login");
     toast.success("logout successfully")
   }
@@ -43,7 +64,7 @@ const UserProfile = () => {
   return (
     <main className="profile-page">
       <div className="profile-shell">
-        <div className="profile-heading"><span>YOUR ACCOUNT</span><h1>Profile & appointments</h1><p>Manage your details and care in one place.</p></div>
+        <div className="profile-heading"><span>YOUR ACCOUNT</span><h1>{tr('Settings')}</h1><p>{tr('Manage your profile, language, and Holter plan requests.')}</p></div>
         <section className="profile-card" aria-label="Your profile">
           <div className="profile-identity">
             <ProfileAvatar key={user?.image || 'no-image'} user={user} />
@@ -61,9 +82,14 @@ const UserProfile = () => {
           <div className="profile-actions">
             <button type="button" className="btn-ds btn-ds-light" onClick={() => setIsOpen(true)}><i className="fa-solid fa-pen-to-square"></i>Edit profile</button>
             <button type="button" className="btn-ds btn-ds-secondary" onClick={() => navigate('/user/appointments')}><i className="fa-solid fa-list"></i>Appointments</button>
-            {user?._id && <Link to={`/user/reset-password/${user._id}`} className="btn-ds btn-ds-secondary">Reset password</Link>}
+            {user?._id && !demo && <Link to={`/user/reset-password/${user._id}`} className="btn-ds btn-ds-secondary">Reset password</Link>}
+            {demo && <span className="profile-kicker">Demo account · no password or stored profile</span>}
             <button type="button" className="btn-ds btn-ds-danger profile-logout" onClick={handleLogout}><i className="fa-solid fa-power-off"></i>Logout</button>
           </div>
+        </section>
+        <section className="profile-settings-grid" aria-label="Account settings">
+          <div className="profile-settings-card"><span className="profile-kicker">{tr('PREFERENCES')}</span><h2>{t('language')}</h2><p>{tr('Choose your preferred language for available interface labels.')}</p><label htmlFor="profile-language">{t('language')}</label><select id="profile-language" value={code} onChange={event => setCode(event.target.value)}>{languages.map(language => <option key={language.code} value={language.code}>{language.name}</option>)}</select><small className="profile-language-note">These five languages are included without an API key. Some clinical pages remain in English until their translations are verified.</small></div>
+          <div className="profile-settings-card"><span className="profile-kicker">HOLTER</span><h2>{tr('Plan details')}</h2>{demo ? <p>{tr('Demo mode does not include a purchased plan.')}</p> : planLoading ? <p>Loading your plan request…</p> : planRequest ? <><p><strong>{planRequest.plan_id === 'holter-care' ? 'Holter + care' : 'Holter device'}</strong></p><p>Request status: <strong className="profile-plan-status">{planRequest.status}</strong></p><p>Requested {new Date(planRequest.created_at).toLocaleDateString(locale, { dateStyle: 'medium' })}</p><p>{planRequest.plan_id === 'holter-care' ? 'Proposed first-year package: device, four remote reviews subject to availability, app access, and one year of maintenance and service.' : 'Proposed one-time device purchase: recorder, setup guidance, app pairing, and technical reports. Doctor visits are separate.'}</p><small>A quote request is not a purchase or an active subscription. Final price and terms are confirmed in writing.</small></> : <p>{tr('No Holter plan request yet.')}</p>}<Link to="/subscription">{tr('View Holter plan details →')}</Link></div>
         </section>
       </div>
 

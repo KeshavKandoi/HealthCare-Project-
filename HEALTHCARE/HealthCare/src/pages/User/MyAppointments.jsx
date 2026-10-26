@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import toast from "react-hot-toast";
-import { reset } from "../../redux/slice/authSlice";
+
 
 function MyAppointments() {
   const dispatch = useDispatch()

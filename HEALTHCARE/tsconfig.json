@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "rootDir": ".",
+    "outDir": "dist",
+    "strict": true,
+    "allowJs": true,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmitOnError": true
+  },
+  "include": ["server.ts", "serverDependencies.js", "config/**/*.js", "controllers/**/*.js", "routes/**/*.js", "routes/**/*.ts", "middlewares/**/*.js", "middlewares/**/*.ts", "models/**/*.js", "lib/**/*.ts", "scripts/**/*.ts"],
+  "exclude": ["dist", "HealthCare", "node_modules", "test"]
+}

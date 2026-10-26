@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import "./HeartHero.css";
 import heartImg from '../../../assets/heart.png';
 
@@ -12,12 +12,12 @@ const HeartHero = () => {
           <span className="hero-highlight">Deserves</span> The Best
         </h1>
         <p className="hero-desc">
-          Real-time ECG monitoring, AI-powered diagnosis, and 24/7 doctor support —
+          Connected ECG recording and a personal health history —
           all from the comfort of your home.
         </p>
         <div className="hero-stats">
-          <div className="stat"><span>10K+</span><p>Patients Monitored</p></div>
-          <div className="stat"><span>24/7</span><p>Live ECG Support</p></div>
+          <div className="stat"><span>—</span><p>Patients monitored</p></div>
+          <div className="stat"><span>—</span><p>Clinical support</p></div>
           <div className="stat"><span>98%</span><p>Accuracy Rate</p></div>
         </div>
         <div className="hero-buttons">

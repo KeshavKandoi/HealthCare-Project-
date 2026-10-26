@@ -41,6 +41,7 @@ function Menus() {
        APPOINTMENTS
       </NavLink>
     </li>
+    <li className='nav-item'><NavLink className="nav-link" to="/device-fleet">DEVICE FLEET</NavLink></li>
     <button className='btn btn-danger m-3' onClick={handleLogout}>LOGOUT</button>
    </ul>
     </div>

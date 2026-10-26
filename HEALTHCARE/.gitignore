@@ -52,3 +52,6 @@ HealthCare/src/assets/frames/
 
 # Website videos
 HealthCare/src/assets/Video/
+
+# Trusted gateway's local ECG batch queue
+ecg-gateway-queue/

@@ -74,6 +74,7 @@ export const getAppointmentDetails=async(req,res)=>{
         message:"No appointment found with this ID"
       })
     }
+    if(appointment.userId!==req.patientId && req.isAdmin!==true)return res.status(403).json({message:"Forbidden"});
     // find user and doctor
     const user=await userModel.findOne({_id:appointment?.userId});
     const doctor=await doctorModel.findOne({_id:appointment?.doctorId})
@@ -124,16 +125,17 @@ export const updateAppointmentStatus=async(req,res)=>{
     }
 
     const {appointmentStatus}=req.body
-    if(!appointmentStatus){
-      return res.status(404).send({
+    if(!['pending','completed','cancelled'].includes(appointmentStatus)){
+      return res.status(400).send({
         success:false,
-        message:"please provide appointment status"
+        message:"Invalid appointment status"
       })
     }
     const appointment=await appointmentModel.findByIdAndUpdate(
       id,{$set:{status:appointmentStatus}},
       { returnDocument: "after" }
     );
+    if(!appointment)return res.status(404).json({success:false,message:"Appointment not found"});
     res.status(200).send({
       success:true,
       message:"Appointment status Has been updated"
@@ -159,6 +161,7 @@ export const getUserAppointments=async(req,res)=>{
         message:"Error in get appointment details API"
       })
     }
+    if(id!==req.patientId)return res.status(403).json({message:"Forbidden"});
     const user=await userModel.findById(id)
     if(!user){
       return res.status(404).send({
@@ -195,6 +198,7 @@ export const getUserAppointmentDetails=async(req,res)=>{
         message:"Error in get appointment details API"
       })
     }
+    if(id!==req.patientId)return res.status(403).json({message:"Forbidden"});
     const user =await userModel.findById(id)
     if(!user){
       return res.status(404).send({
@@ -236,32 +240,4 @@ export const getUserAppointmentDetails=async(req,res)=>{
 
 // update user boooking status
 
-export const cancelAppointment=async(req,res)=>{
-  try{
-    const {id}=req.params
-    if(!id){
-      return res.status(404).send({
-        success:false,
-        message:"provide appointment id"
-      })
-    }
-   const appointment=await appointmentModel.findById(id);
-   if(!appointment){
-   res.status(200).send({
-    success:true,
-    message:"no appointment found with this id"
-   });
-  }
-  await appointment.updateOne({$set:{status:'cancel'}})
-  res.status(200).send({
-    success:true,
-    message:"No Appointment found with this Id"
-  })
-  }catch(error){
-    console.log(error)
-    res.status(500).send({
-      success:false,
-      message:"ERROR IN cancel appointment api"
-    })
-  }
-}
+export const cancelAppointment=async(req,res)=>{try{const appointment=await appointmentModel.findById(req.params.id);if(!appointment||appointment.userId!==req.patientId)return res.status(404).json({message:"Appointment unavailable"});if(appointment.status!=="pending")return res.status(409).json({message:"Appointment cannot be cancelled"});await appointmentModel.findByIdAndUpdate(req.params.id,{$set:{status:"cancelled"}});res.json({success:true,message:"Appointment cancelled"})}catch{res.status(500).json({message:"Cancellation failed"})}};

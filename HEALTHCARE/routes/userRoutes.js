@@ -2,6 +2,8 @@ import express from "express"
 import {userRegister,userLogin,updateUser, updatePassword, getAllUser, getuserDetails, getStats, getLoginUser} from "../controllers/UserController.js"
 import {isAdmin, userAuth} from "../middlewares/authMiddlewares.js"
 import upload from "../middlewares/multer.js";
+import {patientAuth} from "../middlewares/ecgAuth.js";
+const own=(req,res,next)=>req.params.id===req.patientId?next():res.status(403).json({message:"Forbidden"});
 
 const router = express.Router();
 
@@ -15,11 +17,11 @@ router.post("/login",userLogin);
 
 // UPDATE PROFILE ||PATCH
 
-router.patch("/update/:id",userAuth,upload.single("image"), updateUser)
+router.patch("/update/:id",patientAuth,own,upload.single("image"), updateUser)
 
 
 // update password ||patch
-router.patch("/update-password/:id",userAuth,updatePassword);
+router.patch("/update-password/:id",patientAuth,own,updatePassword);
 
 // GET ALL USER||GET
 router.get("/get-all",userAuth,isAdmin,getAllUser);
@@ -33,7 +35,7 @@ router.get("/get-stats",userAuth,isAdmin,getStats);
 
 // GET LOGIN USERS DETAILS||GET
 
-router.get("/get-login-user/:id",userAuth,getLoginUser);
+router.get("/get-login-user/:id",patientAuth,own,getLoginUser);
 
 
 export default router

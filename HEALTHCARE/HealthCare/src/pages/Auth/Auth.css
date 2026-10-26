@@ -49,21 +49,9 @@
   -webkit-text-fill-color: #fff !important;
   caret-color: #fff;
 }
-.auth-container button {
-  margin-top: 8px;
-  border: none;
-  background: #ef4444 !important;
-  color: #fff !important;
-  border-radius: 999px !important;
-  font-weight: 700 !important;
-  transition: all 0.2s ease;
-}
-.auth-container button:hover:not(:disabled) {
-  background: #dc2626 !important;
-}
-.auth-container button:disabled {
-  opacity: 0.4;
-}
+/* Auth actions share the same button states as the rest of the app. */
+.auth-container .hl-button{width:100%;margin-top:8px}
+.auth-container input:focus-visible{border-color:#80dfc2;box-shadow:0 0 0 3px #80dfc239}
 .auth-container p a {
   color: #fca5a5;
   font-weight: 600;
@@ -71,3 +59,4 @@
 .auth-container p a:hover {
   color: #ef4444;
 }
+.demo-signin{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);text-align:center}.demo-signin>span{display:block;color:#7b8991;font-size:12px;margin-bottom:13px}.auth-container .demo-signin p{font-size:12px;margin:12px 0 0;color:#8b9da4}

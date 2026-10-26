@@ -1,0 +1,35 @@
+/* Motion inspired by Magic UI's Shimmer Button / Blur Fade and React Bits' Spotlight Card. */
+#root .hl-button{
+  --button-shadow:0 9px 22px #49c5a42b;
+  position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:.55rem;
+  min-height:44px;min-width:44px;padding:11px 18px;border:1px solid #74d9c0;border-radius:12px;
+  background:linear-gradient(135deg,#a9f0dc,#62d2bb);color:#0d3029!important;
+  box-shadow:var(--button-shadow);font:750 14px/1.25 Inter,system-ui,sans-serif;text-align:center;text-decoration:none;
+  cursor:pointer;transition:transform .22s ease,box-shadow .22s ease,background .22s ease,border-color .22s ease;
+}
+#root .hl-button::after{
+  content:"";position:absolute;inset:-1px;width:45%;background:linear-gradient(90deg,transparent,#ffffff8a,transparent);
+  transform:translateX(-180%) skewX(-22deg);transition:transform .65s ease;pointer-events:none;z-index:0;
+}
+#root .hl-button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 30px #45d0ad52;background:linear-gradient(135deg,#c1f7e6,#78dfc7)}
+#root .hl-button:hover:not(:disabled)::after{transform:translateX(370%) skewX(-22deg)}
+#root .hl-button:active:not(:disabled){transform:translateY(0) scale(.98);box-shadow:0 4px 11px #45d0ad30}
+#root .hl-button:focus-visible{outline:3px solid #d8fff1;outline-offset:3px;box-shadow:0 0 0 6px #2a846866}
+#root .hl-button:disabled,#root .hl-button[aria-disabled="true"]{cursor:not-allowed;opacity:.55;box-shadow:none;transform:none}
+#root .hl-button:disabled::after,#root .hl-button[aria-disabled="true"]::after{display:none}
+#root .hl-button--soft{--button-shadow:none;background:#ffffff12;color:#e8fff7!important;border-color:#8ed9c18c;backdrop-filter:blur(14px)}
+#root .hl-button--soft:hover:not(:disabled){background:#91e2ca25;box-shadow:0 8px 22px #0002}
+#root .hl-button--danger{--button-shadow:none;background:#7e313340;color:#ffdadd!important;border-color:#d9858999}
+#root .hl-button--danger:hover:not(:disabled){background:#a6434970;box-shadow:0 8px 20px #67262944}
+#root .hl-button--choice{min-height:42px;padding:9px 13px;background:#203a38;color:#dcfff2!important;border-color:#70b5a7;box-shadow:none}
+#root .hl-button--choice:hover:not(:disabled){background:#315e55;box-shadow:0 6px 16px #0002}
+#root .hl-button--choice[aria-pressed="true"]{background:#a4efda;color:#11342b!important;border-color:#a4efda;box-shadow:0 0 0 2px #a4efda45}
+#root .hl-button--choice[aria-pressed="true"]:hover{background:#bbf7e5}
+#root .hl-spotlight{position:relative;isolation:isolate;overflow:hidden;--spot-x:50%;--spot-y:50%}
+#root .hl-spotlight::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;background:radial-gradient(330px circle at var(--spot-x) var(--spot-y),#a2f5dc27,transparent 68%);transition:opacity .28s ease}
+#root .hl-spotlight:hover::before{opacity:1}
+#root .hl-spotlight>*{position:relative;z-index:1}
+#root .hl-reveal{animation:hl-reveal .58s cubic-bezier(.2,.8,.2,1) both}
+#root .hl-reveal:nth-child(2){animation-delay:.07s}#root .hl-reveal:nth-child(3){animation-delay:.14s}#root .hl-reveal:nth-child(4){animation-delay:.21s}
+@keyframes hl-reveal{from{opacity:0;transform:translateY(14px);filter:blur(5px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+@media(prefers-reduced-motion:reduce){#root .hl-reveal{animation:none}#root .hl-button,#root .hl-button::after,#root .hl-spotlight::before{transition:none}#root .hl-button:hover:not(:disabled),#root .hl-button:active:not(:disabled){transform:none}#root .hl-button::after{display:none}}
