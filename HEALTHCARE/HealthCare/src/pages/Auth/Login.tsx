@@ -31,7 +31,7 @@ export default function Login() {
       navigate('/');
     } catch (error) {
       const message = typeof error === 'string' ? error : 'Login failed';
-      setNeedsVerification(message.startsWith('Email not verified'));
+      setNeedsVerification(/unconfirmed email|email not verified/i.test(message));
       toast.error(message);
     } finally {
       setSubmitting(false);
