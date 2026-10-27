@@ -1,30 +1,26 @@
-# Family blood pressure text alerts
+# Family blood pressure alerts
 
-Migration `005_bp_alerts.sql` stores patient-selected limits, a caregiver-verified phone, and a per-recipient event log. Apply it with `npm run db:migrate` to the intended deployment database after review. The migration was tested only on a disposable local PostgreSQL instance.
+Migration `005_bp_alerts.sql` stores patient-selected limits, caregiver phone verification, and per-recipient email and voice submission status. Run `npm run db:migrate` against the intended database before deploying this version.
 
-## Connect a family phone
+## Connect a caregiver
 
-1. The patient opens **Family access**, invites the relative's account email, and enables notification permission for that invitation.
-2. The relative signs in to their own account and accepts the invitation token shared by the patient.
-3. On **BP alerts**, the relative enters their own phone in E.164 format (for example `+919876543210`), receives a Twilio Verify code, and confirms it. A patient cannot mark a relative's phone as verified.
-4. The patient sets optional systolic and/or diastolic limits in mmHg and enables alerts. These should be chosen with their care team. Only newly entered BP readings above a configured limit create events. Old readings (over five minutes) do not generate delayed texts.
-5. The patient can disable notifications or revoke the invitation. The relative can remove their verified phone.
+1. The patient opens **Family access**, invites a relative by email, and enables notification permission for that invitation.
+2. The relative signs in and accepts the invitation. Resend can then send alerts to the invitation email address.
+3. For voice calls, the relative verifies their own phone on **BP alerts** with Twilio Verify. A patient cannot mark the phone as verified.
+4. The patient sets systolic and/or diastolic limits in mmHg and enables alerts. Only newly entered readings above the limit create events. Readings more than five minutes old do not create delayed alerts.
+5. The patient can disable notifications or revoke the invitation. The relative can remove their verified phone, which stops voice calls but not email.
 
-## SMS setup
-
-Add server-side values from your Twilio account to the environment (never to the browser):
+## Render environment
 
 ```env
+RESEND_API_KEY=...
+RESEND_FROM_EMAIL=alerts@your-verified-domain.example
 TWILIO_ACCOUNT_SID=AC...
 TWILIO_AUTH_TOKEN=...
 TWILIO_VERIFY_SERVICE_SID=VA...
-TWILIO_MESSAGING_SERVICE_SID=MG...
+TWILIO_VOICE_FROM=+12345678900
 ```
 
-Create a [Verify service](https://www.twilio.com/docs/verify) for phone confirmation and a [Messaging service](https://www.twilio.com/docs/messaging/services) with a sender that can reach intended recipients. Configure country and sender rules before enabling production traffic; see [Twilio's India SMS guidelines](https://www.twilio.com/en-us/guidelines/in/sms) if sending to Indian numbers. Domestic India traffic may require DLT registration and approved message templates.
+Resend requires a verified sending domain and API key. The email address must be on that domain. The Twilio number must be a caller ID allowed by your account; for the trial, use the voice trial number shown in **Communications → Voice → Overview → Try out Voice**. Trial calls can reach only Twilio-verified numbers and are limited to the account's country and free-minute balance. The trial may reject custom outbound call instructions even though it supports restricted custom TwiML; confirm a real test call before relying on voice delivery. The former `TWILIO_MESSAGING_SERVICE_SID` is not used by these alerts.
 
-The server processes pending events every 10 seconds when all four settings are present. It expires unsent events after 10 minutes. The UI distinguishes `pending`, `submitted` (accepted by Twilio, **not confirmed delivered**), `failed`, and `expired`. No SMS is sent in demo mode or when the provider is absent. There is no delivery-status webhook or emergency escalation. Confirm readings and urgent symptoms through ordinary clinical channels.
-
-## Doctor directory
-
-The external directory has four St. John's cardiology profiles and two cardiologists linked to TriLife Hospital (formerly Specialist Hospital) in Kalyan Nagar. Profiles and portraits link to the source sites. They are separate from Heartline's bookable clinician roster. See [CARE_COMMUNICATIONS.md](CARE_COMMUNICATIONS.md) for appointment messaging and video access.
+The server starts the alert worker when at least one delivery channel is configured. Email and voice are attempted independently. The activity table shows `submitted` when the provider accepts a request, not confirmed delivery or that the recipient read/heard the alert. The worker does not retry a rejected request. Events expire after ten minutes if still pending. Do not treat this feature as an emergency response system.

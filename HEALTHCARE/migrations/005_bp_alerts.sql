@@ -22,11 +22,19 @@ create table if not exists bp_alert_events (
   limit_value smallint not null,
   status text not null default 'pending' check (status in ('pending','sending','submitted','failed','expired')),
   provider_message_id text,
+  email_status text not null default 'skipped' check (email_status in ('skipped','submitted','failed')),
+  voice_status text not null default 'skipped' check (voice_status in ('skipped','submitted','failed')),
+  email_provider_id text,
+  voice_provider_id text,
   failure_code text,
   created_at timestamptz not null default now(),
   submitted_at timestamptz,
   unique (measurement_id, grant_id)
 );
+alter table bp_alert_events add column if not exists email_status text not null default 'skipped';
+alter table bp_alert_events add column if not exists voice_status text not null default 'skipped';
+alter table bp_alert_events add column if not exists email_provider_id text;
+alter table bp_alert_events add column if not exists voice_provider_id text;
 create index if not exists bp_alert_pending on bp_alert_events(created_at) where status='pending';
 create index if not exists bp_alert_patient on bp_alert_events(patient_id,created_at desc);
 do $$ begin if exists(select 1 from pg_roles where rolname='anon') then revoke all on patient_bp_alert_settings,bp_alert_events from anon; end if; if exists(select 1 from pg_roles where rolname='authenticated') then revoke all on patient_bp_alert_settings,bp_alert_events from authenticated; end if; end $$;

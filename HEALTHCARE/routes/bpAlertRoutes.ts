@@ -1,7 +1,7 @@
 import { express } from '../serverDependencies.js';
 import { getPool } from '../config/db.js';
 import { patientAuth } from '../middlewares/ecgAuth.js';
-import { bpSmsConfigured, startPhoneVerification, checkPhoneVerification } from '../lib/bpAlerts.js';
+import { bpVerificationConfigured, bpEmailConfigured, bpVoiceConfigured, startPhoneVerification, checkPhoneVerification } from '../lib/bpAlerts.js';
 
 const router = express.Router();
 router.use(patientAuth);
@@ -12,11 +12,12 @@ const validId = (id: unknown) => typeof id === 'string' && /^[0-9a-f-]{36}$/i.te
 router.get('/settings', wrap(async (req, res) => {
   const [settings, alerts] = await Promise.all([
     getPool().query('select enabled,systolic_limit,diastolic_limit,updated_at from patient_bp_alert_settings where patient_id=$1', [req.patientId]),
-    getPool().query(`select e.id,e.kind,e.value,e.limit_value,e.status,e.created_at,g.invite_email
+    getPool().query(`select e.id,e.kind,e.value,e.limit_value,e.status,e.email_status,e.voice_status,e.created_at,g.invite_email
       from bp_alert_events e join caregiver_grants g on g.id=e.grant_id
       where e.patient_id=$1 order by e.created_at desc limit 30`, [req.patientId]),
   ]);
-  res.json({ settings: settings.rows[0] || { enabled: false, systolic_limit: null, diastolic_limit: null }, alerts: alerts.rows, smsConfigured: bpSmsConfigured() });
+  res.json({ settings: settings.rows[0] || { enabled: false, systolic_limit: null, diastolic_limit: null }, alerts: alerts.rows,
+    verificationConfigured: bpVerificationConfigured(), emailConfigured: bpEmailConfigured(), voiceConfigured: bpVoiceConfigured() });
 }));
 
 router.put('/settings', wrap(async (req, res) => {
@@ -39,14 +40,14 @@ router.get('/caregiver/grants', wrap(async (req, res) => {
     from caregiver_grants g join app_users u on u.id=g.patient_id
     where g.caregiver_user_id=$1 and g.accepted_at is not null and g.revoked_at is null
     order by g.accepted_at desc`, [req.patientId]);
-  res.json({ grants: rows, smsConfigured: bpSmsConfigured() });
+  res.json({ grants: rows, verificationConfigured: bpVerificationConfigured() });
 }));
 
 router.post('/caregiver/grants/:id/phone/start', wrap(async (req, res) => {
   if (!validId(req.params.id)) return fail(res, 400, 'Invalid invitation');
   const phone = String(req.body?.phone || '').trim();
   if (!/^\+[1-9][0-9]{7,14}$/.test(phone)) return fail(res, 400, 'Enter a phone number with country code, such as +919876543210');
-  if (!bpSmsConfigured()) return fail(res, 503, 'SMS verification is not configured');
+  if (!bpVerificationConfigured()) return fail(res, 503, 'Phone verification is not configured');
   const { rows } = await getPool().query(`update caregiver_grants set phone_e164=$3,phone_verified_at=null,phone_verification_requested_at=now()
     where id=$1 and caregiver_user_id=$2 and accepted_at is not null and revoked_at is null
       and (phone_verification_requested_at is null or phone_verification_requested_at<now()-interval '60 seconds')
@@ -59,7 +60,7 @@ router.post('/caregiver/grants/:id/phone/start', wrap(async (req, res) => {
 
 router.post('/caregiver/grants/:id/phone/check', wrap(async (req, res) => {
   if (!validId(req.params.id) || !/^\d{4,10}$/.test(String(req.body?.code || ''))) return fail(res, 400, 'Enter the verification code');
-  if (!bpSmsConfigured()) return fail(res, 503, 'SMS verification is not configured');
+  if (!bpVerificationConfigured()) return fail(res, 503, 'Phone verification is not configured');
   const { rows } = await getPool().query(`select phone_e164 from caregiver_grants where id=$1 and caregiver_user_id=$2 and accepted_at is not null and revoked_at is null`, [req.params.id, req.patientId]);
   if (!rows[0]?.phone_e164) return fail(res, 404, 'Phone verification was not started');
   try {

@@ -91,7 +91,7 @@ test('offline backfill, markers, clinician review, caregiver scopes, diagnostics
     assert.equal(shared.data.measurements, undefined);
     assert.equal((await request(`/monitoring/caregivers/${invitation.data.invitation.id}`, 'PATCH', { scopes: ['overview', 'measurements'], notify: true }, patient)).status, 200);
     assert.ok(Array.isArray((await request(`/monitoring/caregiver/shared/${patient}`, 'GET', undefined, caregiver)).data.measurements));
-    assert.equal((await request('/bp-alerts/settings', 'GET', undefined, patient)).data.smsConfigured, false);
+    assert.equal((await request('/bp-alerts/settings', 'GET', undefined, patient)).data.verificationConfigured, false);
     assert.equal((await request('/bp-alerts/settings', 'PUT', { enabled: true, systolicLimit: 145, diastolicLimit: 95 }, patient)).status, 200);
     assert.equal((await request('/bp-alerts/settings', 'PUT', { enabled: true, systolicLimit: 20, diastolicLimit: null }, patient)).status, 400);
     assert.equal((await request('/bp-alerts/caregiver/grants', 'GET', undefined, caregiver)).data.grants.length, 1);
