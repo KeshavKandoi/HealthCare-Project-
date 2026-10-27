@@ -13,6 +13,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { tr } = useLanguage();
@@ -21,6 +22,7 @@ export default function Login() {
     event.preventDefault();
     if (!email.trim() || !password) return toast.error(tr('Please provide all fields'));
     setSubmitting(true);
+    setNeedsVerification(false);
     try {
       leaveDemoSession();
       dispatch(logout());
@@ -28,7 +30,9 @@ export default function Login() {
       toast.success(tr('Login successful'));
       navigate('/');
     } catch (error) {
-      toast.error(typeof error === 'string' ? error : 'Login failed');
+      const message = typeof error === 'string' ? error : 'Login failed';
+      setNeedsVerification(message.startsWith('Email not verified'));
+      toast.error(message);
     } finally {
       setSubmitting(false);
     }
@@ -48,6 +52,7 @@ export default function Login() {
       <div className="form-group mb-3"><input type="password" aria-label={tr('Password')} autoComplete="current-password" required placeholder={tr('Enter your password')} value={password} onChange={event => setPassword(event.target.value)} /></div>
       <button className="hl-button" type="submit" disabled={submitting || !email || !password} style={{ width: '100%' }}>{tr(submitting ? 'Signing in…' : 'Login')}</button>
       <p className="mt-3"><NavLink to="/forgot-password">Forgot password?</NavLink></p>
+      {needsVerification && <p className="mt-3"><NavLink to="/register" onClick={() => sessionStorage.setItem('pendingSignupEmail', email.trim())}>Verify email or resend code</NavLink></p>}
       <p className="mt-3">{tr('New here?')} <NavLink to="/register">{tr('Create an account')}</NavLink></p>
     </form>
     <div className="demo-signin"><span>{tr('or')}</span><button className="hl-button hl-button--soft" type="button" onClick={handleDemoSignIn}>{tr('Continue as demo patient')}</button><p>{tr('Open the patient workspace without creating an account. All changes stay in this tab.')}</p></div>
