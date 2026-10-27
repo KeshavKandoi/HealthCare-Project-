@@ -5,7 +5,8 @@ import { demoAdapter } from '../demo/demoApi';
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_BASEURL || 'http://localhost:4000/api/v1',
-  timeout: 15000,
+  // Render's free instance can take over a minute to wake after inactivity.
+  timeout: 120000,
 });
 
 API.interceptors.request.use(config => {

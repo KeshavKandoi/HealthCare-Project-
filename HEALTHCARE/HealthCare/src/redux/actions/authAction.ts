@@ -7,6 +7,8 @@ function errorMessage(error: unknown, fallback: string): string {
   if (axios.isAxiosError(error)) {
     const response = error.response?.data as { message?: unknown } | undefined;
     if (typeof response?.message === 'string') return response.message;
+    if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') return 'The server is taking too long to respond. Please try again.';
+    if (error.code === 'ERR_NETWORK') return 'Could not reach the server. Check your connection and try again.';
   }
   return error instanceof Error ? error.message : fallback;
 }
