@@ -112,6 +112,13 @@ const planCopy: Record<string, Record<string, string>> = {
   },
 };
 
+const dashboardCopy: Record<string, Record<string, string>> = {
+  hi: { 'Your health at a glance': 'आपकी सेहत एक नज़र में', 'Select a card to see more': 'अधिक देखने के लिए कार्ड चुनें', 'Unable to load': 'लोड नहीं हो सका', 'Your care, in one place.': 'आपकी देखभाल, एक ही स्थान पर।' },
+  kn: { 'Your health at a glance': 'ನಿಮ್ಮ ಆರೋಗ್ಯದ ಒಂದು ನೋಟ', 'Select a card to see more': 'ಹೆಚ್ಚು ನೋಡಲು ಕಾರ್ಡ್ ಆಯ್ಕೆಮಾಡಿ', 'Unable to load': 'ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ', 'Your care, in one place.': 'ನಿಮ್ಮ ಆರೈಕೆ, ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ.' },
+  fr: { 'Your health at a glance': 'Votre santé en un coup d’œil', 'Select a card to see more': 'Sélectionnez une carte pour en savoir plus', 'Unable to load': 'Chargement impossible', 'Your care, in one place.': 'Vos soins, au même endroit.' },
+  de: { 'Your health at a glance': 'Ihre Gesundheit auf einen Blick', 'Select a card to see more': 'Wählen Sie eine Karte für weitere Informationen', 'Unable to load': 'Laden nicht möglich', 'Your care, in one place.': 'Ihre Versorgung an einem Ort.' },
+};
+
 export function translateUi(code: string, phrase: string): string {
-  return copy[code]?.[phrase] || planCopy[code]?.[phrase] || authCopy[code]?.[phrase] || phrase;
+  return copy[code]?.[phrase] || planCopy[code]?.[phrase] || authCopy[code]?.[phrase] || dashboardCopy[code]?.[phrase] || phrase;
 }
