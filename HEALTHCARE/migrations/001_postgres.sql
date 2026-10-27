@@ -1,5 +1,4 @@
 -- Fresh PostgreSQL schema for the existing API. Run against an empty database.
--- Existing MongoDB documents are not imported by this migration.
 create table if not exists app_users (
   id text primary key,
   data jsonb not null,
