@@ -114,9 +114,10 @@ res.status(200).send({
 
 }catch(error){
 console.error('Login failed', error)
-res.status(401).send({
+const unconfirmed = error?.code === 'email_not_confirmed' || /email not confirmed/i.test(error?.message || '');
+res.status(unconfirmed ? 403 : 401).send({
   success:false,
-  message:"Invalid credentials or unconfirmed email"
+  message: unconfirmed ? 'Email not verified. Open your confirmation email or request a new code.' : 'Invalid email or password'
 })
 
   }
