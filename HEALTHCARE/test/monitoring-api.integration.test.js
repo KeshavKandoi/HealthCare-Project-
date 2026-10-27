@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
+import { createServer } from 'node:http';
 import { randomBytes, randomUUID, createHash } from 'node:crypto';
 import pg from 'pg';
-import jwt from 'jsonwebtoken';
 
 const testUrl = process.env.PG_TEST_DATABASE_URL;
 const localOnly = testUrl && ['localhost', '127.0.0.1', '::1'].includes(new URL(testUrl).hostname);
@@ -12,11 +12,21 @@ test('offline backfill, markers, clinician review, caregiver scopes, diagnostics
   const pool = new pg.Pool({ connectionString: testUrl });
   const patient = randomUUID(), caregiver = randomUUID(), doctorUser = randomUUID(), admin = randomUUID();
   const clinician = randomUUID(), device = randomUUID(), session = randomUUID(), appointmentId = randomUUID(), secret = randomBytes(32).toString('hex');
-  const tokenSecret = 'isolated-monitoring-integration-secret';
   const port = 44117;
   const base = `http://localhost:${port}/api/v1`;
-  const token = id => jwt.sign({ id }, tokenSecret);
+  const token = id => id;
   let server;
+  const authServer = createServer((req, res) => {
+    const id = req.headers.authorization?.replace(/^Bearer /, '');
+    res.setHeader('Content-Type', 'application/json');
+    if (req.url === '/auth/v1/user' && [patient, caregiver, doctorUser, admin].includes(id)) {
+      res.end(JSON.stringify({ id, email: `${id}@example.invalid` }));
+    } else {
+      res.statusCode = 401;
+      res.end(JSON.stringify({ message: 'Invalid token' }));
+    }
+  });
+  await new Promise(resolve => authServer.listen(0, '127.0.0.1', resolve));
   try {
     for (const [id, name, email, isAdmin] of [[patient, 'Patient', 'patient@example.invalid', false], [caregiver, 'Caregiver', 'caregiver@example.invalid', false], [doctorUser, 'Clinician', 'clinician@example.invalid', false], [admin, 'Administrator', 'admin@example.invalid', true]]) {
       await pool.query('insert into app_users(id,data) values($1,$2)', [id, { name, email, password: 'test-only-hash', isAdmin }]);
@@ -30,7 +40,7 @@ test('offline backfill, markers, clinician review, caregiver scopes, diagnostics
     const start = new Date(Date.now() - 2 * 3600000);
     await pool.query("insert into ecg_recording_sessions(id,patient_id,device_id,status,started_at,sample_rate_hz,units,target_hours) values($1,$2,$3,'recording',$4,10,'mV',24)", [session, patient, device, start]);
 
-    server = spawn(process.execPath, ['dist/server.js'], { cwd: process.cwd(), env: { ...process.env, DATABASE_URL: testUrl, JWT_SECRET: tokenSecret, ECG_REVIEW_SIGNING_KEY: 'isolated-test-review-signing-secret-123456', PORT: String(port) }, stdio: 'ignore' });
+    server = spawn(process.execPath, ['dist/server.js'], { cwd: process.cwd(), env: { ...process.env, DATABASE_URL: testUrl, SUPABASE_URL: `http://127.0.0.1:${authServer.address().port}`, SUPABASE_PUBLISHABLE_KEY: 'test-publishable-key', ECG_REVIEW_SIGNING_KEY: 'isolated-test-review-signing-secret-123456', PORT: String(port) }, stdio: 'ignore' });
     let ready = false;
     for (let attempt = 0; attempt < 60; attempt++) {
       try { if ((await fetch(`http://localhost:${port}/healthz`)).ok) { ready = true; break; } } catch { /* wait for startup */ }
@@ -125,6 +135,7 @@ test('offline backfill, markers, clinician review, caregiver scopes, diagnostics
     assert.equal(exportResponse.data.entry.some(entry => entry.resource.resourceType === 'DiagnosticReport'), true);
   } finally {
     server?.kill('SIGTERM');
+    await new Promise(resolve => authServer.close(resolve));
     await pool.end();
   }
 });

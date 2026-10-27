@@ -23,4 +23,27 @@ API.interceptors.request.use(config => {
   return config;
 });
 
+let refreshing: Promise<AuthSession> | null = null;
+API.interceptors.response.use(undefined, async error => {
+  if (!axios.isAxiosError(error) || error.response?.status !== 401 || !error.config ||
+      error.config.url?.startsWith('/user/login') || error.config.url?.startsWith('/user/refresh') ||
+      (error.config as typeof error.config & { _retried?: boolean })._retried) throw error;
+  let session: AuthSession | null = null;
+  try { session = JSON.parse(localStorage.getItem('appData') || 'null') as AuthSession | null; }
+  catch { localStorage.removeItem('appData'); throw error; }
+  if (!session?.refreshToken) throw error;
+  try {
+    refreshing ||= axios.post<AuthSession>(`${API.defaults.baseURL}/user/refresh`, { refreshToken: session.refreshToken })
+      .then(response => response.data).finally(() => { refreshing = null; });
+    const renewed = await refreshing;
+    localStorage.setItem('appData', JSON.stringify(renewed));
+    (error.config as typeof error.config & { _retried?: boolean })._retried = true;
+    error.config.headers.Authorization = `Bearer ${renewed.token}`;
+    return API.request(error.config);
+  } catch {
+    localStorage.removeItem('appData');
+    throw error;
+  }
+});
+
 export default API;

@@ -66,10 +66,10 @@ function App() {
   const protectedPage = (element: ReactElement) => restoring ? <main className="session-loading" role="status">Checking your session…</main> : user ? element : <Navigate to="/login" replace />
 
   useEffect(() => {
-    let appData: {token?: string; user?: {_id?: string}} | null;
+    let appData: {token?: string; refreshToken?: string; user?: {_id?: string}} | null;
     try { appData = JSON.parse(localStorage.getItem('appData') || 'null'); }
     catch { localStorage.removeItem('appData'); dispatch(logout()); queueMicrotask(() => setRestoring(false)); return; }
-    if (!appData?.token || !appData?.user?._id) {
+    if (!appData?.token || !appData?.refreshToken || !appData?.user?._id) {
       if (isDemoSession()) dispatch(startDemo());
       queueMicrotask(() => setRestoring(false));
       return;

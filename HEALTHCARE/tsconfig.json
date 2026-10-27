@@ -14,6 +14,6 @@
     "forceConsistentCasingInFileNames": true,
     "noEmitOnError": true
   },
-  "include": ["server.ts", "serverDependencies.js", "config/**/*.js", "controllers/**/*.js", "routes/**/*.js", "routes/**/*.ts", "middlewares/**/*.js", "middlewares/**/*.ts", "models/**/*.js", "lib/**/*.ts", "scripts/**/*.ts"],
+  "include": ["server.ts", "serverDependencies.js", "config/**/*.js", "controllers/**/*.js", "routes/**/*.js", "routes/**/*.ts", "middlewares/**/*.js", "middlewares/**/*.ts", "models/**/*.js", "lib/**/*.js", "lib/**/*.ts", "scripts/**/*.ts"],
   "exclude": ["dist", "HealthCare", "node_modules", "test"]
 }

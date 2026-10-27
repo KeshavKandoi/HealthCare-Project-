@@ -30,7 +30,7 @@ export const restoreSession = createAsyncThunk<AdminSession>('auth/restoreSessio
   try {
     const { data } = await API.get<{ user: AdminAccount }>(`/user/get-login-user/${session.user._id}`);
     if (!data.user?.isAdmin || data.user._id !== session.user._id) throw new Error('Administrator access required');
-    const restored = { token: session.token, user: data.user };
+    const restored = { token: session.token, refreshToken: session.refreshToken, user: data.user };
     localStorage.setItem('appData', JSON.stringify(restored));
     return restored;
   } catch (error) {

@@ -5,8 +5,7 @@ create table if not exists app_users (
   created_at timestamptz not null default now(),
   constraint app_users_required check (
     nullif(data->>'name', '') is not null and
-    nullif(data->>'email', '') is not null and
-    nullif(data->>'password', '') is not null
+    nullif(data->>'email', '') is not null
   )
 );
 create unique index if not exists app_users_email_unique on app_users (lower(data->>'email'));

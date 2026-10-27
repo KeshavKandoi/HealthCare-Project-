@@ -1,7 +1,7 @@
 
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { resetPassword } from '../../redux/actions/authAction'
 import toast from 'react-hot-toast'
 import { logout, reset } from '../../redux/slice/authSlice'
@@ -21,34 +21,21 @@ function ResetPassword() {
   const [newPassword,setNewPassword]=useState("")
   
 
-  const {success,error}=useSelector(state=>state.auth)
-
-  const handleResetPassword=()=>{
+  const handleResetPassword=async()=>{
     if(!oldPassword||!newPassword){
       return toast.error("Please Provide old or new Password")
     }
-    dispatch(resetPassword({id,oldPassword,newPassword}))
-    
-    if(error){
-      toast.error(error);
-      dispatch(reset());
-    }
-    if(success){
-      toast.success("Your Passowrd Reset Please Login Again");
-
-      navigate("/login")
-     
+    try {
+      await dispatch(resetPassword({id,oldPassword,newPassword})).unwrap();
+      localStorage.removeItem('appData');
       dispatch(logout());
-     
+      toast.success('Password changed. Please sign in again.');
+      navigate('/login');
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Could not change password');
       dispatch(reset());
-
     }
   };
-
-  useEffect(()=>{
-    
-   
-  },[dispatch,success,navigate,error])
 
   return (
 

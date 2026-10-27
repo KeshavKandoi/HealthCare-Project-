@@ -14,7 +14,7 @@ function errorMessage(error: unknown, fallback: string): string {
 function storedSession(): AuthSession | null {
   try {
     const parsed: unknown = JSON.parse(localStorage.getItem('appData') || 'null');
-    if (parsed && typeof parsed === 'object' && 'token' in parsed && 'user' in parsed) {
+    if (parsed && typeof parsed === 'object' && 'token' in parsed && 'refreshToken' in parsed && 'user' in parsed) {
       return parsed as AuthSession;
     }
   } catch {

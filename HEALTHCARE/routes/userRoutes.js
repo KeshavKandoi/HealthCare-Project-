@@ -1,5 +1,5 @@
 import express from "express"
-import {userRegister,userLogin,updateUser, updatePassword, getAllUser, getuserDetails, getStats, getLoginUser} from "../controllers/UserController.js"
+import {userRegister,userLogin,userRefresh,updateUser, updatePassword, getAllUser, getuserDetails, getStats, getLoginUser} from "../controllers/UserController.js"
 import {isAdmin, userAuth} from "../middlewares/authMiddlewares.js"
 import upload from "../middlewares/multer.js";
 import {patientAuth} from "../middlewares/ecgAuth.js";
@@ -14,6 +14,7 @@ router.post("/register",userRegister);
 // LOGIN||POST
 
 router.post("/login",userLogin);
+router.post("/refresh",userRefresh);
 
 // UPDATE PROFILE ||PATCH
 

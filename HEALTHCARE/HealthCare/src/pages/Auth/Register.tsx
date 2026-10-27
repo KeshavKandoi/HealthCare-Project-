@@ -23,8 +23,8 @@ export default function Register() {
     if (!name.trim() || !email.trim() || !password) return toast.error(tr('Please provide all fields'));
     setSubmitting(true);
     try {
-      await dispatch(register({ name: name.trim(), email: email.trim(), password })).unwrap();
-      toast.success(tr('Account created. Please sign in.'));
+      const result = await dispatch(register({ name: name.trim(), email: email.trim(), password })).unwrap();
+      toast.success(result.message);
       navigate('/login');
     } catch (error) {
       toast.error(typeof error === 'string' ? error : 'Registration failed');

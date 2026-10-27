@@ -7,6 +7,7 @@ export interface AdminAccount {
 
 export interface AdminSession {
   token: string;
+  refreshToken: string;
   user: AdminAccount;
 }
 
@@ -14,6 +15,7 @@ export function isAdminSession(value: unknown): value is AdminSession {
   if (!value || typeof value !== 'object') return false;
   const session = value as Record<string, unknown>;
   if (typeof session.token !== 'string' || !session.token) return false;
+  if (typeof session.refreshToken !== 'string' || !session.refreshToken) return false;
   const user = session.user;
   return !!user && typeof user === 'object' &&
     typeof (user as Record<string, unknown>)._id === 'string' &&

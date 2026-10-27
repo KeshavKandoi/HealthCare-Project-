@@ -10,6 +10,7 @@ export interface PatientAccount {
 
 export interface AuthSession {
   token: string;
+  refreshToken: string;
   user: PatientAccount;
 }
 
