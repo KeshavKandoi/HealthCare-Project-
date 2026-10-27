@@ -1,5 +1,5 @@
 import userModel from '../models/UserModels.js';
-import { accountFromToken } from '../lib/supabaseAuth.js';
+import { accountFromToken } from '../lib/accountAuth.js';
 
 type UserRequest = { headers: { authorization?: string }; user?: { id: string }; isAdmin?: boolean };
 type AuthResponse = { status(code: number): AuthResponse; json(body: { success: false; message: string }): unknown };

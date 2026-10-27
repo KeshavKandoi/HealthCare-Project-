@@ -5,6 +5,7 @@ import { logout } from '../../../redux/slice/authSlice';
 import { leaveDemoSession } from '../../../demo/demoSession';
 import type { RootState } from '../../../redux/store';
 import { useLanguage, type LanguageKey } from '../../../i18n/LanguageContext';
+import { endAccountSession } from '../../../Api/API';
 import './Navbar.css';
 
 const publicLinks = [['/', 'Product'], ['/about', 'How it works'], ['/doctors', 'Doctors'], ['/contact', 'Contact'], ['/subscription', 'Holter plans']];
@@ -18,7 +19,8 @@ export default function Navbar() {
   const { t, tr, code, setCode, languages } = useLanguage();
   const languageSelector = <select className="language-selector" aria-label={t('language')} value={code} onChange={event => setCode(event.target.value)} dir="auto">{languages.map(language => <option key={language.code} value={language.code}>{language.name}</option>)}</select>;
   const close = () => setOpen(false);
-  const signOut = () => {
+  const signOut = async () => {
+    await endAccountSession();
     localStorage.removeItem('appData');
     leaveDemoSession();
     dispatch(logout());

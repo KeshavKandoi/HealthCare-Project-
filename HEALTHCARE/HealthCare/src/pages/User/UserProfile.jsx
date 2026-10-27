@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux'
 import { logout } from '../../redux/slice/authSlice';
 import { leaveDemoSession } from '../../demo/demoSession';
 import './User.css';
-import API from '../../Api/API';
+import API, { endAccountSession } from '../../Api/API';
 import { useLanguage } from '../../i18n/LanguageContext';
 
 function ProfileAvatar({ user }) {
@@ -53,7 +53,8 @@ const UserProfile = () => {
     return () => { active = false; };
   }, [userId, demo]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await endAccountSession();
     dispatch(logout());
     localStorage.removeItem("appData");
     leaveDemoSession();

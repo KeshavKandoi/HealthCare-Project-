@@ -48,3 +48,10 @@ API.interceptors.response.use(undefined, async error => {
 });
 
 export default API;
+
+export async function endAccountSession(): Promise<void> {
+  try {
+    const session = JSON.parse(localStorage.getItem('appData') || 'null') as AuthSession | null;
+    if (session?.refreshToken) await axios.post(`${API.defaults.baseURL}/user/logout`, { refreshToken: session.refreshToken }, { timeout: 5000 });
+  } catch { /* The local session is cleared even when the server cannot be reached. */ }
+}

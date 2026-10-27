@@ -88,7 +88,6 @@ export default function Register() {
       <button className="hl-button" type="submit" disabled={submitting || code.length !== 6} style={{ width: '100%' }}>{submitting ? 'Verifying…' : 'Verify email'}</button>
       <p className="mt-3">No code? <button type="button" className="auth-text-button" onClick={resendCode} disabled={submitting}>Send a new code</button></p>
       <p className="mt-3"><button type="button" className="auth-text-button" onClick={() => { sessionStorage.removeItem('pendingSignupEmail'); setAwaitingCode(false); setCode(''); }}>Change email</button></p>
-      <p className="mt-3">Received a confirmation link instead? Open it from your email, then <NavLink to="/login">sign in</NavLink>.</p>
       <p className="mt-3"><NavLink to="/login">Already verified? Sign in</NavLink></p>
     </form> : <form onSubmit={handleSubmit}>
       <div className="form-group mb-3"><input type="text" aria-label={tr('Name')} autoComplete="name" required placeholder={tr('Enter your name')} value={name} onChange={event => setName(event.target.value)} /></div>

@@ -3,11 +3,13 @@ import {NavLink, useNavigate} from "react-router-dom"
 import toast from "react-hot-toast"
 import { useDispatch } from 'react-redux';
 import { logout } from '../../redux/slice/authSlice';
+import { endAccountSession } from '../../Api/API';
 
 function Menus() {
   const navigate =useNavigate();
   const dispatch=useDispatch();
-  const handleLogout=()=>{
+  const handleLogout=async()=>{
+    await endAccountSession();
     dispatch(logout())
     toast.success("Logout Successfully")
     localStorage.removeItem("appData");

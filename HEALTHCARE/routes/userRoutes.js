@@ -1,24 +1,26 @@
 import express from "express"
-import {userRegister,userResendSignupCode,userVerifySignupCode,userRequestPasswordReset,userConfirmPasswordReset,userLogin,userRefresh,updateUser, updatePassword, getAllUser, getuserDetails, getStats, getLoginUser} from "../controllers/UserController.js"
+import {userRegister,userResendSignupCode,userVerifySignupCode,userRequestPasswordReset,userConfirmPasswordReset,userLogin,userRefresh,userLogout,updateUser, updatePassword, getAllUser, getuserDetails, getStats, getLoginUser} from "../controllers/UserController.js"
 import {isAdmin, userAuth} from "../middlewares/authMiddlewares.js"
 import upload from "../middlewares/multer.js";
 import {patientAuth} from "../middlewares/ecgAuth.js";
+import { authRateLimit } from '../lib/accountAuth.js';
 const own=(req,res,next)=>req.params.id===req.patientId?next():res.status(403).json({message:"Forbidden"});
 
 const router = express.Router();
 
 
 // REGISTER||POST
-router.post("/register",userRegister);
-router.post("/register/resend-code", userResendSignupCode);
-router.post("/register/verify-code", userVerifySignupCode);
-router.post("/password/forgot", userRequestPasswordReset);
-router.post("/password/reset", userConfirmPasswordReset);
+router.post("/register",authRateLimit,userRegister);
+router.post("/register/resend-code",authRateLimit,userResendSignupCode);
+router.post("/register/verify-code",authRateLimit,userVerifySignupCode);
+router.post("/password/forgot",authRateLimit,userRequestPasswordReset);
+router.post("/password/reset",authRateLimit,userConfirmPasswordReset);
 
 // LOGIN||POST
 
-router.post("/login",userLogin);
+router.post("/login",authRateLimit,userLogin);
 router.post("/refresh",userRefresh);
+router.post("/logout",userLogout);
 
 // UPDATE PROFILE ||PATCH
 

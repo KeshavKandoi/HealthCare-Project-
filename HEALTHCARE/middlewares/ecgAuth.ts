@@ -1,4 +1,4 @@
-import { accountFromToken } from '../lib/supabaseAuth.js';
+import { accountFromToken } from '../lib/accountAuth.js';
 
 type HeaderRequest = { headers: { authorization?: string }; patientId?: string };
 type Response = { status(code: number): Response; json(body: { success: false; message: string }): unknown };

@@ -1,7 +1,7 @@
 import userModel from "../models/UserModels.js"
 import doctorModel from "../models/doctorModel.js"
 import appointmentModel from "../models/appointmentsModel.js";
-import { signUpAccount, resendSignupCode, verifySignupCode, requestPasswordReset, resetAccountPassword, signInAccount, refreshAccount, changeAccountPassword } from '../lib/supabaseAuth.js';
+import { signUpAccount, resendSignupCode, verifySignupCode, requestPasswordReset, resetAccountPassword, signInAccount, refreshAccount, changeAccountPassword, logoutAccount } from '../lib/accountAuth.js';
  
 
 // Register
@@ -24,9 +24,9 @@ export const userRegister =async(req,res)=>{
 
   }catch(error){
 console.error('Registration failed', error)
-res.status(400).send({
+res.status(error.status || 500).send({
   success:false,
-  message:"Something Went Wrong"
+  message: error.status ? error.message : 'Unable to create account. Please try again.'
 })
 
   }
@@ -115,9 +115,10 @@ res.status(200).send({
 }catch(error){
 console.error('Login failed', error)
 const unconfirmed = error?.code === 'email_not_confirmed' || /email not confirmed/i.test(error?.message || '');
-res.status(unconfirmed ? 403 : 401).send({
+const legacyUnconfirmed = error?.code === 'legacy_unconfirmed';
+res.status(legacyUnconfirmed || unconfirmed ? 403 : error.status === 429 ? 429 : 401).send({
   success:false,
-  message: unconfirmed ? 'Email not verified. Open your confirmation email or request a new code.' : 'Invalid email or password'
+  message: legacyUnconfirmed ? error.message : unconfirmed ? 'Email not verified. Request a new code.' : error.status === 429 ? error.message : 'Invalid email or password'
 })
 
   }
@@ -131,6 +132,11 @@ export const userRefresh = async (req, res) => {
   } catch {
     res.status(401).json({ success: false, message: 'Session expired' });
   }
+};
+
+export const userLogout = async (req, res) => {
+  try { await logoutAccount(req.body?.refreshToken); res.status(204).end(); }
+  catch { res.status(503).json({ success: false, message: 'Could not end the session' }); }
 };
 
 

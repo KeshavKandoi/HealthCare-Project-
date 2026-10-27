@@ -6,6 +6,13 @@ const API = axios.create({
   timeout: 15000,
 });
 
+export async function endAccountSession(): Promise<void> {
+  try {
+    const session = readAdminSession();
+    if (session?.refreshToken) await axios.post(`${API.defaults.baseURL}/user/logout`, { refreshToken: session.refreshToken }, { timeout: 5000 });
+  } catch { /* Clear the local session even when the server is unavailable. */ }
+}
+
 API.interceptors.request.use(config => {
   const session = readAdminSession();
   if (session) config.headers.Authorization = `Bearer ${session.token}`;

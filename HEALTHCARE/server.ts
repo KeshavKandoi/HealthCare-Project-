@@ -24,6 +24,7 @@ dotenv.config()
 await connectDB()
 
 const app = express()
+if (process.env.RENDER) app.set('trust proxy', 1)
 const httpServer = createServer(app)
 const allowedOrigins = (process.env.CORS_ORIGINS || "http://localhost:5173,http://localhost:5174").split(",").map(value => value.trim());
 const io = new Server(httpServer, { cors: { origin: allowedOrigins } });
