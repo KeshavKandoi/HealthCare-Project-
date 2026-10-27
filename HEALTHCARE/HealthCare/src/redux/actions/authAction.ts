@@ -35,10 +35,10 @@ export const login = createAsyncThunk<AuthSession, { email: string; password: st
   },
 );
 
-export const register = createAsyncThunk<{ success: boolean; message: string }, { name: string; email: string; password: string }>(
+export const register = createAsyncThunk<{ success: boolean; message: string; needsEmailConfirmation: boolean }, { name: string; email: string; password: string }>(
   'auth/register', async (details, thunkApi) => {
     try {
-      const { data } = await API.post<{ success: boolean; message: string }>('/user/register', details);
+      const { data } = await API.post<{ success: boolean; message: string; needsEmailConfirmation: boolean }>('/user/register', details);
       return data;
     } catch (error) {
       return thunkApi.rejectWithValue(errorMessage(error, 'Registration failed'));

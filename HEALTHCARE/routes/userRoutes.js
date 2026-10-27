@@ -1,5 +1,5 @@
 import express from "express"
-import {userRegister,userLogin,userRefresh,updateUser, updatePassword, getAllUser, getuserDetails, getStats, getLoginUser} from "../controllers/UserController.js"
+import {userRegister,userResendSignupCode,userVerifySignupCode,userRequestPasswordReset,userConfirmPasswordReset,userLogin,userRefresh,updateUser, updatePassword, getAllUser, getuserDetails, getStats, getLoginUser} from "../controllers/UserController.js"
 import {isAdmin, userAuth} from "../middlewares/authMiddlewares.js"
 import upload from "../middlewares/multer.js";
 import {patientAuth} from "../middlewares/ecgAuth.js";
@@ -10,6 +10,10 @@ const router = express.Router();
 
 // REGISTER||POST
 router.post("/register",userRegister);
+router.post("/register/resend-code", userResendSignupCode);
+router.post("/register/verify-code", userVerifySignupCode);
+router.post("/password/forgot", userRequestPasswordReset);
+router.post("/password/reset", userConfirmPasswordReset);
 
 // LOGIN||POST
 

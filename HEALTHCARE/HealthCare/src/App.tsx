@@ -18,6 +18,7 @@ import { isDemoSession } from './demo/demoSession';
 const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Register = lazy(() => import('./pages/Auth/Register'));
+const ForgotPassword = lazy(() => import('./pages/Auth/ForgotPassword'));
 const Login = lazy(() => import('./pages/Auth/Login'));
 const AllDoctors = lazy(() => import('./pages/Doctors/AllDoctors'));
 const HospitalDoctor = lazy(() => import('./pages/Doctors/HospitalDoctor'));
@@ -90,6 +91,7 @@ function App() {
       <Route path="/about" element={<About/>}/>
       <Route path="/contact" element={<Contact/>}/>
       <Route path="/register" element={<Register/>}/>
+      <Route path="/forgot-password" element={<ForgotPassword/>}/>
       <Route path="/login" element={<Login/>}/>
       <Route path="/doctors" element={<AllDoctors/>}/>
       <Route path="/doctors/hospital/:id" element={<HospitalDoctor />} />

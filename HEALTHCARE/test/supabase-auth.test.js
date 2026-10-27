@@ -4,7 +4,7 @@ import { createServer } from 'node:http';
 import userModel from '../dist/models/UserModels.js';
 import { userAuth, isAdmin } from '../dist/middlewares/authMiddlewares.js';
 import { patientAuth, authenticateSocket } from '../dist/middlewares/ecgAuth.js';
-import { signInAccount, refreshAccount } from '../dist/lib/supabaseAuth.js';
+import { signInAccount, refreshAccount, requestPasswordReset, resetAccountPassword } from '../dist/lib/supabaseAuth.js';
 
 function response() {
   return { code: 200, status(code) { this.code = code; return this; }, json() { return this; } };
@@ -65,4 +65,48 @@ test('administrator gate still requires an authenticated local administrator', a
   const denied = response();
   await isAdmin({ headers: {} }, denied, () => assert.fail('must reject'));
   assert.equal(denied.code, 401);
+});
+
+test('password recovery changes a password only after the emailed code is verified', async () => {
+  const requests = [];
+  const accessToken = [
+    Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url'),
+    Buffer.from(JSON.stringify({ sub: 'owner', exp: Math.floor(Date.now() / 1000) + 3600 })).toString('base64url'),
+    'test-signature',
+  ].join('.');
+  const server = createServer(async (req, res) => {
+    const body = await new Promise(resolve => {
+      let value = '';
+      req.on('data', chunk => { value += chunk; });
+      req.on('end', () => resolve(value ? JSON.parse(value) : {}));
+    });
+    requests.push({ path: req.url, method: req.method, body });
+    res.setHeader('Content-Type', 'application/json');
+    if (req.url === '/auth/v1/recover' && req.method === 'POST') return res.end('{}');
+    if (req.url?.startsWith('/auth/v1/verify') && req.method === 'POST') {
+      if (body.token !== '123456') {
+        res.statusCode = 403;
+        return res.end(JSON.stringify({ message: 'Invalid token' }));
+      }
+      return res.end(JSON.stringify({ access_token: accessToken, refresh_token: 'recovery-refresh', token_type: 'bearer', expires_in: 3600, user: { id: 'owner', email: 'owner@example.test' } }));
+    }
+    if (req.url === '/auth/v1/user' && req.method === 'GET') return res.end(JSON.stringify({ id: 'owner', email: 'owner@example.test' }));
+    if (req.url === '/auth/v1/user' && req.method === 'PUT') return res.end(JSON.stringify({ id: 'owner', email: 'owner@example.test' }));
+    if (req.url === '/auth/v1/logout' && req.method === 'POST') return res.end('{}');
+    res.statusCode = 404;
+    res.end(JSON.stringify({ message: 'Unexpected request' }));
+  });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  process.env.SUPABASE_URL = `http://127.0.0.1:${server.address().port}`;
+  process.env.SUPABASE_PUBLISHABLE_KEY = 'test-publishable-key';
+  try {
+    await requestPasswordReset('owner@example.test');
+    await assert.rejects(resetAccountPassword('owner@example.test', '000000', 'new-password-123'));
+    assert.equal(requests.filter(req => req.method === 'PUT').length, 0);
+    await resetAccountPassword('owner@example.test', '123456', 'new-password-123');
+    assert.equal(requests.filter(req => req.method === 'PUT').length, 1);
+    assert.equal(requests.find(req => req.method === 'PUT').body.password, 'new-password-123');
+  } finally {
+    await new Promise(resolve => server.close(resolve));
+  }
 });

@@ -47,6 +47,7 @@ export default function Login() {
       <div className="form-group mb-3"><input type="email" aria-label={tr('Email')} autoComplete="email" required placeholder={tr('Enter your email')} value={email} onChange={event => setEmail(event.target.value)} /></div>
       <div className="form-group mb-3"><input type="password" aria-label={tr('Password')} autoComplete="current-password" required placeholder={tr('Enter your password')} value={password} onChange={event => setPassword(event.target.value)} /></div>
       <button className="hl-button" type="submit" disabled={submitting || !email || !password} style={{ width: '100%' }}>{tr(submitting ? 'Signing in…' : 'Login')}</button>
+      <p className="mt-3"><NavLink to="/forgot-password">Forgot password?</NavLink></p>
       <p className="mt-3">{tr('New here?')} <NavLink to="/register">{tr('Create an account')}</NavLink></p>
     </form>
     <div className="demo-signin"><span>{tr('or')}</span><button className="hl-button hl-button--soft" type="button" onClick={handleDemoSignIn}>{tr('Continue as demo patient')}</button><p>{tr('Open the patient workspace without creating an account. All changes stay in this tab.')}</p></div>

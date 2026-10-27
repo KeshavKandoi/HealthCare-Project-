@@ -60,3 +60,15 @@
   color: #ef4444;
 }
 .demo-signin{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);text-align:center}.demo-signin>span{display:block;color:#7b8991;font-size:12px;margin-bottom:13px}.auth-container .demo-signin p{font-size:12px;margin:12px 0 0;color:#8b9da4}
+.auth-text-button {
+  appearance: none;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.auth-text-button:disabled { cursor: not-allowed; opacity: .6; }

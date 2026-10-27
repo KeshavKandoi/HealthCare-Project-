@@ -34,6 +34,37 @@ export async function signUpAccount({ name, email, password }) {
   return { needsEmailConfirmation: !data.session };
 }
 
+export async function resendSignupCode(email) {
+  const { error } = await client().auth.resend({ type: 'signup', email });
+  if (error) throw error;
+}
+
+export async function verifySignupCode(email, code) {
+  const { data, error } = await client().auth.verifyOtp({ email, token: code, type: 'email' });
+  if (error || !data.user?.email_confirmed_at) throw error || new Error('Invalid or expired code');
+}
+
+export async function requestPasswordReset(email) {
+  const { error } = await client().auth.resetPasswordForEmail(email);
+  if (error) throw error;
+}
+
+export async function resetAccountPassword(email, code, password) {
+  const auth = client();
+  const { data, error } = await auth.auth.verifyOtp({ email, token: code, type: 'recovery' });
+  if (error || !data.session || data.user?.email?.toLowerCase() !== email.toLowerCase()) {
+    throw error || new Error('Invalid or expired code');
+  }
+  const session = await auth.auth.setSession({
+    access_token: data.session.access_token,
+    refresh_token: data.session.refresh_token,
+  });
+  if (session.error) throw session.error;
+  const updated = await auth.auth.updateUser({ password });
+  if (updated.error) throw updated.error;
+  await auth.auth.signOut();
+}
+
 async function ensureProfile(authUser) {
   let profile = await findProfile(authUser);
   if (!profile) {

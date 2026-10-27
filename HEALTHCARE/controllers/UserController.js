@@ -1,7 +1,7 @@
 import userModel from "../models/UserModels.js"
 import doctorModel from "../models/doctorModel.js"
 import appointmentModel from "../models/appointmentsModel.js";
-import { signUpAccount, signInAccount, refreshAccount, changeAccountPassword } from '../lib/supabaseAuth.js';
+import { signUpAccount, resendSignupCode, verifySignupCode, requestPasswordReset, resetAccountPassword, signInAccount, refreshAccount, changeAccountPassword } from '../lib/supabaseAuth.js';
  
 
 // Register
@@ -17,7 +17,8 @@ export const userRegister =async(req,res)=>{
     const result = await signUpAccount({name,email,password});
     res.status(201).send({
       success:true,
-      message: result.needsEmailConfirmation ? 'Check your email to confirm your account before logging in.' : 'Register successfully'
+      needsEmailConfirmation: result.needsEmailConfirmation,
+      message: result.needsEmailConfirmation ? 'Enter the verification code sent to your email.' : 'Register successfully'
     })
 
 
@@ -28,6 +29,62 @@ res.status(400).send({
   message:"Something Went Wrong"
 })
 
+  }
+};
+
+const validEmail = email => typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+const validCode = code => typeof code === 'string' && /^\d{6}$/.test(code.trim());
+
+export const userResendSignupCode = async (req, res) => {
+  const email = req.body?.email?.trim();
+  if (!validEmail(email)) return res.status(400).json({ success: false, message: 'Enter a valid email address' });
+  try {
+    await resendSignupCode(email);
+    res.json({ success: true, message: 'If your signup is pending, a new code has been sent.' });
+  } catch (error) {
+    console.error('Signup code resend failed', error);
+    res.status(429).json({ success: false, message: 'Could not send a new code yet. Please try again later.' });
+  }
+};
+
+export const userVerifySignupCode = async (req, res) => {
+  const email = req.body?.email?.trim();
+  const code = req.body?.code?.trim();
+  if (!validEmail(email) || !validCode(code)) return res.status(400).json({ success: false, message: 'Enter your email and six digit code' });
+  try {
+    await verifySignupCode(email, code);
+    res.json({ success: true, message: 'Email verified. You can now sign in.' });
+  } catch (error) {
+    console.error('Signup code verification failed', error);
+    res.status(400).json({ success: false, message: 'Invalid or expired code. Request a new code and try again.' });
+  }
+};
+
+export const userRequestPasswordReset = async (req, res) => {
+  const email = req.body?.email?.trim();
+  if (!validEmail(email)) return res.status(400).json({ success: false, message: 'Enter a valid email address' });
+  try {
+    await requestPasswordReset(email);
+    res.json({ success: true, message: 'If this email has an account, a reset code has been sent.' });
+  } catch (error) {
+    console.error('Password reset request failed', error);
+    res.status(429).json({ success: false, message: 'Could not send a code yet. Please try again later.' });
+  }
+};
+
+export const userConfirmPasswordReset = async (req, res) => {
+  const email = req.body?.email?.trim();
+  const code = req.body?.code?.trim();
+  const password = req.body?.password;
+  if (!validEmail(email) || !validCode(code) || typeof password !== 'string' || password.length < 8) {
+    return res.status(400).json({ success: false, message: 'Enter your email, six digit code and a password of at least eight characters' });
+  }
+  try {
+    await resetAccountPassword(email, code, password);
+    res.json({ success: true, message: 'Password updated. You can now sign in.' });
+  } catch (error) {
+    console.error('Password reset verification failed', error);
+    res.status(400).json({ success: false, message: 'Invalid or expired code. Request a new code and try again.' });
   }
 };
 
