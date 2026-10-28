@@ -16,7 +16,9 @@ The TypeScript gateway `npm run ecg:gateway` accepts one validated batch JSON ob
 
 ## Simulator
 
-Run migration `011_simulated_ecg.sql` before starting this version. Use a dedicated test account and device; simulated readings are labeled in the monitor, recording history, downloaded data, and technical report. They are excluded from caregiver and clinician recording lists and care-plan progress. A clinical review cannot be signed for them.
+For a quick local test in the **Demo workspace**, stop any process already using port 4000, then run `npm run ecg:local-demo` from `HEALTHCARE`. Keep the receiver running and start the Vite development frontend separately. Open Live monitoring as a demo patient, start a recording, and send the existing `patientId`, `values`, and `bpm` packets to `http://localhost:4000/api/v1/ecg/data`. Complete the recording and open ECG recordings to review it. The receiver reports rejected packets; use `curl --fail-with-body` to see HTTP failures rather than suppressing them. This receiver replaces the normal API on port 4000 for this local demo only and does not access the database or send alerts. Recordings remain in the current browser tab. The random values and BPM are simulated, not blood pressure or a clinical ECG.
+
+For the authenticated simulator below, run migration `011_simulated_ecg.sql` before starting this version. Use a dedicated test account and device; simulated readings are labeled in the monitor, recording history, downloaded data, and technical report. They are excluded from caregiver and clinician recording lists and care-plan progress. A clinical review cannot be signed for them.
 
 1. Set a private `ECG_OPERATOR_KEY` on the local server and start the server. Provision a simulated device (the shell variable below must contain the same operator key):
 

@@ -21,6 +21,7 @@
     "test": "npm run build && node --test test/*.test.js",
     "db:migrate": "node scripts/migrate.js",
     "ecg:simulate": "node scripts/simulate-ecg.js",
+    "ecg:local-demo": "node scripts/local-ecg-demo.js",
     "ecg:gateway": "npm run build && node dist/scripts/offline-gateway.js watch",
     "start": "npm run build && node dist/server.js",
     "build": "tsc -p tsconfig.json"

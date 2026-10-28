@@ -109,6 +109,26 @@ function save(data: DemoState): void {
   memoryState = data;
   try { sessionStorage.setItem(DATA_KEY, JSON.stringify(data)); } catch { /* in-memory demo still works */ }
 }
+
+export type LocalDemoPacket = { sequence: number; values: number[]; bpm: number; receivedAt: string };
+
+// Local test packets never leave this browser's demo session or reach patient records.
+export function appendLocalDemoPackets(packets: LocalDemoPacket[]): RecordingSession | null {
+  const data = state();
+  const session = data.sessions.find(item => item.status === 'recording' && item.device_id === deviceId);
+  if (!session) return null;
+  const target = data.chunks[session.id] ||= [];
+  for (const packet of packets) {
+    if (Date.parse(packet.receivedAt) < Date.parse(session.started_at)) continue;
+    target.push({ sequence: target.length, first_sample_at: packet.receivedAt, sample_count: packet.values.length, samples: packet.values, sha256: 'simulated-local-only' });
+    session.sample_count += packet.values.length;
+    session.sample_rate_hz = packet.values.length;
+    session.units = 'raw';
+    session.is_simulated = true;
+  }
+  save(data);
+  return { ...session };
+}
 function payload(config: InternalAxiosRequestConfig): Record<string, unknown> {
   if (typeof config.data === 'string') {
     try { return JSON.parse(config.data) as Record<string, unknown>; } catch { return {}; }
@@ -231,9 +251,9 @@ export const demoAdapter: AxiosAdapter = async config => {
   if (method === 'POST' && path === '/ecg/pairing-challenges') { if (!data.devices.some(item => item.id === deviceId)) data.devices.push({ id: deviceId, model: 'Heartline sample Holter', firmware_version: 'demo', sample_rate_hz: 250, units: 'mV', last_seen_at: new Date().toISOString(), status: 'paired' }); save(data); return send({ code: '12345678', expiresAt: new Date(Date.now() + 300000).toISOString() }, 201); }
   if (method === 'DELETE' && path.startsWith('/ecg/devices/')) { data.devices = data.devices.filter(item => item.id !== path.split('/').at(-1)); save(data); return send({ success: true }); }
   if (method === 'GET' && path === '/ecg/sessions') return send({ sessions: data.sessions.map(item => ({ ...item, model: data.devices.find(device => device.id === item.device_id)?.model || 'Sample Holter' })) });
-  if (method === 'GET' && path === '/ecg/demo-live') return send({ chunks: Object.values(data.chunks)[0] || [] });
+  if (method === 'GET' && path === '/ecg/demo-live') { const active = data.sessions.find(item => item.status === 'recording'); return send({ chunks: active ? data.chunks[active.id] || [] : Object.values(data.chunks)[0] || [] }); }
   if (method === 'POST' && path === '/ecg/sessions') {
-    const session: RecordingSession = { id: nextId(), patient_id: patientId, device_id: String(body.deviceId || deviceId), status: 'recording', started_at: new Date().toISOString(), ended_at: null, sample_count: 0, sample_rate_hz: 250, units: 'mV', target_hours: body.targetHours === 72 ? 72 : 24 };
+    const session: RecordingSession = { id: nextId(), patient_id: patientId, device_id: String(body.deviceId || deviceId), status: 'recording', started_at: new Date().toISOString(), ended_at: null, sample_count: 0, sample_rate_hz: 10, units: 'raw', is_simulated: true, target_hours: body.targetHours === 72 ? 72 : 24 };
     data.sessions.unshift(session); data.chunks[session.id] = []; data.notes[session.id] = []; data.markers[session.id] = []; data.annotations[session.id] = []; data.reviews[session.id] = []; save(data); return send({ id: session.id, status: 'recording' }, 201);
   }
   const stopMatch = /^\/ecg\/sessions\/([^/]+)\/stop$/.exec(path);
