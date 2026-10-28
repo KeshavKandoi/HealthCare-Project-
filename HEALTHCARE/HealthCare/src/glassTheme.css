@@ -26,3 +26,80 @@
 #root .aidoc-chat,#root .aidoc-header,#root .aidoc-composer-area{background:#ffffff09;border-color:#ffffff2c}
 @media(prefers-reduced-motion:reduce){#root .dashboard-home *,#root .pw-shell *,#root .ecg-new *,#root .doctor-card{animation:none!important;transition:none!important}}
 @media print{#root .study-report-page,#root .study-report-page .ecg-panel,#root .study-report-page .ecg-metrics article,#root .study-report-page .study-report-hero{background:#fff!important;color:#271416!important;box-shadow:none!important;backdrop-filter:none!important}}
+
+/* Heartline's light, atmospheric blue-and-lavender theme. */
+:root {
+  --heartline-ink: #142b50;
+  --heartline-muted: #405d7d;
+  --heartline-accent: #315bb4;
+  --heartline-surface: rgba(247, 253, 255, .74);
+  --heartline-border: rgba(255, 255, 255, .75);
+  --hl-bg: #d1eaf3;
+  --hl-surface: #eef8fc;
+  --hl-border: #b8d6e5;
+  --hl-text: #142b50;
+  --hl-muted: #405d7d;
+  --hl-teal: #315bb4;
+}
+body, #root { background: #c6e6ef; color: var(--heartline-ink); }
+#root .pw-shell, #root .dashboard-home, #root .home-dashboard, #root .care-shell,
+#root .doctors-page, #root .ecg-new, #root .home-public, #root .auth-container,
+#root .about-page, #root .aidoc-page, #root .subscription-page {
+  --pw-bg: #d2ecf1; --pw-card: var(--heartline-surface); --pw-border: #b6d7e6;
+  --pw-text: #142b50; --pw-muted: #405d7d; --pw-accent: #315bb4;
+  --home-bg: #d2ecf1; --home-card: var(--heartline-surface); --home-border: #b6d7e6;
+  background: radial-gradient(ellipse at 14% 3%, rgba(192, 181, 235, .7), transparent 37%), radial-gradient(ellipse at 92% 22%, rgba(150, 228, 226, .8), transparent 41%), linear-gradient(135deg, #bdc9f3 0%, #cceaf2 50%, #d4f2ed 100%);
+  color: var(--heartline-ink);
+}
+#root .pw-card, #root .care-card, #root .dashboard-metrics article, #root .dashboard-feature-card,
+#root .dashboard-aside-card, #root .home-summary-card, #root .home-next, #root .home-dashboard-heading,
+#root .ecg-metrics article, #root .ecg-panel, #root .ecg-bottom article, #root .ecg-list article,
+#root .doctor-card, #root .doctors-state, #root .auth-container .card, #root .study-report-hero,
+#root .aidoc-container, #root .session-loading-card {
+  background: var(--heartline-surface); border: 1px solid var(--heartline-border);
+  color: var(--heartline-ink); box-shadow: 0 18px 48px rgba(46, 91, 143, .12);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+}
+#root .pw-shell :is(h1,h2,h3,h4,strong,dd), #root .home-dashboard :is(h1,h2,h3,strong),
+#root .ecg-new :is(h1,h2,h3,strong), #root .care-shell :is(h1,h2,h3,strong),
+#root .doctors-page :is(h1,h2,h3,strong), #root .auth-container :is(h1,h2,h3),
+#root .session-loading-card :is(h1,h2), #root .home-public :is(h1,h2,h3) { color: var(--heartline-ink); }
+#root .pw-shell :is(p,small,dt), #root .home-dashboard :is(p,small), #root .ecg-new :is(p,small),
+#root .care-shell :is(p,small), #root .doctors-page :is(p,small), #root .auth-container p,
+#root .session-loading-card p, #root .home-public p { color: var(--heartline-muted); }
+#root :is(.pw-shell,.home-dashboard,.ecg-new,.care-shell,.doctors-page) :is(a,.pw-eyebrow,.ecg-kicker,.home-kicker) { color: var(--heartline-accent)!important; }
+#root :is(.pw-shell,.ecg-new,.auth-container,.care-shell,.doctors-page) :is(input,textarea,select),
+#root .language-selector { background: rgba(255,255,255,.8)!important; color: #142b50!important; border: 1px solid #b5d2e2!important; }
+#root :is(input,textarea)::placeholder { color: #6a8199!important; }
+#root :is(.pw-shell,.ecg-new,.care-shell,.auth-container) button:not(:disabled), #root .hl-button,
+#root .public-links .public-cta, #root .ecg-connect-device {
+  background: #315bb4; border-color: #315bb4; color: #fff!important;
+}
+#root :is(.pw-shell,.ecg-new,.care-shell,.auth-container) button:hover:not(:disabled), #root .hl-button:hover { background:#244b9f; border-color:#244b9f; }
+#root .pw-shell .pw-tabs button { background:transparent; color:#405d7d!important; border-color:transparent; }
+#root .pw-shell .pw-tabs button.active { color:#244b9f!important; border-bottom-color:#315bb4; }
+#root .ecg-new button:disabled { background:#e1e8ef; color:#64758a; border-color:#c6d5df; opacity:1; }
+#root .app-topbar, #root .public-header { --hl-teal:#315bb4; --hl-text:#142b50; --hl-muted:#405d7d; background:rgba(239,249,253,.82); border-color:rgba(255,255,255,.8); }
+#root .app-sidebar { --hl-muted:#405d7d; --hl-text:#142b50; background:rgba(234,247,252,.78); border-color:rgba(255,255,255,.8); }
+#root .app-sidebar p, #root .app-topbar-label { color:#607b99; }
+#root .app-sidebar i, #root .app-logo, #root .app-avatar { color:#315bb4!important; }
+#root .app-sidebar a.active { background:rgba(82,126,203,.16); border-inline-start-color:#315bb4; }
+#root .app-sidebar a:hover, #root .app-sidebar button:hover { background:rgba(82,126,203,.12); }
+#root .app-avatar { background:#e0eefb; border-color:#9dbce0; }
+#root .home-public-art { background:radial-gradient(circle at 50% 35%,#a5c7eb,#729ed1 55%,#607fba); border-color:#ffffffa6; }
+#root .home-public h1 em { color:#315bb4; }
+#root .home-public-line svg { stroke:#eefbff; }
+#root .home-next nav a { color:#234878; border-color:#a9c9de; }
+#root .home-next nav a:hover { background:#e3f5fb; }
+#root .home-summary-card>span, #root .home-summary-card i, #root .home-kicker, #root .ecg-metrics span { color:#4567a4!important; }
+#root .ecg-banner, #root .pw-error { background:#fff4e6; border-color:#d7b77e; color:#63471f!important; }
+#root .ecg-panel-foot, #root .study-report-row, #root .pw-details>div { border-color:#c3dbe6; }
+#root .manual-stream-badge { color:#38588f; border-color:#9dbce0; }
+#root .site-footer { background:#b6dbe9; border-color:#a7cadb; color:#244565; }
+#root .site-footer :is(h2,p,a,span) { color:#244565!important; }
+#root .session-loading { background:transparent; }
+#root .session-loading-icon { background:#e4eafa; color:#315bb4; }
+#root .session-loading-eyebrow { color:#315bb4; }
+#root .session-loading-spinner { border-color:#b7cfe2; border-top-color:#315bb4; }
+@media(max-width:790px){#root .public-links.is-open{background:#eaf7fb;}}
+@media print { #root .study-report-page,#root .study-report-page .ecg-panel,#root .study-report-page .ecg-metrics article,#root .study-report-page .study-report-hero { background:#fff!important; color:#142b50!important; box-shadow:none!important; } }
