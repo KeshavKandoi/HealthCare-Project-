@@ -1,7 +1,7 @@
 export type ReportSession = {
   id: string; patient_id: string; device_id: string; status: string;
   started_at: string | Date; ended_at: string | Date | null;
-  target_hours: number; sample_rate_hz: number; sample_count: number | string;
+  target_hours: number; sample_rate_hz: number; sample_count: number | string; is_simulated?: boolean;
 };
 export type ReportChunk = {
   sequence: number | string; first_sample_at: string | Date;
@@ -42,6 +42,7 @@ export function makeTechnicalReport(
   });
   return {
     sessionId: session.id,
+    isSimulated: session.is_simulated === true,
     status: session.status,
     startedAt: session.started_at,
     endedAt: session.ended_at,
@@ -57,6 +58,6 @@ export function makeTechnicalReport(
     deviceEvents: events,
     symptomMarkers: linkedMarkers,
     verifiedMeasurements: measurements,
-    interpretation: 'Technical recording summary only. Signal quality and clinical interpretation require qualified review.',
+    interpretation: session.is_simulated ? 'SIMULATED DATA: for testing only. Not suitable for clinical interpretation.' : 'Technical recording summary only. Signal quality and clinical interpretation require qualified review.',
   };
 }

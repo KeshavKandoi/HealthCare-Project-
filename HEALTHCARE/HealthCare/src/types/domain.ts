@@ -64,6 +64,7 @@ export interface Appointment {
 
 export interface HolterDevice {
   id: Identifier;
+  is_simulated?: boolean;
   model: string | null;
   firmware_version: string | null;
   sample_rate_hz: number;
@@ -87,6 +88,7 @@ export type RecordingStatus = 'created' | 'starting' | 'recording' | 'interrupte
 
 export interface RecordingSession {
   id: Identifier;
+  is_simulated?: boolean;
   patient_id: Identifier;
   device_id: Identifier;
   status: RecordingStatus;

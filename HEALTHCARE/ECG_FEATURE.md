@@ -16,7 +16,30 @@ The TypeScript gateway `npm run ecg:gateway` accepts one validated batch JSON ob
 
 ## Simulator
 
-Use only a dedicated test device and session. Set `ECG_DEVICE_ID`, `ECG_DEVICE_SECRET`, `ECG_SESSION_ID`, and matching `ECG_SAMPLE_RATE_HZ`, then run `npm run ecg:simulate -- 10`. All simulator output is labeled `DEMO / SIMULATED`. Never use synthetic data for care decisions.
+Run migration `011_simulated_ecg.sql` before starting this version. Use a dedicated test account and device; simulated readings are labeled in the monitor, recording history, downloaded data, and technical report. They are excluded from caregiver and clinician recording lists and care-plan progress. A clinical review cannot be signed for them.
+
+1. Set a private `ECG_OPERATOR_KEY` on the local server and start the server. Provision a simulated device (the shell variable below must contain the same operator key):
+
+   ```sh
+   curl -X POST http://localhost:4000/api/v1/ecg/operator/devices \
+     -H 'Content-Type: application/json' -H "X-Operator-Key: $ECG_OPERATOR_KEY" \
+     -d '{"model":"Test simulator","sampleRateHz":10,"units":"raw","isSimulated":true}'
+   ```
+
+   Save the returned `deviceId` and `deviceSecret` privately. The secret is only shown once.
+2. Sign in to the dedicated test account, open **My Devices**, and generate a pairing code. Pair from a trusted terminal with the returned device ID and secret:
+
+   ```sh
+   curl -X POST http://localhost:4000/api/v1/ecg/device/pair \
+     -H 'Content-Type: application/json' \
+     -H "X-Device-Id: $ECG_DEVICE_ID" -H "X-Device-Secret: $ECG_DEVICE_SECRET" \
+     -d '{"code":"REPLACE_WITH_PAIRING_CODE"}'
+   ```
+
+3. In **Live monitoring**, select the test device and start a recording. Copy its test session ID from the recording timeline. Set `ECG_DEVICE_ID`, `ECG_DEVICE_SECRET`, `ECG_SESSION_ID`, `ECG_SAMPLE_RATE_HZ=10`, and, if needed, `ECG_API_URL=http://localhost:4000/api/v1/ecg` in the terminal or backend `.env`.
+4. From `HEALTHCARE`, run `npm run ecg:simulate -- 300`. Each success line means the server accepted that one-second batch. The command stops on an HTTP error and reports the reason. After it finishes, complete the recording in the monitor and open **ECG recordings** for the technical report and original data download.
+
+The synthetic waveform is not a physiological measurement. The simulator does not derive heart rate, blood pressure, glucose, or a diagnosis, and does not trigger medical alerts. Use a real, independently measured value to test the corresponding alert workflow. When resuming an interrupted session, inspect the recording's `last_sequence` and set `ECG_START_SEQUENCE` to the next sequence. An unconfirmed packet may have been stored despite a network error; check the session before resuming.
 
 ## Storage and operations
 

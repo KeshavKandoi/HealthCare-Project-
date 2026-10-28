@@ -119,7 +119,7 @@ router.get('/sessions/:id/report', wrap(async (req, res) => {
 
 router.get('/plans', wrap(async (req, res) => {
   const { rows } = await db().query(`select p.*,d.data->>'name' doctor_name,
-    coalesce((select sum(s.sample_count::numeric/s.sample_rate_hz/3600) from ecg_recording_sessions s where s.patient_id=p.patient_id and s.device_id=p.device_id and s.started_at>=p.starts_at and s.started_at<=p.review_due_at),0) recorded_hours
+    coalesce((select sum(s.sample_count::numeric/s.sample_rate_hz/3600) from ecg_recording_sessions s where s.patient_id=p.patient_id and s.device_id=p.device_id and not s.is_simulated and s.started_at>=p.starts_at and s.started_at<=p.review_due_at),0) recorded_hours
     from monitoring_plans p join doctors d on d.id=p.doctor_id where p.patient_id=$1 order by p.created_at desc limit 50`, [req.patientId]);
   res.json({ plans: rows });
 }));
@@ -135,7 +135,7 @@ router.get('/doctor/patients', wrap(async (req, res) => {
 
 router.get('/doctor/patients/:patientId/sessions', wrap(async (req, res) => {
   if (!await doctorForPatient(req.patientId, req.params.patientId)) return fail(res, 403, 'Care relationship required');
-  const { rows } = await db().query('select id,device_id,status,started_at,ended_at,sample_count,target_hours from ecg_recording_sessions where patient_id=$1 order by started_at desc limit 100', [req.params.patientId]);
+  const { rows } = await db().query('select id,device_id,status,started_at,ended_at,sample_count,target_hours from ecg_recording_sessions where patient_id=$1 and not is_simulated order by started_at desc limit 100', [req.params.patientId]);
   res.json({ sessions: rows });
 }));
 
@@ -171,6 +171,7 @@ router.post('/doctor/sessions/:id/annotations', wrap(async (req, res) => {
 router.post('/doctor/sessions/:id/reviews', wrap(async (req, res) => {
   const session = await doctorSession(req.params.id, req.patientId);
   if (!session) return fail(res, 403, 'Care relationship required');
+  if (session.is_simulated) return fail(res, 409, 'Simulated recordings cannot receive a clinical review');
   if (session.status !== 'completed') return fail(res, 409, 'Complete the recording before signing a review');
   const summary = req.body?.summary;
   if (typeof summary !== 'string' || summary.trim().length < 20 || summary.length > 5000) return fail(res, 400, 'Review summary must be 20–5000 characters');
@@ -255,7 +256,7 @@ router.get('/caregiver/shared/:patientId', wrap(async (req, res) => {
   if (grant.scopes.includes('overview')) shared.overview = (await db().query("select data->>'name' name from app_users where id=$1", [req.params.patientId])).rows[0];
   if (grant.scopes.includes('measurements')) shared.measurements = (await db().query('select kind,value,unit,measured_at from patient_health_measurements where patient_id=$1 order by measured_at desc limit 100', [req.params.patientId])).rows;
   if (grant.scopes.includes('appointments')) shared.appointments = (await db().query('select start_at,end_at,status from scheduled_appointments where patient_id=$1 and start_at>now() order by start_at limit 20', [req.params.patientId])).rows;
-  if (grant.scopes.includes('ecg_reports')) shared.ecgReports = (await db().query('select id,started_at,ended_at,status,sample_count,target_hours from ecg_recording_sessions where patient_id=$1 order by started_at desc limit 20', [req.params.patientId])).rows;
+  if (grant.scopes.includes('ecg_reports')) shared.ecgReports = (await db().query('select id,started_at,ended_at,status,sample_count,target_hours from ecg_recording_sessions where patient_id=$1 and not is_simulated order by started_at desc limit 20', [req.params.patientId])).rows;
   res.json(shared);
 }));
 
@@ -289,7 +290,7 @@ router.get('/export/fhir', wrap(async (req, res) => {
     db().query('select id,kind,value,unit,measured_at,source from patient_health_measurements where patient_id=$1 order by measured_at desc limit 1000', [id]),
     db().query('select id,substance,reaction,severity,created_at from patient_allergies where patient_id=$1 order by created_at desc limit 200', [id]),
     db().query('select id,name,dosage,frequency,start_date,end_date,status,created_at from patient_medications where patient_id=$1 order by created_at desc limit 200', [id]),
-    db().query("select s.id,s.started_at,s.ended_at,s.status,r.summary,r.signed_at from ecg_recording_sessions s left join ecg_doctor_reviews r on r.session_id=s.id and r.released_at is not null where s.patient_id=$1 order by s.started_at desc limit 100", [id]),
+    db().query("select s.id,s.started_at,s.ended_at,s.status,s.is_simulated,r.summary,r.signed_at from ecg_recording_sessions s left join ecg_doctor_reviews r on r.session_id=s.id and r.released_at is not null where s.patient_id=$1 order by s.started_at desc limit 100", [id]),
   ]);
   const patientRef = `urn:uuid:${randomUUID()}`;
   const entry: Array<{ fullUrl: string; resource: Record<string, unknown> }> = [{ fullUrl: patientRef, resource: { resourceType: 'Patient', identifier: [{ system: 'urn:heartline:patient', value: id }], name: [{ text: user.rows[0]?.name || 'Patient' }] } }];
@@ -300,7 +301,7 @@ router.get('/export/fhir', wrap(async (req, res) => {
   }
   for (const item of allergies.rows) entry.push({ fullUrl: `urn:uuid:${item.id}`, resource: { resourceType: 'AllergyIntolerance', id: item.id, patient: { reference: patientRef }, code: { text: item.substance }, recordedDate: item.created_at, note: item.reaction ? [{ text: `Patient recorded reaction: ${item.reaction}` }] : undefined } });
   for (const item of medications.rows) entry.push({ fullUrl: `urn:uuid:${item.id}`, resource: { resourceType: 'MedicationStatement', id: item.id, status: 'recorded', medication: { concept: { text: item.name } }, subject: { reference: patientRef }, dateAsserted: item.created_at, effectivePeriod: item.start_date || item.end_date ? { start: item.start_date || undefined, end: item.end_date || undefined } : undefined, renderedDosageInstruction: [item.dosage, item.frequency].filter(Boolean).join(' · ') || undefined, note: [{ text: `Patient medication list status: ${item.status}` }] } });
-  for (const item of sessions.rows) entry.push({ fullUrl: `urn:uuid:${item.id}`, resource: { resourceType: 'DiagnosticReport', id: item.id, status: item.summary ? 'final' : 'preliminary', code: { text: 'Holter ECG recording technical summary' }, subject: { reference: patientRef }, effectivePeriod: { start: item.started_at, end: item.ended_at || undefined }, conclusion: item.summary || undefined, issued: item.signed_at || undefined } });
+  for (const item of sessions.rows) entry.push({ fullUrl: `urn:uuid:${item.id}`, resource: { resourceType: 'DiagnosticReport', id: item.id, status: item.summary ? 'final' : 'preliminary', code: { text: item.is_simulated ? 'SIMULATED ECG recording technical summary - test data' : 'Holter ECG recording technical summary' }, subject: { reference: patientRef }, effectivePeriod: { start: item.started_at, end: item.ended_at || undefined }, conclusion: item.summary || undefined, issued: item.signed_at || undefined } });
   res.set('Content-Type', 'application/fhir+json');
   res.set('Content-Disposition', 'attachment; filename="heartline-fhir-r5.json"');
   res.json({ resourceType: 'Bundle', type: 'collection', timestamp: new Date().toISOString(), entry });

@@ -26,11 +26,11 @@ async function deviceAuth(req,res,next) {
 // Provision only by a trusted operator over a private deployment channel.
 router.post('/operator/devices',asyncRoute(async(req,res)=>{
   if (!process.env.ECG_OPERATOR_KEY || req.headers['x-operator-key'] !== process.env.ECG_OPERATOR_KEY) return fail(res,403,'Operator access required');
-  const {model,sampleRateHz,units} = req.body;
-  if (!Number.isInteger(sampleRateHz) || sampleRateHz<1 || sampleRateHz>2000 || !['raw','mV'].includes(units)) return fail(res,400,'Verified sample rate and units required');
+  const {model,sampleRateHz,units,isSimulated = false} = req.body;
+  if (!Number.isInteger(sampleRateHz) || sampleRateHz<1 || sampleRateHz>2000 || !['raw','mV'].includes(units) || typeof isSimulated !== 'boolean' || (isSimulated && units !== 'raw')) return fail(res,400,'Valid sample rate and units required; simulated devices use raw units');
   const id=randomUUID(), secret=randomBytes(32).toString('hex');
   const client=await getPool().connect();
-  try { await client.query('begin'); await client.query('insert into devices(id,model,sample_rate_hz,units) values($1,$2,$3,$4)',[id,typeof model==='string'?model.slice(0,100):null,sampleRateHz,units]); await client.query('insert into device_credentials(device_id,secret_hash) values($1,$2)',[id,hash(secret)]); await audit(client,id,null,'provision'); await client.query('commit'); res.status(201).json({deviceId:id,deviceSecret:secret}); }
+  try { await client.query('begin'); await client.query('insert into devices(id,model,sample_rate_hz,units,is_simulated) values($1,$2,$3,$4,$5)',[id,typeof model==='string'?model.slice(0,100):null,sampleRateHz,units,isSimulated]); await client.query('insert into device_credentials(device_id,secret_hash) values($1,$2)',[id,hash(secret)]); await audit(client,id,null,'provision'); await client.query('commit'); res.status(201).json({deviceId:id,deviceSecret:secret,isSimulated}); }
   catch(e){await client.query('rollback');throw e} finally {client.release()}
 }));
 router.post('/operator/devices/:id/rotate',asyncRoute(async(req,res)=>{
@@ -67,6 +67,7 @@ router.post('/device/heartbeat',deviceAuth,asyncRoute(async(req,res)=>{
 }));
 router.post('/device/batches',deviceAuth,asyncRoute(async(req,res)=>{
   const {sessionId,sequence,firstSampleAt,sampleRateHz,samples}=req.body || {};
+  if (req.body?.simulated === true && !req.device.is_simulated) return fail(res,403,'Simulated packets require a simulated device');
   if (!req.device.patient_id || !uuid(sessionId) || !Number.isSafeInteger(sequence) || sequence<0 || !Array.isArray(samples) || samples.length<1 || samples.length>2000 || !samples.every(n=>typeof n==='number'&&Number.isFinite(n)&&Math.abs(n)<1e7) || sampleRateHz!==req.device.sample_rate_hz) return fail(res,400,'Invalid batch');
   const firstTime=Date.parse(firstSampleAt); if (!Number.isFinite(firstTime) || firstTime>Date.now()+300000) return fail(res,400,'Sample timestamp is invalid or in the future');
   const client=await getPool().connect();
@@ -90,9 +91,10 @@ router.post('/device/batches',deviceAuth,asyncRoute(async(req,res)=>{
     res.status(201).json({success:true,nextSequence:sequence+1});
   }catch(e){await client.query('rollback');throw e}finally{client.release()}
 }));
+router.post('/data',(_req,res)=>fail(res,410,'This endpoint is retired. Use an authenticated device batch and recording session.'));
 router.use(patientAuth);
 router.get('/devices',asyncRoute(async(req,res)=>{
- const {rows}=await getPool().query("select d.id,d.model,d.firmware_version,d.sample_rate_hz,d.units,d.last_seen_at,d.status from devices d join patient_device_assignments a on a.device_id=d.id where a.patient_id=$1 and a.unpaired_at is null order by a.assigned_at desc",[req.patientId]); res.json({devices:rows});
+ const {rows}=await getPool().query("select d.id,d.model,d.firmware_version,d.sample_rate_hz,d.units,d.last_seen_at,d.status,d.is_simulated from devices d join patient_device_assignments a on a.device_id=d.id where a.patient_id=$1 and a.unpaired_at is null order by a.assigned_at desc",[req.patientId]); res.json({devices:rows});
 }));
 router.post('/pairing-challenges',pairingLimit,asyncRoute(async(req,res)=>{
  const code=String(randomBytes(4).readUInt32BE()%100000000).padStart(8,'0'), id=randomUUID();
@@ -109,7 +111,7 @@ router.post('/sessions',asyncRoute(async(req,res)=>{
  const {rows}=await getPool().query("select d.* from devices d join patient_device_assignments a on a.device_id=d.id where d.id=$1 and a.patient_id=$2 and a.unpaired_at is null and d.status='paired'",[id,req.patientId]);
  if(!rows[0])return fail(res,404,'Device unavailable');
  const sessionId=randomUUID();
- try {await getPool().query("insert into ecg_recording_sessions(id,patient_id,device_id,status,sample_rate_hz,units,target_hours) values($1,$2,$3,'recording',$4,$5,$6)",[sessionId,req.patientId,id,rows[0].sample_rate_hz,rows[0].units,targetHours]);}
+ try {await getPool().query("insert into ecg_recording_sessions(id,patient_id,device_id,status,sample_rate_hz,units,target_hours,is_simulated) values($1,$2,$3,'recording',$4,$5,$6,$7)",[sessionId,req.patientId,id,rows[0].sample_rate_hz,rows[0].units,targetHours,rows[0].is_simulated]);}
  catch(e){if(e.code==='23505')return fail(res,409,'Device already has an active recording');throw e}
  res.status(201).json({id:sessionId,status:'recording'});
 }));
@@ -131,9 +133,9 @@ router.get('/sessions/:id',asyncRoute(async(req,res)=>{
 }));
 router.get('/sessions/:id/download',asyncRoute(async(req,res)=>{
  if(!uuid(req.params.id))return fail(res,400,'Invalid session');
- const {rows}=await getPool().query('select id from ecg_recording_sessions where id=$1 and patient_id=$2',[req.params.id,req.patientId]);if(!rows[0])return fail(res,404,'Session unavailable');
+ const {rows}=await getPool().query('select id,is_simulated from ecg_recording_sessions where id=$1 and patient_id=$2',[req.params.id,req.patientId]);if(!rows[0])return fail(res,404,'Session unavailable');
  const {rows:chunks}=await getPool().query('select sequence,first_sample_at,samples from ecg_recording_chunks where session_id=$1 order by sequence',[req.params.id]);
- res.set('Content-Disposition',`attachment; filename="ecg-${req.params.id}.json"`);res.json({sessionId:req.params.id,chunks});
+ res.set('Content-Disposition',`attachment; filename="ecg-${req.params.id}.json"`);res.json({sessionId:req.params.id,isSimulated:rows[0].is_simulated,chunks});
 }));
 router.post('/sessions/:id/notes',asyncRoute(async(req,res)=>{
  if(!uuid(req.params.id)||typeof req.body?.note!=='string'||!req.body.note.trim()||req.body.note.length>1000)return fail(res,400,'Invalid note');
@@ -142,8 +144,7 @@ router.post('/sessions/:id/notes',asyncRoute(async(req,res)=>{
 }));
 router.get('/history/:patientId',asyncRoute(async(req,res)=>{
  if(req.params.patientId!==req.patientId)return fail(res,403,'Forbidden');
- const {rows}=await getPool().query('select id,started_at,ended_at,status,sample_count from ecg_recording_sessions where patient_id=$1 order by started_at desc limit 100',[req.patientId]);res.json({success:true,records:rows});
+ const {rows}=await getPool().query('select id,started_at,ended_at,status,sample_count,is_simulated from ecg_recording_sessions where patient_id=$1 order by started_at desc limit 100',[req.patientId]);res.json({success:true,records:rows});
 }));
-router.post('/data',(_req,res)=>fail(res,410,'Legacy unauthenticated ingestion removed'));
 router.use((error,req,res,next)=>{console.error('ECG request failed',error.code||error.name);fail(res,500,'ECG request failed')});
 export default router;

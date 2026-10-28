@@ -7,7 +7,8 @@ const twilioConfigured = () => /^AC[0-9a-f]{32}$/i.test(sid()) && !!token();
 export const bpVerificationConfigured = () => twilioConfigured() && /^VA[0-9a-f]{32}$/i.test(verifySid());
 export const bpEmailConfigured = () => !!process.env.RESEND_API_KEY && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(process.env.RESEND_FROM_EMAIL || '');
 export const bpVoiceConfigured = () => twilioConfigured() && /^\+[1-9]\d{7,14}$/.test(process.env.TWILIO_VOICE_FROM || '');
-export const bpDeliveryConfigured = () => bpEmailConfigured() || bpVoiceConfigured();
+export const bpSmsConfigured = () => twilioConfigured() && /^\+[1-9]\d{7,14}$/.test(process.env.TWILIO_SMS_FROM || '');
+export const bpDeliveryConfigured = () => bpEmailConfigured() || bpVoiceConfigured() || bpSmsConfigured();
 
 async function twilio(path: string, fields: Record<string, string>) {
   const response = await fetch(`https://${path}`, {
@@ -61,6 +62,14 @@ async function sendVoice(to: string) {
   return result.sid || null;
 }
 
+async function sendSms(to: string) {
+  const result = await twilio(`api.twilio.com/2010-04-01/Accounts/${sid()}/Messages.json`, {
+    To: to, From: process.env.TWILIO_SMS_FROM || '',
+    Body: 'Heartline: A blood pressure reading exceeded the limit set in the app. Please check on your family member and follow their care plan.',
+  });
+  return result.sid || null;
+}
+
 export async function processBpAlerts() {
   if (!bpDeliveryConfigured() || processing) return;
   processing = true;
@@ -79,25 +88,30 @@ export async function processBpAlerts() {
       const alert = rows[0];
       if (!alert) break;
       try {
-        const permission = await getPool().query(`select 1 from bp_alert_events e
+        const permission = await getPool().query(`select g.phone_e164,g.phone_verified_at,g.invite_email from bp_alert_events e
           join caregiver_grants g on g.id=e.grant_id
           join patient_bp_alert_settings s on s.patient_id=e.patient_id
           where e.id=$1 and e.status='sending' and s.enabled and g.notify
             and g.accepted_at is not null and g.revoked_at is null`, [alert.id]);
         if (!permission.rowCount) { await getPool().query("update bp_alert_events set status='expired' where id=$1", [alert.id]); continue; }
+        const recipient = permission.rows[0];
         const delivery = await Promise.allSettled([
-          bpEmailConfigured() && alert.invite_email ? sendEmail(alert.invite_email) : Promise.resolve(null),
-          bpVoiceConfigured() && alert.phone_verified_at && alert.phone_e164 ? sendVoice(alert.phone_e164) : Promise.resolve(null),
+          bpEmailConfigured() && recipient.invite_email ? sendEmail(recipient.invite_email) : Promise.resolve(null),
+          bpVoiceConfigured() && recipient.phone_verified_at && recipient.phone_e164 ? sendVoice(recipient.phone_e164) : Promise.resolve(null),
+          bpSmsConfigured() && recipient.phone_verified_at && recipient.phone_e164 ? sendSms(recipient.phone_e164) : Promise.resolve(null),
         ]);
         const emailSent = delivery[0].status === 'fulfilled' && !!delivery[0].value;
         const voiceSent = delivery[1].status === 'fulfilled' && !!delivery[1].value;
+        const smsSent = delivery[2].status === 'fulfilled' && !!delivery[2].value;
         await getPool().query(`update bp_alert_events set status=$2,email_status=$3,voice_status=$4,
-          email_provider_id=$5,voice_provider_id=$6,submitted_at=case when $2='submitted' then now() else null end,
+          email_provider_id=$5,voice_provider_id=$6,sms_status=$7,sms_provider_id=$8,submitted_at=case when $2='submitted' then now() else null end,
           failure_code=case when $2='failed' then 'No configured channel accepted alert' else null end where id=$1`,
-          [alert.id, emailSent || voiceSent ? 'submitted' : 'failed', emailSent ? 'submitted' : delivery[0].status === 'rejected' ? 'failed' : 'skipped',
+          [alert.id, emailSent || voiceSent || smsSent ? 'submitted' : 'failed', emailSent ? 'submitted' : delivery[0].status === 'rejected' ? 'failed' : 'skipped',
             voiceSent ? 'submitted' : delivery[1].status === 'rejected' ? 'failed' : 'skipped',
             emailSent && delivery[0].status === 'fulfilled' ? delivery[0].value : null,
-            voiceSent && delivery[1].status === 'fulfilled' ? delivery[1].value : null]);
+            voiceSent && delivery[1].status === 'fulfilled' ? delivery[1].value : null,
+            smsSent ? 'submitted' : delivery[2].status === 'rejected' ? 'failed' : 'skipped',
+            smsSent && delivery[2].status === 'fulfilled' ? delivery[2].value : null]);
       } catch (error) {
         await getPool().query("update bp_alert_events set status='failed',failure_code=$2 where id=$1", [alert.id, error instanceof Error ? error.message.slice(0, 100) : 'provider error']);
       }

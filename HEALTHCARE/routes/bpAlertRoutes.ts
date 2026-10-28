@@ -1,7 +1,7 @@
 import { express } from '../serverDependencies.js';
 import { getPool } from '../config/db.js';
 import { patientAuth } from '../middlewares/ecgAuth.js';
-import { bpVerificationConfigured, bpEmailConfigured, bpVoiceConfigured, startPhoneVerification, checkPhoneVerification } from '../lib/bpAlerts.js';
+import { bpVerificationConfigured, bpEmailConfigured, bpVoiceConfigured, bpSmsConfigured, startPhoneVerification, checkPhoneVerification } from '../lib/bpAlerts.js';
 
 const router = express.Router();
 router.use(patientAuth);
@@ -12,12 +12,12 @@ const validId = (id: unknown) => typeof id === 'string' && /^[0-9a-f-]{36}$/i.te
 router.get('/settings', wrap(async (req, res) => {
   const [settings, alerts] = await Promise.all([
     getPool().query('select enabled,systolic_limit,diastolic_limit,updated_at from patient_bp_alert_settings where patient_id=$1', [req.patientId]),
-    getPool().query(`select e.id,e.kind,e.value,e.limit_value,e.status,e.email_status,e.voice_status,e.created_at,g.invite_email
+    getPool().query(`select e.id,e.kind,e.value,e.limit_value,e.status,e.email_status,e.voice_status,e.sms_status,e.created_at,g.invite_email
       from bp_alert_events e join caregiver_grants g on g.id=e.grant_id
       where e.patient_id=$1 order by e.created_at desc limit 30`, [req.patientId]),
   ]);
   res.json({ settings: settings.rows[0] || { enabled: false, systolic_limit: null, diastolic_limit: null }, alerts: alerts.rows,
-    verificationConfigured: bpVerificationConfigured(), emailConfigured: bpEmailConfigured(), voiceConfigured: bpVoiceConfigured() });
+    verificationConfigured: bpVerificationConfigured(), emailConfigured: bpEmailConfigured(), voiceConfigured: bpVoiceConfigured(), smsConfigured: bpSmsConfigured() });
 }));
 
 router.put('/settings', wrap(async (req, res) => {
