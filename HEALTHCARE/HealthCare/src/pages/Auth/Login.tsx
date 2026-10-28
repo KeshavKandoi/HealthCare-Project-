@@ -28,7 +28,7 @@ export default function Login() {
       dispatch(logout());
       await dispatch(login({ email: email.trim(), password })).unwrap();
       toast.success(tr('Login successful'));
-      navigate('/');
+      navigate(localStorage.getItem('heartline.onboardingEmail') === email.trim().toLowerCase() ? '/my-health?setup=1' : '/');
     } catch (error) {
       const message = typeof error === 'string' ? error : 'Login failed';
       setNeedsVerification(/unconfirmed email|email not verified/i.test(message));

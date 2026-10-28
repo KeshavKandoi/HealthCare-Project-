@@ -53,6 +53,7 @@ export default function Register() {
     try {
       await API.post('/user/register/verify-code', { email: email.trim(), code });
       sessionStorage.removeItem('pendingSignupEmail');
+      localStorage.setItem('heartline.onboardingEmail', email.trim().toLowerCase());
       toast.success('Email verified. Please sign in.');
       navigate('/login');
     } catch (error) {

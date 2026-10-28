@@ -188,13 +188,9 @@ export const updateUser = async (req, res) => {
 
     const { name, phone, dob, gender, address } = req.body;
 
-    const updateData = {
-      name,
-      phone,
-      dob,
-      gender,
-      address,
-    };
+    const updateData = Object.fromEntries(
+      Object.entries({ name, phone, dob, gender, address }).filter(([, value]) => value !== undefined)
+    );
 
     // Only update image if file is uploaded
     if (req.file) {
