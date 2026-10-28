@@ -104,16 +104,30 @@ body, #root { background: #c6e6ef; color: var(--heartline-ink); }
 @media(max-width:790px){#root .public-links.is-open{background:#eaf7fb;}}
 @media print { #root .study-report-page,#root .study-report-page .ecg-panel,#root .study-report-page .ecg-metrics article,#root .study-report-page .study-report-hero { background:#fff!important; color:#142b50!important; box-shadow:none!important; } }
 
-/* Consistent surfaces for messaging, plans, settings, and public information. */
-#root :is(.care-comms,.plan-page,.profile-page,.about-page){background:radial-gradient(ellipse at 12% 0%,#c9c4ff99,transparent 38%),radial-gradient(ellipse at 94% 24%,#a8f0e9aa,transparent 40%),linear-gradient(135deg,#d8e6f8,#e2f6f6);color:#18324b}
-#root :is(.care-comms,.plan-page,.profile-page,.about-page) :is(h1,h2,h3,h4,strong,label){color:#18324b}
-#root :is(.care-comms,.plan-page,.profile-page,.about-page) :is(p,small,li){color:#526f86}
-#root :is(.care-comms-layout,.plan-card,.plan-explainer,.plan-request,.plan-signin,.profile-card,.about-hero,.about-purpose,.about-card){background:rgba(255,255,255,.7);border-color:rgba(255,255,255,.8);box-shadow:0 18px 48px #3f65871a;backdrop-filter:blur(18px)}
-#root :is(.care-comms-layout>aside,.care-comms-toolbar,.care-chat,.care-chat form,.care-calls,.care-comms-tabs){background:rgba(242,250,253,.85);border-color:#c4dce7}
-#root .care-chat-list article{background:#fff;color:#18324b;border-color:#d6e8ee}#root .care-chat-list article.mine{background:#d9e8ff;border-color:#bbd1ef}#root .care-chat-list article p,#root .care-chat-list time{color:#314f6c}
-#root .care-comms-layout>aside>button{color:#18324b;border-color:#d7e8ef}#root .care-comms-layout>aside>button.active{background:#dceaff;box-shadow:inset 3px 0 #5c65d6}#root .care-comms-tabs button{color:#526f86}#root .care-comms-tabs button.active{background:#315bb4;color:#fff}
-#root :is(.care-comms,.plan-page,.profile-page) :is(input,textarea,select){background:#fff!important;color:#18324b!important;border-color:#b5d2e2!important}
-#root :is(.care-comms,.plan-page,.profile-page) button:not(:disabled){background:#315bb4;color:#fff;border-color:#315bb4}#root :is(.care-comms,.plan-page,.profile-page) a{color:#315bb4}
-#root .plan-card.featured{background:rgba(255,255,255,.82);border-color:#9bbbe4}#root .plan-card li span,#root .plan-card-top span,#root .plan-intro>span{color:#315bb4}
-#root .profile-details strong,#root .profile-identity h2{color:#18324b}#root .profile-details span,#root .profile-heading p{color:#526f86}
-@supports not (backdrop-filter:blur(1px)){#root :is(.pw-card,.ecg-panel,.plan-card,.profile-card,.care-comms-layout){background:#f6fbfd}}
+/* Refined Heartline surfaces, retaining the original navigation layout. */
+:root{--heartline-page:#f3f8fc;--heartline-sidebar:#eaf3fa;--heartline-ink:#1c3550;--heartline-muted:#526a80;--heartline-accent:#3458ad;--heartline-border:#d5e3ed;--heartline-surface:rgba(255,255,255,.92);--heartline-shadow:0 10px 32px rgba(52,84,113,.08);--heartline-radius:18px}
+body,#root{background:var(--heartline-page);color:var(--heartline-ink)}
+#root .app-sidebar{--hl-muted:#223d5b;--hl-text:#1c3550;background:var(--heartline-sidebar);border-color:var(--heartline-border)}
+#root .app-sidebar :is(a,button){color:#223d5b}
+#root .app-sidebar :is(a,button):hover,#root .app-sidebar a.active{color:#234b9b;background:#d5e8f8}
+#root .app-sidebar i{color:#315b94!important}
+#root .app-sidebar p{color:#526a80}
+#root .app-sidebar nav{overflow-y:auto;min-height:0;scrollbar-color:#a6bfce transparent}
+#root .app-topbar,#root .public-header{background:rgba(246,250,253,.96);border-color:var(--heartline-border)}
+#root :is(.pw-shell,.dashboard-home,.home-dashboard,.care-shell,.doctors-page,.ecg-new,.home-public,.auth-container,.about-page,.plan-page,.profile-page,.care-comms){background:radial-gradient(ellipse at 8% 0%,rgba(220,217,248,.20),transparent 32%),radial-gradient(ellipse at 98% 10%,rgba(199,240,236,.18),transparent 34%),var(--heartline-page);color:var(--heartline-ink)}
+#root :is(.pw-card,.care-card,.home-summary-card,.home-next,.home-dashboard-heading,.ecg-metrics article,.ecg-panel,.ecg-bottom article,.ecg-list article,.doctor-card,.doctors-state,.auth-container .card,.study-report-hero,.plan-card,.plan-explainer,.plan-request,.profile-card,.care-comms-layout){background:var(--heartline-surface);color:var(--heartline-ink);border:1px solid var(--heartline-border);border-radius:var(--heartline-radius);box-shadow:var(--heartline-shadow)}
+#root :is(.pw-shell,.home-dashboard,.ecg-new,.care-shell,.doctors-page,.plan-page,.profile-page,.care-comms) :is(h1,h2,h3,h4,strong){color:var(--heartline-ink)}
+#root :is(.pw-shell,.home-dashboard,.ecg-new,.care-shell,.doctors-page,.plan-page,.profile-page,.care-comms) :is(p,small,dt){color:var(--heartline-muted)}
+#root :is(.ecg-new,.pw-shell,.home-dashboard,.plan-page,.profile-page,.care-comms) h1{font-size:clamp(28px,3vw,36px);line-height:1.18;letter-spacing:-.035em}
+#root :is(.ecg-new,.pw-shell,.home-dashboard,.plan-page,.profile-page,.care-comms) h2{font-size:clamp(20px,2vw,24px)}
+#root :is(.care-comms-layout>aside,.care-comms-toolbar,.care-chat,.care-chat form,.care-calls,.care-comms-tabs){background:#f6fafc;color:var(--heartline-ink);border-color:var(--heartline-border)}
+#root .care-comms-layout>aside>button{color:var(--heartline-ink);border-color:var(--heartline-border)}
+#root .care-chat-list article{background:#fff;border-color:var(--heartline-border)}#root .care-chat-list article.mine{background:#e5effc}#root .care-chat-list :is(p,time){color:var(--heartline-ink)}
+#root :is(.care-comms,.plan-page,.profile-page) :is(input,select,textarea){background:#fff!important;color:var(--heartline-ink)!important;border:1px solid #bbcfdd!important}
+#root :is(.care-comms,.plan-page,.profile-page) button:not(:disabled){background:var(--heartline-accent);color:#fff;border-color:var(--heartline-accent)}
+#root :is(.care-comms,.plan-page,.profile-page) a{color:var(--heartline-accent)}
+#root .ecg-new .ecg-empty{min-height:170px;color:var(--heartline-muted)}
+#root .ecg-new-head>.ecg-actions{background:#fff;border-color:var(--heartline-border)}
+#root .home-summary-card small,#root .home-card-label,#root .home-next nav span{color:var(--heartline-muted)!important}
+@supports not (backdrop-filter:blur(1px)){#root :is(.pw-card,.ecg-panel,.plan-card,.profile-card,.care-comms-layout){background:#fff}}
+@media(max-width:790px){#root .public-links.is-open{background:#f3f8fc}}
