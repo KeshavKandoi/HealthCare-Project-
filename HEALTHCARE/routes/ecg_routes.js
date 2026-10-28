@@ -1,4 +1,5 @@
 import express from 'express';
+import { manualEcgRouter } from './manualEcg.js';
 import { patientAuth } from '../middlewares/ecgAuth.js';
 import { getPool } from '../config/db.js';
 import { io } from '../server.js';
@@ -93,6 +94,8 @@ router.post('/device/batches',deviceAuth,asyncRoute(async(req,res)=>{
 }));
 router.post('/data',(_req,res)=>fail(res,410,'This endpoint is retired. Use an authenticated device batch and recording session.'));
 router.use(patientAuth);
+router.use('/manual/start', pairingLimit);
+router.use(manualEcgRouter(getPool, (patientId, batch) => io.to(`patient:${patientId}`).emit('ecg-batch', batch)));
 router.get('/devices',asyncRoute(async(req,res)=>{
  const {rows}=await getPool().query("select d.id,d.model,d.firmware_version,d.sample_rate_hz,d.units,d.last_seen_at,d.status,d.is_simulated from devices d join patient_device_assignments a on a.device_id=d.id where a.patient_id=$1 and a.unpaired_at is null order by a.assigned_at desc",[req.patientId]); res.json({devices:rows});
 }));
@@ -146,5 +149,5 @@ router.get('/history/:patientId',asyncRoute(async(req,res)=>{
  if(req.params.patientId!==req.patientId)return fail(res,403,'Forbidden');
  const {rows}=await getPool().query('select id,started_at,ended_at,status,sample_count,is_simulated from ecg_recording_sessions where patient_id=$1 order by started_at desc limit 100',[req.patientId]);res.json({success:true,records:rows});
 }));
-router.use((error,req,res,next)=>{console.error('ECG request failed',error.code||error.name);fail(res,500,'ECG request failed')});
+router.use((error,req,res,next)=>{console.error('ECG request failed',error.code||error.name);fail(res,503,['42P01','42703'].includes(error.code)?'ECG database setup is incomplete. The server needs the latest database migrations.':'ECG service is unavailable. Please retry shortly.')});
 export default router;
