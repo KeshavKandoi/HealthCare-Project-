@@ -103,3 +103,17 @@ body, #root { background: #c6e6ef; color: var(--heartline-ink); }
 #root .session-loading-spinner { border-color:#b7cfe2; border-top-color:#315bb4; }
 @media(max-width:790px){#root .public-links.is-open{background:#eaf7fb;}}
 @media print { #root .study-report-page,#root .study-report-page .ecg-panel,#root .study-report-page .ecg-metrics article,#root .study-report-page .study-report-hero { background:#fff!important; color:#142b50!important; box-shadow:none!important; } }
+
+/* Consistent surfaces for messaging, plans, settings, and public information. */
+#root :is(.care-comms,.plan-page,.profile-page,.about-page){background:radial-gradient(ellipse at 12% 0%,#c9c4ff99,transparent 38%),radial-gradient(ellipse at 94% 24%,#a8f0e9aa,transparent 40%),linear-gradient(135deg,#d8e6f8,#e2f6f6);color:#18324b}
+#root :is(.care-comms,.plan-page,.profile-page,.about-page) :is(h1,h2,h3,h4,strong,label){color:#18324b}
+#root :is(.care-comms,.plan-page,.profile-page,.about-page) :is(p,small,li){color:#526f86}
+#root :is(.care-comms-layout,.plan-card,.plan-explainer,.plan-request,.plan-signin,.profile-card,.about-hero,.about-purpose,.about-card){background:rgba(255,255,255,.7);border-color:rgba(255,255,255,.8);box-shadow:0 18px 48px #3f65871a;backdrop-filter:blur(18px)}
+#root :is(.care-comms-layout>aside,.care-comms-toolbar,.care-chat,.care-chat form,.care-calls,.care-comms-tabs){background:rgba(242,250,253,.85);border-color:#c4dce7}
+#root .care-chat-list article{background:#fff;color:#18324b;border-color:#d6e8ee}#root .care-chat-list article.mine{background:#d9e8ff;border-color:#bbd1ef}#root .care-chat-list article p,#root .care-chat-list time{color:#314f6c}
+#root .care-comms-layout>aside>button{color:#18324b;border-color:#d7e8ef}#root .care-comms-layout>aside>button.active{background:#dceaff;box-shadow:inset 3px 0 #5c65d6}#root .care-comms-tabs button{color:#526f86}#root .care-comms-tabs button.active{background:#315bb4;color:#fff}
+#root :is(.care-comms,.plan-page,.profile-page) :is(input,textarea,select){background:#fff!important;color:#18324b!important;border-color:#b5d2e2!important}
+#root :is(.care-comms,.plan-page,.profile-page) button:not(:disabled){background:#315bb4;color:#fff;border-color:#315bb4}#root :is(.care-comms,.plan-page,.profile-page) a{color:#315bb4}
+#root .plan-card.featured{background:rgba(255,255,255,.82);border-color:#9bbbe4}#root .plan-card li span,#root .plan-card-top span,#root .plan-intro>span{color:#315bb4}
+#root .profile-details strong,#root .profile-identity h2{color:#18324b}#root .profile-details span,#root .profile-heading p{color:#526f86}
+@supports not (backdrop-filter:blur(1px)){#root :is(.pw-card,.ecg-panel,.plan-card,.profile-card,.care-comms-layout){background:#f6fbfd}}

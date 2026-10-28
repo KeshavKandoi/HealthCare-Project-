@@ -1,0 +1,8 @@
+/* Heartline admin shares the patient workspace's Aurora palette. */
+body{margin:0;color:#18324b;background:radial-gradient(ellipse at 10% 0%,#c9c4ff88,transparent 40%),radial-gradient(ellipse at 90% 25%,#a8f0e999,transparent 42%),#edf6fb;font-family:Inter,system-ui,sans-serif}
+#root .nav{position:sticky;top:0;width:100%;min-height:100vh!important;padding:24px 12px;background:rgba(244,251,253,.84);border-right:1px solid #fff;box-shadow:8px 0 32px #46698812}
+#root .nav h4{color:#18324b;letter-spacing:-.03em}#root .nav .nav-link{color:#405d7d;border:0;border-radius:10px;margin:3px 0;padding:11px 14px}#root .nav .nav-link:hover,#root .nav .nav-link.active{background:#dceaff;color:#284d9f}
+#root :is(.card,.table,.modal-content){background:rgba(255,255,255,.82);border:1px solid #fff;border-radius:18px;color:#18324b;box-shadow:0 15px 45px #46698816}
+#root :is(input,select,textarea){background:#fff;color:#18324b;border:1px solid #b8d4e2;border-radius:9px}
+#root :is(.btn-primary,.btn-success){background:#315bb4;border-color:#315bb4;color:white}
+@media(max-width:767px){#root .nav{position:relative;min-height:0!important;margin:0;padding:14px}#root .nav h4{margin-bottom:12px!important}}
