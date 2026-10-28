@@ -131,3 +131,30 @@ body,#root{background:var(--heartline-page);color:var(--heartline-ink)}
 #root .home-summary-card small,#root .home-card-label,#root .home-next nav span{color:var(--heartline-muted)!important}
 @supports not (backdrop-filter:blur(1px)){#root :is(.pw-card,.ecg-panel,.plan-card,.profile-card,.care-comms-layout){background:#fff}}
 @media(max-width:790px){#root .public-links.is-open{background:#f3f8fc}}
+
+/* Blue, periwinkle and lavender accents, keeping existing page layouts. */
+:root{--hl-aurora-bg:#f0f5fc;--hl-aurora-blue:#416ac6;--hl-aurora-indigo:#555acb;--hl-aurora-border:#d1e1f1;--hl-aurora-text:#1e3554;--hl-aurora-muted:#526b87;--hl-aurora-glass:rgba(255,255,255,.78)}
+#root :is(.pw-shell,.home-dashboard,.care-shell,.doctors-page,.ecg-new,.home-public,.auth-container,.about-page,.plan-page,.profile-page,.care-comms,.history-shell,.bp-shell){background:radial-gradient(ellipse at 5% 0%,rgba(200,197,247,.24),transparent 36%),radial-gradient(ellipse at 95% 16%,rgba(196,239,239,.23),transparent 38%),var(--hl-aurora-bg);color:var(--hl-aurora-text)}
+#root .home-dashboard-heading{background:linear-gradient(120deg,#d4e8fa 0%,#dce5fb 58%,#e7dffa 100%);border-color:#fff;box-shadow:0 14px 35px #4b6f9e1a}
+#root .home-dashboard-heading :is(h1,h1 span){color:#1e3554!important}#root .home-dashboard-heading p{color:#425f7e}
+#root .home-monitor-button{background:#416ac6;color:#fff!important}#root .home-monitor-button:hover{background:#3158aa}
+#root .home-kicker-dot{background:#555acb;box-shadow:0 0 0 4px #555acb20}#root .home-heading-art svg{stroke:#5979bf;filter:drop-shadow(0 0 8px #a7b8e8)}#root .home-art-ring{border-color:#8ba9dc80}#root .home-art-caption{color:#557397}
+#root .home-summary-card{background:var(--hl-aurora-glass);border:1px solid #fff;box-shadow:0 12px 30px #476b9614}
+#root .home-summary-card:hover{background:#f7fbff;border-color:#aabfe8;box-shadow:0 16px 34px #476b9622}
+#root .home-card-icon,#root .home-card-icon-blue,#root .home-card-icon-peach,#root .home-card-icon-lilac{background:#e4edfc;border-color:#c8daf2;color:#3e62ad}
+#root .home-card-icon-blue{background:#dff2fa;color:#267b94}#root .home-card-icon-peach{background:#ece8fc;color:#6257ac}#root .home-card-icon-lilac{background:#e8e9fc;color:#555acb}
+#root .home-next{background:rgba(248,252,255,.82);border-color:#fff}#root .home-next nav a{background:#e1ecfb;border-color:#cadcf2;color:#1e3554}
+#root .home-next nav a:nth-child(2){background:#e8e9fc}#root .home-next nav a:nth-child(3){background:#dcf0f6}
+#root .home-next nav a:hover,#root .home-next nav a:focus-visible{background:#d2e2f8;border-color:#829fd4;transform:translateY(-2px)}
+#root .home-shortcut-icon{background:#cbdcf6;color:#345aa6}#root .home-shortcut-icon i{color:#345aa6!important}#root .home-next nav .home-shortcut-arrow{color:#345aa6!important}
+#root :is(.history-summary article,.history-panel,.bp-provider-note,.bp-notice,.plan-card,.plan-explainer,.plan-request,.plan-signin,.profile-card,.care-card,.pw-card,.ecg-panel,.ecg-metrics article,.ecg-list article){background:var(--hl-aurora-glass);border:1px solid #fff;color:var(--hl-aurora-text);box-shadow:0 12px 34px #476b9614}
+#root :is(.history-shell,.bp-shell,.care-shell,.plan-page,.profile-page,.care-comms) :is(h1,h2,h3,h4,strong,label,li){color:var(--hl-aurora-text)}
+#root :is(.history-shell,.bp-shell,.care-shell,.plan-page,.profile-page,.care-comms) :is(p,small,dt){color:var(--hl-aurora-muted)}
+#root :is(.care-comms-toolbar,.care-chat,.care-chat form,.care-calls,.care-comms-layout>aside,.care-comms-tabs){background:#eff6fd;border-color:#d1e1f1}
+#root .care-comms-tabs button.active{background:#416ac6;color:#fff}#root .care-comms-layout>aside>button.active{background:#e0ecfc;box-shadow:inset 3px 0 #555acb}
+#root .care-chat-list article{background:#fff;border-color:#d1e1f1}#root .care-chat-list article.mine{background:#dceafc}#root .care-chat-list :is(p,time){color:#1e3554}
+#root :is(.profile-page,.plan-page,.care-comms,.history-shell,.bp-shell) :is(input,textarea,select){background:#fff!important;color:#1e3554!important;border-color:#b8cde1!important}
+#root :is(.plan-page,.profile-page,.care-comms) button:not(:disabled){background:#416ac6;color:#fff;border-color:#416ac6}
+#root :is(.app-sidebar,.app-topbar){background:#eaf3fa;border-color:#d1e1f1}#root .app-sidebar :is(a,button){color:#223d5b}#root .app-sidebar i{color:#416ac6!important}#root .app-sidebar a.active{background:#dce8fa;color:#234b9b}
+#root :is(.home-summary-card,.home-next nav a,.pw-card,.ecg-panel){transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease}
+@media(prefers-reduced-motion:reduce){#root :is(.home-summary-card,.home-next nav a,.pw-card,.ecg-panel){transition:none!important}#root .home-next nav a:hover{transform:none}}
