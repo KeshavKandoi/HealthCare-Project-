@@ -20,18 +20,16 @@ export function queueSymptom(patientId: string, sessionId: string, symptom: stri
   return marker;
 }
 
-let flushing = false;
+let flushing: Promise<number> | null = null;
 export async function syncSymptoms(patientId: string): Promise<number> {
-  if (flushing) return read(patientId).length;
-  flushing = true;
-  try {
-    const queue = read(patientId);
-    while (queue.length) {
-      const marker = queue[0];
+  if (flushing) { await flushing; if (read(patientId).length) return syncSymptoms(patientId); return 0; }
+  flushing = (async () => {
+    while (read(patientId).length) {
+      const marker = read(patientId)[0];
       await API.post(`/monitoring/sessions/${marker.sessionId}/markers`, marker);
-      queue.shift();
-      write(patientId, queue);
+      write(patientId, read(patientId).filter(item => item.clientId !== marker.clientId));
     }
     return 0;
-  } finally { flushing = false; }
+  })();
+  try { return await flushing; } finally { flushing = null; }
 }
