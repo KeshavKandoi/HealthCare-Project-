@@ -54,6 +54,24 @@ class PageErrorBoundary extends Component<{ children: ReactNode }, { failed: boo
   render() { return this.state.failed ? <main className="session-loading"><div><h1>Page could not load</h1><p>The application may have updated while this tab was open.</p><button onClick={() => window.location.reload()}>Reload page</button></div></main> : this.props.children; }
 }
 
+function PageLoading({ session = false }: { session?: boolean }) {
+  const [slow, setSlow] = useState(false);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSlow(true), 10000);
+    return () => window.clearTimeout(timer);
+  }, []);
+  return <main className="session-loading" aria-busy="true">
+    <div className="session-loading-card" role="status" aria-live="polite">
+      <span className="session-loading-icon" aria-hidden="true">♥</span>
+      <span className="session-loading-eyebrow">HEARTLINE</span>
+      <h1>{session ? 'Preparing your workspace' : 'Getting things ready'}</h1>
+      <p>{session ? 'Checking your session securely. This should only take a moment.' : 'Loading your page. This should only take a moment.'}</p>
+      <span className="session-loading-spinner" aria-hidden="true" />
+      {slow && <div className="session-loading-slow"><p>This is taking longer than expected. Check your connection and try again.</p><button onClick={() => window.location.reload()}>Reload page</button></div>}
+    </div>
+  </main>;
+}
+
 function DoctorBookingRoute({ demo }: { demo: boolean }) {
   const { id } = useParams();
   return demo && id ? <Navigate to={`/appointments/book/${id}`} replace /> : <Appointments />;
@@ -64,7 +82,7 @@ function App() {
   const { pathname } = useLocation()
   const { user, demo } = useSelector((state: RootState) => state.auth)
   const [restoring, setRestoring] = useState(true)
-  const protectedPage = (element: ReactElement) => restoring ? <main className="session-loading" role="status">Checking your session…</main> : user ? element : <Navigate to="/login" replace />
+  const protectedPage = (element: ReactElement) => restoring ? <PageLoading session /> : user ? element : <Navigate to="/login" replace />
 
   useEffect(() => {
     let appData: {token?: string; refreshToken?: string; user?: {_id?: string}} | null;
@@ -85,9 +103,9 @@ function App() {
     <>
     <Navbar/>
     <Toaster/>
-     <PageErrorBoundary key={pathname}><Suspense fallback={<main className="session-loading" role="status">Loading page…</main>}>
+     <PageErrorBoundary key={pathname}><Suspense fallback={<PageLoading />}>
      <Routes>
-      <Route path="/" element={restoring ? <main className="session-loading" role="status">Checking your session…</main> : <Home/>}/>
+      <Route path="/" element={restoring ? <PageLoading session /> : <Home/>}/>
       <Route path="/about" element={<About/>}/>
       <Route path="/contact" element={<Contact/>}/>
       <Route path="/register" element={<Register/>}/>

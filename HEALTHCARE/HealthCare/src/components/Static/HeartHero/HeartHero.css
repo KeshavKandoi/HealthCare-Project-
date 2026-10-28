@@ -18,8 +18,8 @@
 }
 
 .hero-tag {
-  background: #e0f5f5;
-  color: #0a7a7a;
+  background: #f5e0e2;
+  color: #6a1a22;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -33,7 +33,7 @@
 .hero-title {
   font-size: 58px;
   font-weight: 800;
-  color: #064d4d;
+  color: #421115;
   line-height: 1.15;
   margin: 0 0 20px;
 }
@@ -58,7 +58,7 @@
   display: block;
   font-size: 32px;
   font-weight: 800;
-  color: #064d4d;
+  color: #421115;
 }
 
 .stat p {
@@ -74,7 +74,7 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #064d4d, #0a7a7a);
+  background: linear-gradient(135deg, #421115, #6a1a22);
   color: white;
   padding: 14px 30px;
   border-radius: 999px;
@@ -93,18 +93,18 @@
 
 .btn-secondary {
   background: white;
-  color: #064d4d;
+  color: #421115;
   padding: 14px 30px;
   border-radius: 999px;
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;
-  border: 2px solid #064d4d;
+  border: 2px solid #421115;
   transition: all 0.3s ease;
 }
 
 .btn-secondary:hover {
-  background: #064d4d;
+  background: #421115;
   color: white;
   transform: translateY(-2px);
 }
@@ -229,10 +229,10 @@
   42%       { transform: scale(1.2); }
 }
 
-.bpm-badge span { font-size: 22px; font-weight: 800; color: #064d4d; }
+.bpm-badge span { font-size: 22px; font-weight: 800; color: #421115; }
 .bpm-badge small {
   font-size: 11px;
-  color: #22c55e;
+  color: #b92e3b;
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;

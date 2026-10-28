@@ -51,7 +51,7 @@
 }
 /* Auth actions share the same button states as the rest of the app. */
 .auth-container .hl-button{width:100%;margin-top:8px}
-.auth-container input:focus-visible{border-color:#80dfc2;box-shadow:0 0 0 3px #80dfc239}
+.auth-container input:focus-visible{border-color:#df8089;box-shadow:0 0 0 3px #df808939}
 .auth-container p a {
   color: #fca5a5;
   font-weight: 600;

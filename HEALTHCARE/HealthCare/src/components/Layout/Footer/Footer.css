@@ -1,14 +1,14 @@
-.site-footer{background:#0b1518;border-top:1px solid #6b927b38;color:#dff3e9;padding:0 28px}
+.site-footer{background:#180b0c;border-top:1px solid #6b927b38;color:#f3dfe1;padding:0 28px}
 .site-footer-inner{max-width:1330px;margin:0 auto;padding:47px 0 22px}
 .site-footer-top{display:grid;grid-template-columns:minmax(230px,1.15fr) 1fr;gap:48px;padding-bottom:45px}
-.site-footer-logo{display:inline-flex;align-items:center;gap:7px;color:#f0fff5!important;font-size:23px;font-weight:850;letter-spacing:-.055em;text-decoration:none}
-.site-footer-logo span{color:#72d8b7!important;font-size:24px}
+.site-footer-logo{display:inline-flex;align-items:center;gap:7px;color:#fcf3f4!important;font-size:23px;font-weight:850;letter-spacing:-.055em;text-decoration:none}
+.site-footer-logo span{color:#d8727b!important;font-size:24px}
 .site-footer-brand p{max-width:330px;margin:12px 0 0;color:#a9bdb3!important;font-size:13px;line-height:1.6}
 .site-footer-links{display:grid;grid-template-columns:repeat(2,minmax(140px,1fr));gap:28px}
-.site-footer-links h2{margin:2px 0 17px;color:#91c7ae;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.site-footer-links h2{margin:2px 0 17px;color:#c79196;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
 .site-footer-links a{display:block;width:max-content;max-width:100%;padding:4px 0;margin:3px 0;color:#c0d3c8!important;font-size:13px;text-decoration:none;transition:color .18s ease}
-.site-footer-links a:hover,.site-footer-links a:focus-visible{color:#a7edc6!important;text-decoration:underline;text-underline-offset:4px}
-.site-footer-links a:focus-visible,.site-footer-logo:focus-visible{outline:2px solid #9de8c1;outline-offset:4px;border-radius:2px}
+.site-footer-links a:hover,.site-footer-links a:focus-visible{color:#eaaab0!important;text-decoration:underline;text-underline-offset:4px}
+.site-footer-links a:focus-visible,.site-footer-logo:focus-visible{outline:2px solid #e79ea5;outline-offset:4px;border-radius:2px}
 .site-footer-bottom{display:flex;justify-content:space-between;gap:16px;padding-top:20px;border-top:1px solid #6b927b30;color:#85a096;font-size:12px}
 .site-footer--workspace{margin-left:238px}
 .site-footer--workspace .site-footer-inner{max-width:1190px}
