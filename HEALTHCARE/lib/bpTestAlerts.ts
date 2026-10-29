@@ -18,9 +18,10 @@ type Fetch = (url: string, init?: RequestInit) => Promise<Response>;
 const channels: Channel[] = ['email', 'sms', 'voice'];
 const validEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 const createTable = `create table if not exists healthcare_private.bp_test_alerts (
-  id uuid primary key, trigger_key text not null unique, account_email text not null,
+  id uuid primary key, trigger_key text not null unique, account_email text,
   systolic smallint not null, diastolic smallint not null, recorded_at timestamptz not null, source text not null,
-  deliveries jsonb not null, created_at timestamptz not null default now())`;
+  deliveries jsonb not null, created_at timestamptz not null default now());
+alter table healthcare_private.bp_test_alerts alter column account_email drop not null`;
 
 /** The authorized Heartline account and its contacts, all set by the operator on the server. */
 export function testAlertConfig() {
@@ -119,16 +120,16 @@ export function createTestAlerts({ pool = getPool as () => Pool, fetcher = ((url
     const settings = config();
     const recipients: Record<Channel, string | null> = { email: settings.email, sms: settings.phone, voice: settings.phone };
     const deliveries = Object.fromEntries(channels.map(channel => {
-      const reason = !settings.account ? 'Test alert recipients are not configured (BP_TEST_ALERT_ACCOUNT)' : !recipients[channel] ? (channel === 'email' ? 'No test recipient email' : 'No test recipient phone (BP_TEST_ALERT_PHONE)') : !enabled[channel]() ? `${channel === 'email' ? 'Resend' : 'Twilio'} ${channel} is not configured on the server` : null;
+      const reason = !settings.account ? 'Alert contacts are not set up on the server' : !recipients[channel] ? `No ${channel === 'email' ? 'email address' : 'phone number'} is set up for test alerts` : !enabled[channel]() ? `${channel === 'email' ? 'Email' : channel === 'sms' ? 'SMS' : 'Voice call'} delivery is not configured on the server` : null;
       const status: DeliveryStatus = reason ? 'not_configured' : 'pending';
-      return [channel, { status, recipient: recipients[channel], providerId: null, providerStatus: null, detail: reason, updatedAt: new Date().toISOString(), history: [entry(status, null, reason)] } satisfies Delivery];
+      return [channel, { status, recipient: reason ? null : recipients[channel], providerId: null, providerStatus: null, detail: reason, updatedAt: new Date().toISOString(), history: [entry(status, null, reason)] } satisfies Delivery];
     })) as Record<Channel, Delivery>;
-    if (!settings.account) return { recorded: false, reason: 'Test alert recipients are not configured on the server.', deliveries };
+    // The alert is always recorded and shown in the app; messages go out only to configured contacts.
     const { rows } = await db(`insert into healthcare_private.bp_test_alerts(id,trigger_key,account_email,systolic,diastolic,recorded_at,source,deliveries)
       values($1,$2,$3,$4,$5,$6,$7,$8) on conflict(trigger_key) do nothing returning id`,
       [randomUUID(), triggerKey, settings.account, reading.systolic, reading.diastolic, reading.recordedAt, source, JSON.stringify(deliveries)]);
-    void processPending().catch(error => console.error('BP test alert delivery failed', error));
-    return { recorded: !!rows[0], id: rows[0]?.id ?? null, deliveries };
+    if (channels.some(channel => deliveries[channel].status === 'pending')) void processPending().catch(error => console.error('BP test alert delivery failed', error));
+    return { recorded: !!rows[0], id: rows[0]?.id ?? null, deliveries, ...(settings.account ? {} : { reason: 'Alert recorded. Email, SMS and calls start once alert contacts are set up on the server.' }) };
   }
 
   /** Submits each pending channel once; a channel stuck mid-submission is failed, never resent. */
@@ -179,15 +180,17 @@ export function createTestAlerts({ pool = getPool as () => Pool, fetcher = ((url
   }
 
   /** Alert history for the authorized account only; null for anyone else. */
+  /** Monitoring alerts are shared like the live monitor; only the configured account sees contact details. */
   async function listFor(accountEmail: string) {
     const account = config().account;
-    if (!account || accountEmail.trim().toLowerCase() !== account) return null;
-    await refreshStatuses(account).catch(() => {});
-    const { rows } = await db('select id,systolic,diastolic,recorded_at,source,deliveries,created_at from healthcare_private.bp_test_alerts where account_email=$1 order by created_at desc limit 50', [account]);
-    return rows;
+    const authorized = !!account && accountEmail.trim().toLowerCase() === account;
+    await refreshStatuses().catch(() => {});
+    const { rows } = await db('select id,systolic,diastolic,recorded_at,source,deliveries,created_at from healthcare_private.bp_test_alerts order by created_at desc limit 50');
+    const alerts = authorized ? rows : rows.map(row => ({ ...row, deliveries: Object.fromEntries(Object.entries(row.deliveries as Record<Channel, Delivery>).map(([channel, delivery]) => [channel, { ...delivery, recipient: null, providerId: null }])) }));
+    return { authorized, alerts };
   }
 
-  const active = () => !!config().account && (bpEmailConfigured() || bpSmsConfigured() || bpVoiceConfigured());
+  const active = () => bpEmailConfigured() || bpSmsConfigured() || bpVoiceConfigured();
   function startWorker() {
     if (!active()) return;
     const timer = setInterval(() => { void processPending().then(() => refreshStatuses()).catch(error => console.error('BP test alert worker error', error)); }, 10000);

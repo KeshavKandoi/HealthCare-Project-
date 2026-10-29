@@ -17,6 +17,7 @@ import { logout, startDemo } from './redux/slice/authSlice';
 import { getLoginUserDetails } from './redux/actions/authAction';
 import { isDemoSession } from './demo/demoSession';
 import Companion, { OpenCompanion } from './components/Companion/Companion';
+import HighBpAlert from './components/Alerts/HighBpAlert';
 // Pages with their own focus where the floating Companion would only get in the way.
 const withoutCompanion = ['/backoffice', '/login', '/register', '/forgot-password'];
 const About = lazy(() => import('./pages/About'));
@@ -169,6 +170,7 @@ function App() {
       </Routes>
       </Suspense></PageErrorBoundary>
       {!withoutCompanion.some(path => pathname.startsWith(path)) && <Companion userId={user?._id ?? null} />}
+      {user && !pathname.startsWith('/backoffice') && pathname !== '/bp-alerts' && <HighBpAlert />}
       {!user && ["/", "/features", "/how-it-works", "/technology", "/about", "/contact", "/doctors", "/subscription"].includes(pathname) && <Footer/>}
     </>
   )

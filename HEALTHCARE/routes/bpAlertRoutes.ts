@@ -82,11 +82,10 @@ router.delete('/caregiver/grants/:id/phone', wrap(async (req, res) => {
   res.json({ removed: true });
 }));
 
-// Backoffice High blood pressure test alerts, shown only to the account configured as their recipient.
+// Backoffice High blood pressure monitoring alerts. Every account sees them; contact details only the configured one.
 router.get('/test-alerts', wrap(async (req, res) => {
   const { rows } = await getPool().query("select data->>'email' email from app_users where id=$1", [req.patientId]);
-  const alerts = rows[0]?.email ? await testAlerts.listFor(rows[0].email) : null;
-  res.json(alerts ? { authorized: true, alerts } : { authorized: false, alerts: [] });
+  res.json(await testAlerts.listFor(rows[0]?.email || ''));
 }));
 
 export default router;

@@ -20,3 +20,9 @@ export function useLiveVitals(mode: WaveformMode): LiveVitals | null {
   }, [mode]);
   return mode === 'off' ? null : vitals;
 }
+
+/** The High blood pressure reading at the moment it was selected, matching the alert the server records. */
+export function highBpReadingAt(at: string) {
+  const vitals = scenarioVitals((Date.parse(at) / 1000) % 3600, config('high-bp'));
+  return { systolic: Math.round(vitals.systolic), diastolic: Math.round(vitals.diastolic) };
+}

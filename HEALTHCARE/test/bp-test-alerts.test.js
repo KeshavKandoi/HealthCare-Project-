@@ -70,14 +70,23 @@ test('one trigger sends one email, SMS and call through mocked providers, indepe
     // Provider updates become Delivered only when the provider reports it.
     for(const [key,value] of Object.entries(row.deliveries))if(value.providerId)remote[value.providerId]=key==='email'?'delivered':'completed';
     const listed=await alerts.listFor(account);
-    const updated=listed.find(item=>item.id===partial.id).deliveries;
+    assert.equal(listed.authorized,true);
+    const updated=listed.alerts.find(item=>item.id===partial.id).deliveries;
+    assert.equal(updated.email.recipient,account);
     assert.equal(updated.email.status,'delivered');assert.equal(updated.voice.status,'delivered');assert.equal(updated.sms.status,'failed');
     assert.ok(updated.email.history.length>=3);
-    assert.equal(await alerts.listFor('someone-else@example.test'),null);
-    // Without a configured account nothing is recorded or sent.
+    // Other accounts see the alert and its statuses, but never the contact details.
+    const shared=await alerts.listFor('someone-else@example.test');
+    assert.equal(shared.authorized,false);
+    const seen=shared.alerts.find(item=>item.id===partial.id).deliveries;
+    assert.equal(seen.email.status,'delivered');assert.equal(seen.email.recipient,null);assert.equal(seen.sms.recipient,null);
+    // Without configured contacts the alert is still recorded, but nothing is sent.
     const unconfigured=createTestAlerts({pool:()=>pool,fetcher,config:()=>({account:null,email:null,phone:null,timeZone:'Asia/Kolkata'})});
     const skipped=await unconfigured.trigger({triggerKey:`test:${randomUUID()}`,reading});
-    assert.equal(skipped.recorded,false);assert.equal(skipped.deliveries.email.status,'not_configured');
+    const postsBefore=calls.filter(c=>c.method==='POST').length;
+    assert.equal(skipped.recorded,true);assert.equal(skipped.deliveries.email.status,'not_configured');assert.equal(skipped.deliveries.voice.status,'not_configured');
+    await unconfigured.processPending();assert.equal(calls.filter(c=>c.method==='POST').length,postsBefore);
+    await pool.query('delete from healthcare_private.bp_test_alerts where id=$1',[skipped.id]);
   }finally{
     await pool.query('delete from healthcare_private.bp_test_alerts where account_email=$1',[account]);
     await pool.end();
