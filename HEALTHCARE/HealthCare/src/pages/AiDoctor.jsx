@@ -106,14 +106,14 @@ function AIDoctor() {
         </aside>
 
         <section className="aidoc-panel" aria-label="AI health assistant chat">
-          <header className="aidoc-header"><div className="aidoc-header-icon"><i className="fa-solid fa-comment-medical" aria-hidden="true" /></div><div><h2>AI health assistant</h2><p>Ask a question or attach an image</p></div><span className="aidoc-header-badge">INFORMATIONAL</span></header>
+          <header className="aidoc-header"><div className="aidoc-header-icon"><i className="fa-solid fa-comment-medical" aria-hidden="true" /></div><div><h2>Heartline Companion</h2><p>Ask a question or attach an image</p></div><span className="aidoc-header-badge">INFORMATIONAL</span></header>
 
           <div className="aidoc-chat" ref={chatBoxRef} aria-live="polite" aria-relevant="additions text">
             {chat.length === 0 && !loading && <div className="aidoc-empty"><div className="aidoc-empty-icon"><i className="fa-solid fa-wave-square" aria-hidden="true" /></div><h3>What would you like to understand?</h3><p>Start with a question, or choose one below.</p><div className="aidoc-suggestions">{suggestions.map(item => <button type="button" key={item} onClick={() => setMessage(item)}>{item}<i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" /></button>)}</div></div>}
 
-            {chat.map((item, index) => <div className={`aidoc-row ${item.sender}`} key={index}><div className="aidoc-message-meta">{item.sender === "user" ? "YOU" : "HEARTLINE AI"}</div><div className={`aidoc-bubble ${item.sender}`}>{item.hasImage && <span className="aidoc-attachment-tag"><i className="fa-solid fa-image" aria-hidden="true" /> Image attached</span>}{item.text !== "Image attached" && item.text}</div></div>)}
+            {chat.map((item, index) => <div className={`aidoc-row ${item.sender}`} key={index}><div className="aidoc-message-meta">{item.sender === "user" ? "YOU" : "COMPANION · AI"}</div><div className={`aidoc-bubble ${item.sender}`}>{item.hasImage && <span className="aidoc-attachment-tag"><i className="fa-solid fa-image" aria-hidden="true" /> Image attached</span>}{item.text !== "Image attached" && item.text}</div></div>)}
 
-            {loading && <div className="aidoc-row bot"><div className="aidoc-message-meta">HEARTLINE AI</div><div className="aidoc-bubble bot aidoc-typing" aria-label="Thinking"><span /><span /><span /></div></div>}
+            {loading && <div className="aidoc-row bot"><div className="aidoc-message-meta">COMPANION · AI</div><div className="aidoc-bubble bot aidoc-typing" aria-label="Thinking"><span /><span /><span /></div></div>}
           </div>
 
           <div className="aidoc-composer-area">
