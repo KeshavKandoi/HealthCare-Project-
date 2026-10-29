@@ -9,3 +9,5 @@
 #root .public-header .public-cta { background:#f5f7fb !important; border-color:#f5f7fb !important; color:#111722 !important; }
 #root .public-header .language-selector { background:#141c27; border:1px solid #697789; color:#fff; }
 @media(max-width:790px){#root .public-links.is-open { background:#0b1018 !important; }}
+#root .public-header .app-logo, #root .public-header .app-logo span { color:#f5f7fb !important; }
+#root .public-header .public-links .public-cta { color:#111722 !important; }

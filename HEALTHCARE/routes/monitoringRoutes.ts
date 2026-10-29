@@ -280,7 +280,20 @@ router.post('/devices/:id/support', wrap(async (req, res) => {
   const { rows } = await db().query(`insert into device_support_requests(id,device_id,patient_id,request_type,issue)
     select $1,a.device_id,$2,$3,$4 from patient_device_assignments a where a.device_id=$5 and a.patient_id=$2 and a.unpaired_at is null returning *`, [randomUUID(), req.patientId, req.body.requestType, req.body.issue.trim(), req.params.id]);
   if (!rows[0]) return fail(res, 404, 'Device unavailable');
-  res.status(201).json({ request: rows[0] });
+  let emailStatus = 'not_configured';
+  const key = process.env.RESEND_API_KEY, from = process.env.RESEND_FROM_EMAIL;
+  const to = process.env.SUPPORT_EMAIL || 'letstalks.support@gmail.com';
+  if (key && from) {
+    try {
+      const result = await fetch('https://api.resend.com/emails', {
+        method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ from, to: [to], subject: `Heartline device ${req.body.requestType} request`, text: `Request ID: ${rows[0].id}\nDevice ID: ${req.params.id}\nRequest type: ${req.body.requestType}\n\nIssue:\n${req.body.issue.trim()}` }),
+        signal: AbortSignal.timeout(10000),
+      });
+      emailStatus = result.ok ? 'sent' : 'failed';
+    } catch { emailStatus = 'failed'; }
+  }
+  res.status(201).json({ request: rows[0], emailStatus });
 }));
 
 router.get('/export/fhir', wrap(async (req, res) => {

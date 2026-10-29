@@ -31,3 +31,13 @@
 #root .home-public-art-label { color:#d3dce8 !important; }
 #root .home-public-actions .hl-button { background:#f5f7fb !important; color:#111722 !important; border:1px solid #f5f7fb !important; }
 #root .home-public-actions .hl-button--soft { background:transparent !important; color:#f5f7fb !important; border-color:#8b9aad !important; }
+.home-heart-art { perspective: 800px; min-height: 430px; }
+.home-heart-art::before,.home-heart-art::after { display:none; }
+.heart-orbit { position:absolute; width:64%; aspect-ratio:1; border:1px solid #8099ba40; border-radius:50%; }
+.heart-orbit-two { width:84%; border-color:#8099ba20; }
+.heart-scroll { width:min(54%,280px); transform:translateY(var(--heart-scroll-y, 0px)) scale(var(--heart-scroll-scale, 1)); will-change:transform; }
+.heart-beat { animation:home-heartbeat 1.5s ease-in-out infinite; filter:drop-shadow(0 16px 45px #db5f8170); }
+.home-heart { width:100%; display:block; }
+@keyframes home-heartbeat { 0%, 100% { transform:scale(1); } 12% { transform:scale(1.08); } 24% { transform:scale(1); } 35% { transform:scale(1.05); } 48% { transform:scale(1); } }
+@media (max-width:650px) { .home-heart-art { min-height:280px; } }
+@media (prefers-reduced-motion:reduce) { .heart-beat { animation:none; } .heart-scroll { transform:none; } }

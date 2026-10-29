@@ -6,3 +6,15 @@
 @keyframes care-rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:900px){.care-diagnostic-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:720px){.care-page-head{align-items:start;flex-direction:column}.care-plan-grid,.care-two-column{grid-template-columns:1fr}.care-card dl{grid-template-columns:1fr 1fr}.care-inline-form{flex-direction:column;align-items:stretch}}@media(max-width:480px){.care-diagnostic-grid{grid-template-columns:1fr}.care-card{padding:20px}}
 @media(prefers-reduced-motion:reduce){.care-card{animation:none}.care-progress span{transition:none}}
+
+#root .device-support { color:#151c29; }
+#root .device-support .care-page-head { padding: 30px; border:1px solid #d3dfeb; border-radius:22px; background:linear-gradient(120deg,#fff,#edf5ff); }
+#root .device-support .care-card { background:#fff; border:1px solid #d3dfeb; border-radius:18px; box-shadow:0 8px 28px #233b5810; }
+#root .device-support .care-card:before { background:#668bc7; opacity:.55; }
+#root .device-support :is(h1,h2,h3,strong,label,li) { color:#17283e; }
+#root .device-support :is(p,small) { color:#52667d; }
+#root .device-support .care-kicker { color:#315bb4; }
+#root .device-support :is(select,textarea) { background:#fff; color:#17283e; border:1px solid #9bb2c9; border-radius:10px; }
+#root .device-support textarea { min-height:140px; }
+#root .device-support button { background:#315bb4; color:#fff; border:1px solid #315bb4; border-radius:10px; }
+#root .device-support .care-action-link { color:#234d9d; border-color:#9bb2c9; background:#fff; }
