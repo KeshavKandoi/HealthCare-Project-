@@ -205,3 +205,6 @@ body,#root{background:var(--heartline-page);color:var(--heartline-ink)}
 #root .password-settings-card form button { min-height: 48px; margin-top: 16px; border: 1px solid #173c87; border-radius: 8px; background: #315bb5; color: #fff; font-weight: 700; cursor: pointer; }
 #root .password-settings-card form button:disabled { opacity: .65; cursor: wait; }
 #root .password-settings-back { margin-top: 22px; padding: 0; border: 0; background: transparent; color: #1b459a; font-weight: 600; cursor: pointer; }
+
+#root .pw-shell .pw-tabs button:hover, #root .pw-shell .pw-tabs button:focus-visible { background: #dce8fa; color: #111 !important; }
+#root .pw-shell .pw-tabs button.active:hover { color: #111 !important; }
