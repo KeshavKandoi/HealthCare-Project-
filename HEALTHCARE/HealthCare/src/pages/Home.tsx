@@ -80,7 +80,7 @@ export default function Home() {
     </div>
     <div className="home-public-art home-heart-art" ref={heartArt} aria-hidden="true">
       <div className="heart-orbit heart-orbit-one" /><div className="heart-orbit heart-orbit-two" />
-      <div className="heart-scroll"><div className="heart-beat"><svg viewBox="0 0 240 220" className="home-heart" role="presentation"><defs><linearGradient id="heart-fill" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#ffb8c0"/><stop offset=".48" stopColor="#e85b78"/><stop offset="1" stopColor="#843a78"/></linearGradient></defs><path d="M120 197C105 185 28 133 28 76c0-31 20-51 47-51 22 0 37 13 45 30 8-17 23-30 45-30 27 0 47 20 47 51 0 57-77 109-92 121Z" fill="url(#heart-fill)"/><path d="M52 76c0-19 11-31 27-32" fill="none" stroke="#fff" strokeOpacity=".55" strokeWidth="7" strokeLinecap="round"/></svg></div></div>
+      <div className="heart-scroll"><div className="heart-beat"><img src="/anatomical-heart.png" className="home-heart" alt="" /></div></div>
       <div className="home-public-art-label">{tr('A clearer record of your care.')}</div>
     </div>
   </main>;
