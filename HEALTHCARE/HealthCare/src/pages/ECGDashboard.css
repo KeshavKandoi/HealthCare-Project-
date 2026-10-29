@@ -7,3 +7,18 @@
 .ecg-new-head{display:block}.ecg-new-head h1{font-size:clamp(2rem,4vw,3rem)}.ecg-new-head>.ecg-actions{margin-top:24px;padding:18px;background:#161b1e;border:1px solid #3c3336;border-radius:14px;align-items:center}.ecg-actions>*{min-height:44px}.ecg-actions select{min-width:180px;max-width:100%}.ecg-new .ecg-primary,.ecg-new-head .ecg-actions>button:first-child{background:#ed969d;color:#251417;border-color:#ed969d;font-weight:700}.manual-stream label{display:block;font-weight:600;margin-top:20px}.manual-stream textarea{min-height:140px;resize:vertical;font-family:ui-monospace,monospace;line-height:1.6;background:#101517}.manual-stream-badge{padding:6px 10px;border:1px solid #79545a;border-radius:99px;color:#edb2b7;font-size:12px;white-space:nowrap}.manual-stream-status{display:flex;gap:24px;flex-wrap:wrap;padding:18px 0;color:#c6cbce}.manual-stream-help{font-size:14px;line-height:1.6}.ecg-new a{color:#ed969d}@media(max-width:600px){.ecg-new-head>.ecg-actions{display:grid;grid-template-columns:1fr}.ecg-actions select{width:100%}.manual-stream-status{gap:12px}}
 .ecg-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.ecg-connect-device{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:11px 18px;border:1px solid #ed969d;border-radius:10px;color:#f6d8da!important;background:#4a1c20;text-decoration:none}.ecg-connect-device:hover{background:#62272e}.ecg-canvas{background:#fff8f7}@media(max-width:520px){.ecg-metrics{grid-template-columns:1fr 1fr}}
 .ecg-report-times{display:flex;justify-content:space-between;gap:12px;color:#a5b7bf;font-size:.85rem;flex-wrap:wrap}
+
+/* Live monitoring controls use a high-contrast, neutral surface. */
+#root .ecg-new { background: #fff; color: #111; }
+#root .ecg-new :is(h1,h2,h3,h4,p,small,strong,span,label,figcaption) { color: #111; }
+#root .ecg-new :is(.ecg-panel,.ecg-metrics article,.ecg-new-head > .ecg-actions) { background: #fff; border: 1px solid #b8b8b8; box-shadow: 0 4px 18px #0000000d; }
+#root .ecg-new :is(button,select,textarea,.ecg-connect-device) { background: #fff; color: #111 !important; border: 1px solid #333; }
+#root .ecg-new :is(button,.ecg-connect-device):hover:not(:disabled) { background: #f0f0f0; color: #111 !important; border-color: #111; }
+#root .ecg-new button:disabled { background: #f2f2f2; color: #666 !important; border-color: #aaa; }
+#root .ecg-new a { color: #111; }
+.manual-stream-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.manual-simulation-label { display:inline-block; font-size:.8rem; font-weight:700; padding:4px 9px; border:1px solid #777; border-radius:20px; }
+.manual-stream #manual-settings { margin-top:12px; }
+.manual-stream #manual-settings .ecg-actions { margin-top:16px; align-items:center; }
+.manual-stream .ecg-metrics { margin:22px 0 0; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
