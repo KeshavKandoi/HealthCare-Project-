@@ -11,3 +11,13 @@
 #root .doctor-directory .doctor-profile-card { background:#fff; border:1px solid #d0dce8; box-shadow:0 8px 28px #263e5910; }
 #root .doctor-directory .doctor-card-primary { background:#315bb4; color:#fff; border-color:#315bb4; }
 #root .doctor-directory a:not(.doctor-card-primary) { color:#315bb4; }
+
+/* Doctor profile: light, readable patient view. */
+#root .doctor-detail{background:#fff;color:#111}
+#root .doctor-detail :is(h1,h2,h3,p,span,strong,small,label){color:#111}
+#root .doctor-detail :is(.doctor-detail-hero,.doctor-detail-panel){background:#fff;border:1px solid #d5d5d5;box-shadow:0 8px 28px #0000000d}
+#root .doctor-detail :is(.doctor-profile-specialty,.doctor-detail-label){color:#333}
+#root .doctor-detail a{color:#173f8a}
+#root .doctor-detail .doctor-detail-pending{background:#f1f1f1}
+#root .doctor-detail :is(input,textarea){background:#fff;color:#111;border-color:#777;color-scheme:light}
+#root .doctor-detail .doctor-detail-error{color:#9b1c1c!important}
