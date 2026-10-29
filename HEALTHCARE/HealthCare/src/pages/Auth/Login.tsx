@@ -45,7 +45,7 @@ export default function Login() {
     }
   }
 
-  return <div className="auth-container memora-auth"><div className="memora-auth-content"><div className="memora-brand">♥ Heartline</div><div className="card">
+  return <div className="auth-container memora-auth"><div className="memora-auth-content"><div className="memora-brand">Heartline</div><div className="card">
     <h2>{tr('Login')}</h2>
     <p>{tr('Please enter your email and password')}</p>
     <form onSubmit={handleSubmit}>
@@ -56,5 +56,5 @@ export default function Login() {
       {needsVerification && <p className="mt-3"><NavLink to="/register" onClick={() => sessionStorage.setItem('pendingSignupEmail', email.trim())}>Verify email or resend code</NavLink></p>}
       <p className="mt-3">{tr('New here?')} <NavLink to="/register">{tr('Create an account')}</NavLink></p>
     </form>
-  </div><p className="memora-auth-foot">Your heart health, together.</p></div></div>;
+  </div></div></div>;
 }

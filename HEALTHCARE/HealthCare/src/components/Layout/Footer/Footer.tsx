@@ -13,7 +13,7 @@ export default function Footer() {
     <div className="site-footer-inner">
       <div className="site-footer-top">
         <div className="site-footer-brand">
-          <Link to="/" className="site-footer-logo" aria-label="Heartline home"><span aria-hidden="true">♥</span> Heartline</Link>
+          <Link to="/" className="site-footer-logo" aria-label="Heartline home">Heartline</Link>
           <p>{tr(workspace ? 'Your health information, appointments, and monitoring in one place.' : 'A simpler way to keep your heart health records together.')}</p>
         </div>
         <nav className="site-footer-links" aria-label="Footer navigation">

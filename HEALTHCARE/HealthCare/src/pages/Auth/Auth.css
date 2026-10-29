@@ -96,3 +96,16 @@
 #root .memora-auth .demo-signin .hl-button { background: #242d3a !important; color: #eef3f9 !important; border: 1px solid #697789 !important; }
 #root .memora-auth .memora-auth-foot { color: #b7c0cc !important; text-align: center; font-size: 12px; margin: 0; }
 @media (max-width: 700px) { #root .memora-auth .card { padding: 28px 22px; } #root .auth-container.memora-auth { padding: 28px 16px; } }
+
+/* Input icons and account-link spacing */
+#root .memora-auth .form-group:has(#auth-email),
+#root .memora-auth .form-group:has(#auth-password){position:relative}
+#root .memora-auth .form-group:has(#auth-email)::after,
+#root .memora-auth .form-group:has(#auth-password)::after{position:absolute;left:16px;bottom:15px;width:18px;height:18px;pointer-events:none;background-repeat:no-repeat;background-position:center;background-size:contain;content:''}
+#root .memora-auth .form-group:has(#auth-email)::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e5e9ef' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='m4 7 8 6 8-6'/%3E%3C/svg%3E")}
+#root .memora-auth .form-group:has(#auth-password)::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e5e9ef' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='10' width='16' height='11' rx='2'/%3E%3Cpath d='M8 10V7a4 4 0 0 1 8 0v3M12 14v3'/%3E%3C/svg%3E")}
+#root .memora-auth :is(#auth-email,#auth-password){padding-left:46px}
+#root .memora-auth .card form p.mt-3{margin-top:20px!important;line-height:1.6}
+#root .memora-auth .form-group:has(#auth-name){position:relative}
+#root .memora-auth .form-group:has(#auth-name)::after{position:absolute;left:16px;bottom:15px;width:18px;height:18px;pointer-events:none;content:'';background:center / contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e5e9ef' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21a8 8 0 0 1 16 0'/%3E%3C/svg%3E")}
+#root .memora-auth #auth-name{padding-left:46px}

@@ -73,7 +73,7 @@ export default function Register() {
     }
   }
 
-  return <div className="auth-container memora-auth"><div className="memora-auth-content"><div className="memora-brand">♥ Heartline</div><div className="card">
+  return <div className="auth-container memora-auth"><div className="memora-auth-content"><div className="memora-brand">Heartline</div><div className="card">
     <h2>{awaitingCode ? 'Verify your email' : tr('Create an account')}</h2>
     <p>{awaitingCode ? `Enter the six digit code sent to ${email.trim()}.` : tr('Please enter your details to register')}</p>
     {awaitingCode ? <form onSubmit={verifyCode}>
@@ -89,5 +89,5 @@ export default function Register() {
       <button className="hl-button" type="submit" disabled={submitting || !name || !email || !password} style={{ width: '100%' }}>{tr(submitting ? 'Creating account…' : 'Register')}</button>
       <p className="mt-3">{tr('Already have an account?')} <NavLink to="/login">{tr('Sign in')}</NavLink></p>
     </form>}
-  </div><p className="memora-auth-foot">Your heart health, together.</p></div></div>;
+  </div></div></div>;
 }

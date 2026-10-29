@@ -68,7 +68,6 @@ function PageLoading({ session = false }: { session?: boolean }) {
   }, []);
   return <main className="session-loading" aria-busy="true">
     <div className="session-loading-card" role="status" aria-live="polite">
-      <span className="session-loading-icon" aria-hidden="true">♥</span>
       <span className="session-loading-eyebrow">HEARTLINE</span>
       <h1>{session ? 'Preparing your workspace' : 'Getting things ready'}</h1>
       <p>{session ? 'Checking your session securely. This should only take a moment.' : 'Loading your page. This should only take a moment.'}</p>

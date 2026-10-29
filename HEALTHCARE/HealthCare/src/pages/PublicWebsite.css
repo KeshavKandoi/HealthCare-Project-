@@ -25,6 +25,9 @@
 #root .pub-site .heart-media{position:absolute;inset:0 0 0 35%;z-index:0;display:grid;place-items:center}
 #root .pub-site .heart-media img{width:100%;height:90%;object-fit:contain;mix-blend-mode:screen;filter:hue-rotate(325deg) saturate(.85);opacity:.86}
 #root .pub-site .heart-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#root .pub-site .heart-sequence .heart-media{inset:0}
+#root .pub-site .heart-sequence .heart-stage::after{content:"";position:absolute;z-index:1;inset:auto 0 0;height:clamp(140px,24vw,360px);background:linear-gradient(to bottom,transparent 0%,rgba(8,8,8,.35) 45%,#080808 100%);pointer-events:none}
+#root .pub-site .heart-tagline{position:absolute;z-index:2;top:clamp(4px,1vw,15px);right:clamp(4px,1.5vw,24px);margin:0;padding:12px 18px;border-radius:10px;background:#080808;color:#fff;opacity:1;font-size:clamp(13px,1.3vw,20px);font-weight:600;letter-spacing:.02em;text-shadow:0 2px 14px #000}
 #root .pub-site .heart-light{position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 74% 46%,#243b74 0,transparent 55%),linear-gradient(120deg,#071326,#101c38)}
 #root .pub-site .heart-caption{position:absolute;bottom:30px;left:6vw;right:6vw;display:flex;justify-content:space-between;border-top:1px solid #91aecc44;padding-top:22px;color:#9bb0cb;font-size:10px;letter-spacing:.14em}
 #root .pub-site .has-film{height:400svh}
@@ -96,11 +99,11 @@
 @media(prefers-reduced-motion:reduce){#root .pub-site *,#root .cinematic-nav *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 /* Shared public navigation: deliberately independent of the patient sidebar. */
 #root .pub-site .pub-button span{color:inherit}
-#root .cinematic-nav.public-header{height:76px;background:#071326eb!important;border-color:#ffffff20!important;backdrop-filter:blur(20px)}
+#root .cinematic-nav.public-header{height:64px;background:#071326eb!important;border-color:#ffffff20!important;backdrop-filter:blur(20px)}
 #root .cinematic-nav .public-nav{max-width:none;padding:0 3vw;gap:30px}
 #root .cinematic-nav .public-menu-content{display:flex;flex:1;align-items:center;justify-content:space-between;gap:22px}
 #root .cinematic-nav .public-links{position:static;display:flex;flex:1;justify-content:center;gap:clamp(10px,1.4vw,25px);background:none;padding:0;border:0}
-#root .cinematic-nav .public-links a{font-size:12px;font-weight:500;position:relative;padding:25px 0;color:#c5d4e9!important}
+#root .cinematic-nav .public-links a{font-size:12px;font-weight:500;position:relative;padding:19px 0;color:#c5d4e9!important}
 #root .cinematic-nav .public-links a.active{color:#fff!important}
 #root .cinematic-nav .public-links a.active:after{content:'';height:2px;position:absolute;bottom:16px;left:0;right:0;background:#66e1ff}
 #root .cinematic-nav .public-auth{display:flex;align-items:center;gap:20px;white-space:nowrap}
@@ -109,7 +112,7 @@
 #root .cinematic-nav .app-menu{display:none}
 body:has(.cinematic-nav) #root .site-footer{margin:0;background:#071326;color:#b8cce5;border-top:1px solid #ffffff20}
 body:has(.cinematic-nav) #root .site-footer :is(a,h2,p,span){color:#b8cce5}
-@media(max-width:1150px){#root .cinematic-nav .app-menu{display:block;color:#fff;border:1px solid #73839a;border-radius:8px;padding:8px 13px;margin-left:auto}#root .cinematic-nav .public-menu-content{display:none;position:absolute;left:0;right:0;top:76px;background:#071326;max-height:calc(100dvh - 76px);overflow-y:auto;padding:20px 24px;border-bottom:1px solid #53647b}#root .cinematic-nav .public-menu-content.is-open{display:flex;flex-direction:column;align-items:stretch}#root .cinematic-nav .public-links{flex-direction:column;gap:0}#root .cinematic-nav .public-links a{padding:14px 0}#root .cinematic-nav .public-links a.active:after{bottom:8px;right:85%}#root .cinematic-nav .public-auth{border-top:1px solid #53647b;padding-top:20px;justify-content:space-between}}
+@media(max-width:1150px){#root .cinematic-nav .app-menu{display:block;color:#fff;border:1px solid #73839a;border-radius:8px;padding:8px 13px;margin-left:auto}#root .cinematic-nav .public-menu-content{display:none;position:absolute;left:0;right:0;top:64px;background:#071326;max-height:calc(100dvh - 64px);overflow-y:auto;padding:20px 24px;border-bottom:1px solid #53647b}#root .cinematic-nav .public-menu-content.is-open{display:flex;flex-direction:column;align-items:stretch}#root .cinematic-nav .public-links{flex-direction:column;gap:0}#root .cinematic-nav .public-links a{padding:14px 0}#root .cinematic-nav .public-links a.active:after{bottom:8px;right:85%}#root .cinematic-nav .public-auth{border-top:1px solid #53647b;padding-top:20px;justify-content:space-between}}
 @media(max-width:600px){#root .cinematic-nav.public-header{height:68px}#root .cinematic-nav .public-menu-content{top:68px;max-height:calc(100dvh - 68px)}}
 /* Only signed-out directory and plans receive public presentation overrides. */
 body:has(.cinematic-nav) #root :is(.plan-page,.doctors-page){background:#eaf4ff;color:#183452}
@@ -118,3 +121,59 @@ body:has(.cinematic-nav) #root .doctor-directory :is(h1,h2,h3,p,span,strong){col
 body:has(.cinematic-nav) #root .doctor-profile-card{background:#ffffffa0;border:1px solid #b9cee2;box-shadow:0 18px 45px #18345209}
 body:has(.cinematic-nav) #root .doctor-card-primary{background:#183452;color:#fff;border-color:#183452}
 body:has(.cinematic-nav) #root .plan-page .plan-card{border-color:#a8bdd3;box-shadow:0 18px 45px #18345209}
+
+/* Homepage palette */
+#root .pub-home{background:#080808;color:#fff;--pub-line:#363636}
+#root .pub-home :is(.pub-intro,.pub-product,.pub-dark,.pub-final){background:#080808;color:#fff}
+#root .pub-home :is(h1,h2,h3,p,em,.pub-eyebrow,.pub-text-link,.pub-feature,.pub-feature>span,.pub-workflow span,.pub-hardware b){color:#fff}
+#root .pub-home .pub-feature-grid,#root .pub-home .pub-feature,#root .pub-home .pub-timeline,#root .pub-home .pub-workflow li{border-color:#424242}
+#root .pub-home .pub-feature:hover,#root .pub-home .pub-feature:focus-visible{background:#ffffff0d}
+#root .pub-home .pub-time-track{border-color:#424242;background:repeating-linear-gradient(90deg,transparent 0 39px,#ffffff0d 40px)}
+#root .pub-home .pub-time-track i{background:linear-gradient(#fff,#858585)}
+#root .pub-home .pub-hardware{background:#141414;border-color:#444;box-shadow:none}
+#root .pub-home .pub-hardware hr{border:0;border-top:1px solid #444}
+#root .pub-home .pub-button{background:#fff;border-color:#fff;color:#080808}
+#root .pub-home .pub-button:hover{background:#dedede}
+
+/* Dark theme for the signed-out public website. */
+#root .pub-site:not(.pub-home){background:#080808;color:#fff;--pub-line:#424242}
+#root .pub-site:not(.pub-home) .pub-page-hero{background:#080808;color:#fff}
+#root .pub-site:not(.pub-home) :is(h1,h2,h3,p,em,.pub-eyebrow,.pub-text-link,.pub-page-index,.pub-architecture small,.pub-tech-detail summary){color:#fff}
+#root .pub-site:not(.pub-home) :is(.pub-information-grid article,.pub-steps article,.pub-tech-detail,.pub-inline-cta){border-color:#424242}
+#root .pub-site:not(.pub-home) .pub-button{background:#fff;border-color:#fff;color:#111}
+#root .pub-site:not(.pub-home) .pub-button:hover{background:#ddd}
+#root .pub-site .pub-contact-form :is(input,textarea){background:#161616;color:#fff;border-color:#555}
+#root .pub-site .pub-contact-form :is(input,textarea):focus{outline:2px solid #fff;outline-offset:2px}
+body:has(.cinematic-nav) #root :is(.doctor-directory,.plan-page){background:#080808!important;color:#fff!important}
+body:has(.cinematic-nav) #root :is(.doctor-directory,.plan-page) :is(h1,h2,h3,h4,p,span,strong,small,label,li,.plan-price,.plan-note){color:#fff!important}
+body:has(.cinematic-nav) #root :is(.doctor-profile-card,.plan-page .plan-card,.plan-page .plan-card.featured,.plan-page .plan-request,.plan-page .plan-signin,.plan-page .plan-explainer){background:#151515!important;border:1px solid #464646!important;box-shadow:none}
+body:has(.cinematic-nav) #root .plan-page .plan-note{background:#181818!important;border-color:#777!important}
+body:has(.cinematic-nav) #root .plan-page .plan-card-top :is(.plan-mark,strong){background:#292929!important;border-color:#666!important;color:#fff!important}
+body:has(.cinematic-nav) #root .plan-page .plan-card ul{border-color:#555}
+body:has(.cinematic-nav) #root :is(.doctor-card-primary,.plan-page .plan-card button,.plan-page .plan-request button){background:#fff!important;border:1px solid #fff!important;color:#111!important}
+body:has(.cinematic-nav) #root :is(.doctor-card-primary,.plan-page .plan-card button,.plan-page .plan-request button):hover{background:#ddd!important}
+body:has(.cinematic-nav) #root .plan-page :is(input,select,textarea){background:#1a1a1a!important;color:#fff!important;border:1px solid #777!important}
+body:has(.cinematic-nav) #root .plan-page a{color:#fff!important}
+
+/* Public navigation */
+#root .cinematic-nav.public-header{background:#08090b!important;border-color:#26272a!important}
+#root .cinematic-nav .public-menu-content{position:relative}
+#root .cinematic-nav .public-links{flex:0 1 auto;margin:auto;gap:2px;padding:4px;background:#111216;border:1px solid #303136;border-radius:999px}
+#root .cinematic-nav .public-links a{display:flex;align-items:center;justify-content:center;min-height:40px;padding:0 16px;border-radius:999px;color:#c5c5ca!important;transition:background .22s ease,color .22s ease,transform .22s ease}
+#root .cinematic-nav .public-links a:hover{color:#fff!important;background:#292a2e}
+#root .cinematic-nav .public-links a.active{background:#fff;color:#090a0c!important;animation:public-nav-select .25s ease both}
+#root .cinematic-nav .public-links a.active:before{content:'•';margin-right:7px}
+#root .cinematic-nav .public-links a.active:after{display:none}
+#root .cinematic-nav .public-auth{gap:10px}
+#root .cinematic-nav .public-auth a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 16px;border:1px solid #55565a;border-radius:12px;color:#fff;transition:background .2s ease,border-color .2s ease}
+#root .cinematic-nav .public-auth a:hover{background:#222;border-color:#aaa}
+#root .cinematic-nav .public-auth .public-cta{background:#fff!important;border-color:#fff!important;color:#090a0c!important;padding:0 17px;border-radius:12px}
+#root .cinematic-nav .public-auth .public-cta:hover{background:#dedede!important}
+@keyframes public-nav-select{from{opacity:.6;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+@media(max-width:1150px){
+  #root .cinematic-nav .public-menu-content{background:#08090b}
+  #root .cinematic-nav .public-links{width:100%;margin:0;gap:4px;padding:6px;border-radius:18px}
+  #root .cinematic-nav .public-links a{justify-content:flex-start;padding:0 16px}
+  #root .cinematic-nav .public-auth{border-color:#303136}
+}
+@media(prefers-reduced-motion:reduce){#root .cinematic-nav .public-links a{animation:none!important;transition:none!important}}
