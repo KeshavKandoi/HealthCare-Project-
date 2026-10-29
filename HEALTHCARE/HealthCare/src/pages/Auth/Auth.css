@@ -72,3 +72,27 @@
 }
 
 .auth-text-button:disabled { cursor: not-allowed; opacity: .6; }
+
+/* Sign-in and signup presentation inspired by the MeMorae auth screens. */
+#root .auth-container.memora-auth {
+  position: relative; isolation: isolate; min-height: calc(100vh - 72px);
+  padding: 48px 18px; background: radial-gradient(ellipse at 50% 28%, #202a39 0%, #111722 44%, #070a10 82%) !important; color: #f5f7fb;
+}
+.memora-auth-content { width: min(100%, 560px); display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.memora-brand { color: #f5f7fb; font-size: 25px; font-weight: 750; letter-spacing: -.045em; text-shadow: 0 1px 14px #d2deee29; }
+#root .memora-auth .card { width: 100%; max-width: 560px; padding: 48px 52px; background: #0d1119f0 !important; border: 1px solid #46515f !important; border-radius: 18px; box-shadow: 0 24px 80px #0008; }
+#root .memora-auth .card h2 { color: #fff !important; text-align: left; font-size: 26px; letter-spacing: -.04em; margin: 0 0 8px; }
+#root .memora-auth .card > p { color: #c3cad5 !important; text-align: left; margin: 0 0 26px; line-height: 1.5; }
+#root .memora-auth form label { display: block; color: #f1f4f8 !important; font-size: 13px; font-weight: 650; margin: 0 0 8px; }
+#root .memora-auth input { min-height: 48px; background: #101722 !important; color: #fff !important; border: 1px solid #596779 !important; border-radius: 8px; }
+#root .memora-auth input::placeholder { color: #a4afbd !important; }
+#root .memora-auth input:focus-visible { outline: 2px solid #e5eef8; outline-offset: 2px; border-color: #dbe7f5 !important; }
+#root .memora-auth input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #101722 inset !important; -webkit-text-fill-color: #fff !important; }
+#root .memora-auth form .hl-button { min-height: 48px; margin-top: 8px; color: #fff !important; background: #101010 !important; border: 1px solid #fff !important; border-radius: 8px; }
+#root .memora-auth form .hl-button:hover:not(:disabled) { background: #242424 !important; }
+#root .memora-auth .card form p, #root .memora-auth .demo-signin p { color: #c3cad5 !important; margin-bottom: 0; }
+#root .memora-auth .card a, #root .memora-auth .auth-text-button { color: #e4edf8 !important; text-decoration: underline; text-underline-offset: 3px; }
+#root .memora-auth .demo-signin { border-color: #46515f; }
+#root .memora-auth .demo-signin .hl-button { background: #242d3a !important; color: #eef3f9 !important; border: 1px solid #697789 !important; }
+#root .memora-auth .memora-auth-foot { color: #b7c0cc !important; text-align: center; font-size: 12px; margin: 0; }
+@media (max-width: 700px) { #root .memora-auth .card { padding: 28px 22px; } #root .auth-container.memora-auth { padding: 28px 16px; } }

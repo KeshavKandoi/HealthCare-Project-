@@ -44,17 +44,17 @@ export default function Login() {
     navigate('/');
   }
 
-  return <div className="auth-container"><div className="card">
+  return <div className="auth-container memora-auth"><div className="memora-auth-content"><div className="memora-brand">♥ Heartline</div><div className="card">
     <h2>{tr('Login')}</h2>
     <p>{tr('Please enter your email and password')}</p>
     <form onSubmit={handleSubmit}>
-      <div className="form-group mb-3"><input type="email" aria-label={tr('Email')} autoComplete="email" required placeholder={tr('Enter your email')} value={email} onChange={event => setEmail(event.target.value)} /></div>
-      <div className="form-group mb-3"><input type="password" aria-label={tr('Password')} autoComplete="current-password" required placeholder={tr('Enter your password')} value={password} onChange={event => setPassword(event.target.value)} /></div>
+      <div className="form-group mb-3"><label htmlFor="auth-email">Email address</label><input id="auth-email" type="email" aria-label={tr('Email')} autoComplete="email" required placeholder={tr('Enter your email')} value={email} onChange={event => setEmail(event.target.value)} /></div>
+      <div className="form-group mb-3"><label htmlFor="auth-password">Password</label><input id="auth-password" type="password" aria-label={tr('Password')} autoComplete="current-password" required placeholder={tr('Enter your password')} value={password} onChange={event => setPassword(event.target.value)} /></div>
       <button className="hl-button" type="submit" disabled={submitting || !email || !password} style={{ width: '100%' }}>{tr(submitting ? 'Signing in…' : 'Login')}</button>
       <p className="mt-3"><NavLink to="/forgot-password">Forgot password?</NavLink></p>
       {needsVerification && <p className="mt-3"><NavLink to="/register" onClick={() => sessionStorage.setItem('pendingSignupEmail', email.trim())}>Verify email or resend code</NavLink></p>}
       <p className="mt-3">{tr('New here?')} <NavLink to="/register">{tr('Create an account')}</NavLink></p>
     </form>
     <div className="demo-signin"><span>{tr('or')}</span><button className="hl-button hl-button--soft" type="button" onClick={handleDemoSignIn}>{tr('Continue as demo patient')}</button><p>{tr('Open the patient workspace without creating an account. All changes stay in this tab.')}</p></div>
-  </div></div>;
+  </div><p className="memora-auth-foot">Your heart health, together.</p></div></div>;
 }
