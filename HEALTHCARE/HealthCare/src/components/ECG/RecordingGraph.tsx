@@ -5,14 +5,14 @@ import { initialScale, inspectSignal, validRate } from './signal';
 import type { SignalChunk, AmplitudeScale } from './signal';
 import './RecordingGraph.css';
 
-type Props = { sessionId: string; sampleRate: number; start: string; end: string; units: string; live?: boolean; sourceChunks?: SignalChunk[]; lead?: string };
+type Props = { sessionId: string; sampleRate: number; start: string; end: string; units: string; live?: boolean; sourceChunks?: SignalChunk[]; liveChunks?: SignalChunk[]; lead?: string };
 const windows = [1, 2, 5, 10, 30, 60, 300];
 
 export default function RecordingGraph(props: Props) {
   // Remount all viewport state when switching recordings, including fixed amplitude scale.
   return <RecordingViewer key={props.sessionId} {...props} />;
 }
-function RecordingViewer({ sessionId, sampleRate, start, end, units, live = false, sourceChunks, lead }: Props) {
+function RecordingViewer({ sessionId, sampleRate, start, end, units, live = false, sourceChunks, liveChunks, lead }: Props) {
   const begin = Date.parse(start), finish = Math.max(begin + 1, Date.parse(end) || begin + 1);
   const [seconds, setSeconds] = useState(10);
   const [position, setPosition] = useState(begin);
@@ -33,7 +33,8 @@ function RecordingViewer({ sessionId, sampleRate, start, end, units, live = fals
   const fetchLeft = mode === 'live' ? Math.floor(left / 5000) * 5000 : left;
   const fetchSpan = mode === 'live' ? Math.min(300000, span + 5000) : span;
   const requestKey = `${fetchLeft}:${fetchSpan}:${retry}`;
-  const chunks = mode === 'paused' && frozen ? frozen.chunks : sourceChunks ?? (remote && (remote.key === requestKey || mode === 'live') ? remote.chunks : []);
+  const merged = useMemo(()=>{const fetched = remote && (remote.key === requestKey || mode === 'live') ? remote.chunks : [];const bySequence=new Map(fetched.map(c=>[Number(c.sequence),c]));if(mode==='live')for(const c of liveChunks||[])bySequence.set(Number(c.sequence),c);return [...bySequence.values()]},[remote,requestKey,mode,liveChunks]);
+  const chunks = mode === 'paused' && frozen ? frozen.chunks : sourceChunks ?? merged;
   const diagnostics = useMemo(() => inspectSignal(chunks, sampleRate), [chunks, sampleRate]);
   const displayScale = useMemo(() => ({ center: scale?.center ?? 0, perDivision: (scale?.perDivision ?? 100) / zoom }), [scale, zoom]);
   useEffect(() => {
@@ -49,8 +50,9 @@ function RecordingViewer({ sessionId, sampleRate, start, end, units, live = fals
     return () => { clearTimeout(timer); controller.abort(); };
   }, [sessionId, fetchLeft, fetchSpan, requestKey, sampleRate, sourceChunks, mode, units]);
   useEffect(() => {
-    if (sourceChunks?.some(c=>c.samples.some(Number.isFinite))) setScale(current=>current??initialScale(sourceChunks,units));
-  }, [sourceChunks, units]);
+    const supplied=sourceChunks||liveChunks;
+    if (supplied?.some(c=>c.samples.some(Number.isFinite))) setScale(current=>current??initialScale(supplied,units));
+  }, [sourceChunks, liveChunks, units]);
   useEffect(() => {
     const reconnect = () => setRetry(value => value + 1);
     window.addEventListener('online', reconnect);

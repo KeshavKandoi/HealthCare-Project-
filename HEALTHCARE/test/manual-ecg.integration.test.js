@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import express from 'express';
 import pg from 'pg';
 import {randomUUID} from 'node:crypto';
-import {manualEcgRouter} from '../routes/manualEcg.js';
+import {manualEcgRouter} from '../dist/routes/manualEcg.js';
 
 test('manual stream persists only owned simulated packets, rejects malformed and conflicting uploads', {skip:process.env.ECG_INTEGRATION_TEST!=='1'}, async()=>{
   const pool=new pg.Pool({connectionString:process.env.DATABASE_URL,connectionTimeoutMillis:8000});

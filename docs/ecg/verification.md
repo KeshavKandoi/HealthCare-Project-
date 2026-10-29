@@ -35,4 +35,15 @@ Manual connection now defaults to `Simulated Holter resting-v1`, a new 250 Hz/mV
 
 The isolated PostgreSQL integration test passed for ten packets / 2,500 samples. All stored samples equal the generator output exactly; BP matches scenarioVitals; duplicate retries are idempotent; another patient's upload is rejected. Physical ingestion regression tests passed in the same suite. Frontend build/typecheck passed. Production database and SMTP were not modified.
 
-Manual-to-automatic visual comparison in the signed-in application has not yet been completed for this update; do not treat the earlier automatic-only browser check as verification of this new manual UI.
+The earlier v1 manual visual acceptance was superseded by the v2 browser run below.
+
+## Rest/activity/recovery v2 (2026-10-29)
+New runs use `resting-v2`, seed `20261029`, at 250 samples/second. A deterministic beat schedule varies R–R intervals and P/R/T amplitudes slightly. The scenario rests for 30 seconds, rises smoothly through 90 seconds, holds through 120 seconds, then recovers through 210 seconds. BP is an independent scenario output updated every five seconds; it is not calculated from ECG. Both panels show trends and timestamped BP history. Version 1 remains available for existing recordings.
+
+Manual starts persist scenario/seed metadata as a recording event. Every accepted packet is validated against that version/seed and stored with its original sample clock. Automatic simulation saves also include version and seed metadata. Physical ingestion and its unavailable ECG-only BP result are unchanged.
+
+The live renderer now consumes accepted packets immediately alongside range-fetched history. PostgreSQL bigint sequence strings and live numeric sequences are normalized when merging, so a packet is not displayed twice. Display pause still freezes only the viewer.
+
+Validation: deterministic seeds, v1 compatibility, smooth phase transitions, changing BP, and heart rate consistent with simulated R–R intervals pass. Frontend lint/typecheck/build pass. Backend suite: 17 pass, five database-gated tests skipped in the generic run. The separate isolated PostgreSQL monitoring integration passed, including 2,500 exact stored manual samples, idempotency, ownership and physical-ingestion regressions. No production database or notification provider was changed.
+
+Actual signed-in Chrome run passed: snapshots at 10, 30, 60, 120 and 180 seconds, then saved recording playback. Manual ingestion stored 45,000 samples in local PostgreSQL. At 120 seconds both panels displayed approximately 96 BPM and 128/82 simulated BP; recovery was visible at 180 seconds. Browser authentication was isolated through a local test adapter; ECG API and persistence were real local application services. No physical hardware was tested. Screenshots and browser video are saved in `/tmp/heartline-ecg-qa/`.

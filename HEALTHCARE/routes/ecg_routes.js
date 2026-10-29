@@ -1,5 +1,5 @@
 import express from 'express';
-import {simulationPacket, simulationRate, scenarioVitals} from '../lib/ecgSimulation.js';
+import {simulationPacket, simulationRate, scenarioVitals, simulationSeed} from '../lib/ecgSimulation.js';
 import {estimateResearchBp} from '../lib/ecgResearch.js';
 import { manualEcgRouter } from './manualEcg.js';
 import { patientAuth } from '../middlewares/ecgAuth.js';
@@ -100,12 +100,13 @@ router.use('/manual/start', pairingLimit);
 router.use(manualEcgRouter(getPool, (patientId, batch) => io.to(`patient:${patientId}`).emit('ecg-batch', batch)));
 // Simulation records are isolated from physical sessions and every medical alert path.
 router.post('/simulations',pairingLimit,asyncRoute(async(req,res)=>{
- const {id,startedAt,durationSeconds}=req.body||{};
+ const {id,startedAt,durationSeconds,scenario='resting-v1',seed=simulationSeed}=req.body||{};
+ if(!['resting-v1','resting-v2'].includes(scenario)||seed!==simulationSeed)return fail(res,400,'Unsupported scenario or seed');
  const start=Date.parse(startedAt);
  if(!uuid(id)||!Number.isFinite(start)||start>Date.now()+5000||start<Date.now()-86400000||!Number.isInteger(durationSeconds)||durationSeconds<1||durationSeconds>300)return fail(res,400,'Invalid simulation run');
- const chunks=Array.from({length:durationSeconds},(_,sequence)=>({sequence,first_sample_at:new Date(start+sequence*1000).toISOString(),samples:simulationPacket(sequence)}));
- const bp=Array.from({length:durationSeconds},(_,sequence)=>({timestamp:new Date(start+sequence*1000).toISOString(),source:'simulated',...scenarioVitals(sequence)}));
- const saved=await getPool().query('insert into ecg_simulation_runs(id,patient_id,scenario_version,started_at,duration_seconds,sample_rate_hz,waveform_chunks,simulated_bp) values($1,$2,$3,$4,$5,$6,$7,$8) on conflict(id) do nothing returning id',[id,req.patientId,'resting-v1',new Date(start),durationSeconds,simulationRate,JSON.stringify(chunks),JSON.stringify(bp)]);
+ const chunks=Array.from({length:durationSeconds},(_,sequence)=>({sequence,first_sample_at:new Date(start+sequence*1000).toISOString(),samples:simulationPacket(sequence,{scenario,seed})}));
+ const bp=Array.from({length:durationSeconds},(_,sequence)=>({timestamp:new Date(start+sequence*1000).toISOString(),source:'simulated',scenario,seed,...scenarioVitals(sequence,{scenario,seed})}));
+ const saved=await getPool().query('insert into ecg_simulation_runs(id,patient_id,scenario_version,started_at,duration_seconds,sample_rate_hz,waveform_chunks,simulated_bp) values($1,$2,$3,$4,$5,$6,$7,$8) on conflict(id) do nothing returning id',[id,req.patientId,scenario,new Date(start),durationSeconds,simulationRate,JSON.stringify(chunks),JSON.stringify(bp)]);
  if(!saved.rows.length){const existing=await getPool().query('select id from ecg_simulation_runs where id=$1 and patient_id=$2',[id,req.patientId]);if(!existing.rows.length)return fail(res,409,'Run unavailable')}
  res.status(201).json({id,source:'simulated'});
 }));

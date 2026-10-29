@@ -58,7 +58,7 @@ test('offline backfill, markers, clinician review, caregiver scopes, diagnostics
     await pool.query('update ecg_recording_sessions set started_at=$2 where id=$1',[manual.data.id,manualStart]);
     let firstPacket;
     for(let sequence=0;sequence<10;sequence++){
-      const packet={sequence,samples:simulationPacket(sequence),firstSampleAt:new Date(Date.parse(manualStart)+sequence*1000).toISOString(),sampleRateHz:250,source:'simulated',scenario:'resting-v1'};
+      const packet={sequence,samples:simulationPacket(sequence),firstSampleAt:new Date(Date.parse(manualStart)+sequence*1000).toISOString(),sampleRateHz:250,source:'simulated',scenario:'resting-v2',seed:20261029};
       const uploaded=await request(`/ecg/manual/simulated/${manual.data.id}/packets`,'POST',packet,patient);
       assert.equal(uploaded.status,201,JSON.stringify(uploaded.data));assert.deepEqual(uploaded.data.batch.samples,simulationPacket(sequence));
       assert.equal(uploaded.data.batch.systolic,scenarioVitals(sequence).systolic);
