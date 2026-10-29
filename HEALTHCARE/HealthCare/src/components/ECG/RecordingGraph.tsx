@@ -91,7 +91,7 @@ function RecordingViewer({ sessionId, sampleRate, start, end, units, live = fals
     <label className="recording-timeline">Recording timeline<input type="range" min={begin} max={Math.max(begin+1,max)} value={left} disabled={max===begin} onChange={e=>pan(Number(e.target.value))} aria-label="Recording timeline" /></label>
     <div className="recording-times"><span>{new Date(begin).toLocaleString()}</span><span>{new Date(finish).toLocaleString()}</span></div>
     <p className="recording-calibration">{units==='mV'?'Reported mV*':'Raw amplitude'} · {displayScale.perDivision} {units==='mV'?'mV':'units'}/major division · {sourceChunks && lead ? 'Reference scaling from source header' : 'Uncalibrated: lead, ADC gain and calibration have not been verified.'} No filtering applied.</p>
-    {sampleRate<100 && <p className="recording-quality">Sparse input: showing individual samples, not an interpolated ECG trace. These samples cannot resolve detailed P–QRS–T morphology.</p>}
+    {sampleRate<100 && <p className="recording-quality">Low sample rate: the line connects the received samples. Fine P–QRS–T detail may not be captured at this rate.</p>}
     {diagnostics.repeatedChunks>0 && <p className="recording-quality">{diagnostics.repeatedChunks} adjacent packets contain identical sample arrays. The repetition is present in the source data.</p>}
     {diagnostics.overlaps>0 && <p className="recording-quality">Overlapping packet timestamps detected; segments are shown separately.</p>}
     {clipping && <p className="recording-quality">Some values are outside the current amplitude view. Reduce amplitude magnification or choose “Fit amplitude once”.</p>}

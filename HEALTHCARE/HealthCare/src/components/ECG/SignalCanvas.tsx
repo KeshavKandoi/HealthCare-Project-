@@ -36,17 +36,17 @@ export default function SignalCanvas({ chunks, sampleRate, start, span, scale, u
       ctx.save(); ctx.beginPath(); ctx.rect(pad.left, pad.top, w, h); ctx.clip();
       ctx.strokeStyle = '#202127'; ctx.fillStyle = '#202127'; ctx.lineWidth = 1.1; ctx.lineJoin = 'round';
       const segments = signalSegments(chunks, sampleRate, start, start + span);
-      // Sparse streams cannot support a detailed rhythm strip. Show actual points, not triangular interpolation.
-      const pointsOnly = sampleRate < 100;
+      // Draw the same sample-to-sample trace for every source. Never smooth or bridge missing segments.
       for (const segment of segments) {
         const points = reduceToPixels(segment, start, span, w);
         ctx.beginPath();
         points.forEach((point, i) => {
-          if (pointsOnly) { ctx.moveTo(x(point.time) + 1.8, y(point.value)); ctx.arc(x(point.time), y(point.value), 1.8, 0, Math.PI * 2); }
-          else if (i === 0) ctx.moveTo(x(point.time), y(point.value));
+          if (i === 0) ctx.moveTo(x(point.time), y(point.value));
           else ctx.lineTo(x(point.time), y(point.value));
         });
-        if (pointsOnly) ctx.fill(); else ctx.stroke();
+        ctx.stroke();
+        // A lone sample has no neighbour to join, but must remain visible.
+        if (points.length === 1) { ctx.beginPath(); ctx.arc(x(points[0].time), y(points[0].value), 1, 0, Math.PI * 2); ctx.fill(); }
       }
       ctx.restore();
       ctx.fillStyle = '#64484c'; ctx.fillText(units === 'mV' ? 'mV*' : 'raw', 4, 12);
