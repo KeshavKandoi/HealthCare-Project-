@@ -130,9 +130,19 @@ router.get('/sessions',asyncRoute(async(req,res)=>{
 router.get('/sessions/:id',asyncRoute(async(req,res)=>{
  if(!uuid(req.params.id))return fail(res,400,'Invalid session');
  const {rows}=await getPool().query('select * from ecg_recording_sessions where id=$1 and patient_id=$2',[req.params.id,req.patientId]);if(!rows[0])return fail(res,404,'Session unavailable');
- const chunks=await getPool().query('select sequence,first_sample_at,sample_count,samples,sha256 from ecg_recording_chunks where session_id=$1 order by sequence limit 10000',[req.params.id]);
+ const chunks=req.query.metadata === '1' ? {rows:[]} : await getPool().query('select sequence,first_sample_at,sample_count,samples,sha256 from ecg_recording_chunks where session_id=$1 order by sequence limit 10000',[req.params.id]);
  const notes=await getPool().query('select id,note,created_at from ecg_session_notes where session_id=$1 and patient_id=$2 order by created_at',[req.params.id,req.patientId]);
  res.json({session:rows[0],chunks:chunks.rows,notes:notes.rows});
+}));
+router.get('/sessions/:id/chunks',asyncRoute(async(req,res)=>{
+ if(!uuid(req.params.id))return fail(res,400,'Invalid session');
+ const start=Date.parse(req.query.start),end=Date.parse(req.query.end);
+ if(!Number.isFinite(start)||!Number.isFinite(end)||end<=start||end-start>300000)return fail(res,400,'Choose a time range up to five minutes');
+ const {rows}=await getPool().query('select sample_rate_hz from ecg_recording_sessions where id=$1 and patient_id=$2',[req.params.id,req.patientId]);
+ if(!rows[0])return fail(res,404,'Session unavailable');
+ const chunks=await getPool().query("select sequence,first_sample_at,sample_count,samples,sha256 from ecg_recording_chunks where session_id=$1 and first_sample_at<$3 and first_sample_at+(sample_count::double precision/$4*interval '1 second')>$2 order by first_sample_at,sequence limit 20001",[req.params.id,new Date(start),new Date(end),rows[0].sample_rate_hz]);
+ if(chunks.rows.length>20000)return fail(res,413,'Too many chunks in this time range; zoom in');
+ res.json({chunks:chunks.rows});
 }));
 router.get('/sessions/:id/download',asyncRoute(async(req,res)=>{
  if(!uuid(req.params.id))return fail(res,400,'Invalid session');
