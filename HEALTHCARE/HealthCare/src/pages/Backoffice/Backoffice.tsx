@@ -69,7 +69,7 @@ export default function Backoffice() {
       <section className="bo-intro">
         <p className="bo-kicker">Live monitoring control</p>
         <h1>Live waveform</h1>
-        <p>Choose what the Live waveform panel shows on every simulated monitor. Open monitors switch within a few seconds.</p>
+        <p>Choose what the Live monitoring screen shows. Every open monitor switches within a few seconds.</p>
       </section>
 
       <section className="bo-panel" aria-labelledby="bo-now-title">
@@ -95,8 +95,6 @@ export default function Backoffice() {
             </span>
           </button>)}
         </div>
-      </section>
-      <p className="bo-footnote">Applies to simulated Holter streams only. Recordings from physical devices are never changed.</p>
-    </main>
+      </section>    </main>
   </div>;
 }

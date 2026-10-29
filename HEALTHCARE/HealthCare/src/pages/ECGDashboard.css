@@ -33,3 +33,15 @@
 #root .ecg-new .ecg-leads-off h3 { margin: 4px 0 0; font-size: 1.3rem; letter-spacing: -.02em; color: #8c1d29; }
 #root .ecg-new .ecg-leads-off p { margin: 0; color: #6b5357; line-height: 1.5; }
 @media (max-width: 520px) { .ecg-leads-off { min-height: 250px; } .ecg-leads-off-card { padding: 18px; } }
+
+/* Live monitor: vitals, leads status and a continuous sweep on ECG paper. */
+.ecg-new .ecg-live-metrics { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.ecg-live-screen { position: relative; height: 340px; margin: 20px 0 4px; overflow: hidden; border: 1px solid #d9c3c6; border-radius: 10px; background-color: #fff8f7; background-image: linear-gradient(#e9a7b04d 1px, transparent 1px), linear-gradient(90deg, #e9a7b04d 1px, transparent 1px), linear-gradient(#f7dce0 1px, transparent 1px), linear-gradient(90deg, #f7dce0 1px, transparent 1px); background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px; }
+.ecg-live-screen canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+#root .ecg-new .ecg-live-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid #b7e4c7; border-radius: 999px; background: #effaf3; color: #166534; font-size: .8rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.ecg-live-badge::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: ecg-live-pulse 2s infinite; }
+#root .ecg-new .ecg-live-badge.is-off { border-color: #e3c9cd; background: #fdecee; color: #8c1d29; }
+.ecg-live-badge.is-off::before { background: #b4232f; animation: none; }
+@keyframes ecg-live-pulse { 0% { box-shadow: 0 0 0 0 #22c55e80; } 70% { box-shadow: 0 0 0 8px #22c55e00; } 100% { box-shadow: 0 0 0 0 #22c55e00; } }
+@media (max-width: 520px) { .ecg-live-screen { height: 250px; } .ecg-new .ecg-live-metrics { grid-template-columns: 1fr 1fr; } .ecg-live-metrics article:last-child { grid-column: 1 / -1; } }
+@media (prefers-reduced-motion: reduce) { .ecg-live-badge::before { animation: none; } }

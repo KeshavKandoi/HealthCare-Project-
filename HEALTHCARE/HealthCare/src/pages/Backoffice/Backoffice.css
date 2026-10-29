@@ -81,7 +81,6 @@
 .bo-mode-text small { color: var(--bo-muted) !important; font-size: 13px; line-height: 1.45; }
 .bo-pill { padding: 2px 8px; border-radius: 999px; background: var(--bo-accent); color: var(--bo-accent-ink) !important; font-size: 10.5px; font-style: normal; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
 .bo-pill.is-pending { background: transparent; border: 1px solid var(--bo-accent); color: var(--bo-accent) !important; }
-.bo-footnote { color: var(--bo-faint) !important; font-size: 13px; line-height: 1.5; }
 
 @media (max-width: 520px) {
   .bo-email { display: none; }
