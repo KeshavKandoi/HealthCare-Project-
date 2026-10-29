@@ -45,10 +45,10 @@ export default function ManualStream({ onStarted, onBatch, onFinished }: Props) 
     }
   };
   return <section className="ecg-panel manual-stream" aria-label="Manual connection">
-    <div className="ecg-panel-head"><div><h2>Manual connection</h2><p>Paste your packet JSON or supported terminal loop, then start streaming.</p></div><span className="manual-stream-badge">Simulated data</span></div>
+    <div className="ecg-panel-head"><div><h2>Manual connection</h2><p>Paste your packet JSON or terminal loop here, then click Connect and start. This page sends authenticated packets to your recording.</p></div><span className="manual-stream-badge">Simulated data</span></div>
     <label htmlFor="manual-packets">Packet input</label>
     <textarea id="manual-packets" spellCheck={false} value={input} disabled={busy} onChange={e=>setInput(e.target.value)} />
-    <p className="manual-stream-help">Packets are sent to your account once per second. Keep this page open. This is a 10-sample/s raw test feed, not hardware ECG. Reusing the same values repeats that pattern; it cannot create P–QRS–T detail.</p>
+    <p className="manual-stream-help">Do not run the old /ecg/data command in Terminal: that endpoint is retired. Paste the loop above instead. Packets are sent to your account once per second. Keep this page open. This is a 10-sample/s raw test feed, not hardware ECG. Reusing the same values repeats that pattern; it cannot create P–QRS–T detail.</p>
     <div className="ecg-actions"><button disabled={busy} onClick={()=>void start()} className="ecg-primary">{busy?'Streaming…':'Connect and start'}</button><button disabled={!busy} onClick={()=>{run.current.stopped=true;setStatus('Disconnecting…')}}>Stop stream</button><button disabled={busy} onClick={()=>setInput(example)}>Use example</button></div>
     <div className="manual-stream-status" role="status"><strong>{status}</strong><span>{sent} packets saved</span><span>{bpm === null ? '—' : bpm} BPM</span></div>
     {error && <p role="alert" className="ecg-banner">{error}</p>}

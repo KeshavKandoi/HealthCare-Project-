@@ -29,22 +29,25 @@ function RecordingViewer({ sessionId, sampleRate, start, end, units, live = fals
   const span = seconds * 1000; // Always ten seconds initially, even if only one packet exists.
   const max = Math.max(begin, finish - span);
   const left = mode === 'paused' && frozen ? frozen.left : mode === 'live' ? max : Math.max(begin, Math.min(position, max));
-  const requestKey = `${left}:${span}:${retry}`;
-  const chunks = mode === 'paused' && frozen ? frozen.chunks : sourceChunks ?? (remote?.key === requestKey ? remote.chunks : []);
+  // Keep an in-flight live request alive while the display clock advances.
+  const fetchLeft = mode === 'live' ? Math.floor(left / 5000) * 5000 : left;
+  const fetchSpan = mode === 'live' ? Math.min(300000, span + 5000) : span;
+  const requestKey = `${fetchLeft}:${fetchSpan}:${retry}`;
+  const chunks = mode === 'paused' && frozen ? frozen.chunks : sourceChunks ?? (remote && (remote.key === requestKey || mode === 'live') ? remote.chunks : []);
   const diagnostics = useMemo(() => inspectSignal(chunks, sampleRate), [chunks, sampleRate]);
   const displayScale = useMemo(() => ({ center: scale?.center ?? 0, perDivision: (scale?.perDivision ?? 100) / zoom }), [scale, zoom]);
   useEffect(() => {
-    if (sourceChunks || mode === 'paused' || !Number.isFinite(left) || !validRate(sampleRate)) return;
+    if (sourceChunks || mode === 'paused' || !Number.isFinite(fetchLeft) || !validRate(sampleRate)) return;
     const controller = new AbortController();
     const timer = window.setTimeout(() => {
       setPending(true); setError('');
-      API.get<{chunks:SignalChunk[]}>(`/ecg/sessions/${sessionId}/chunks`, { params: { start: new Date(left).toISOString(), end: new Date(left + span).toISOString() }, signal: controller.signal })
+      API.get<{chunks:SignalChunk[]}>(`/ecg/sessions/${sessionId}/chunks`, { params: { start: new Date(fetchLeft).toISOString(), end: new Date(fetchLeft + fetchSpan).toISOString() }, signal: controller.signal })
         .then(response => { if (!controller.signal.aborted) { setRemote({key:requestKey, chunks:response.data.chunks}); if(response.data.chunks.some(c=>c.samples.some(Number.isFinite)))setScale(current=>current??initialScale(response.data.chunks,units)); } })
         .catch(() => { if (!controller.signal.aborted) { setRemote(null); setError('Unable to load samples. Reconnect and retry.'); } })
         .finally(() => { if (!controller.signal.aborted) setPending(false); });
     }, 100);
     return () => { clearTimeout(timer); controller.abort(); };
-  }, [sessionId, left, span, requestKey, sampleRate, sourceChunks, mode, units]);
+  }, [sessionId, fetchLeft, fetchSpan, requestKey, sampleRate, sourceChunks, mode, units]);
   useEffect(() => {
     if (sourceChunks?.some(c=>c.samples.some(Number.isFinite))) setScale(current=>current??initialScale(sourceChunks,units));
   }, [sourceChunks, units]);
@@ -52,7 +55,7 @@ function RecordingViewer({ sessionId, sampleRate, start, end, units, live = fals
     const reconnect = () => setRetry(value => value + 1);
     window.addEventListener('online', reconnect);
     // Poll the same viewport in live mode too: late/gateway-replayed batches may have identical end times.
-    const timer = live && mode === 'live' && !sourceChunks ? window.setInterval(reconnect, 3000) : undefined;
+    const timer = undefined;
     return () => { window.removeEventListener('online', reconnect); clearInterval(timer); };
   }, [live, mode, sourceChunks]);
   const pan = (next: number) => { setMode('playback'); setPosition(Math.max(begin, Math.min(max, next))); };
