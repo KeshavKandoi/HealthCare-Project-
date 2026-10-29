@@ -220,3 +220,38 @@ body,#root{background:var(--heartline-page);color:var(--heartline-ink)}
 #root .my-health-page button:not(.pw-tabs button):disabled,
 #root .care-shell button.care-invite-button:disabled{background:#f4f4f4!important;color:#777!important;border-color:#aaa!important;cursor:not-allowed}
 #root .my-health-page button:focus-visible,#root .care-shell button.care-invite-button:focus-visible{outline:3px solid #315bb4;outline-offset:3px}
+
+/* Caregiver invitations */
+#root .caregiver-page :is(.care-success,.care-token){background:#fff!important;color:#111!important;border:1px solid #555!important;box-shadow:0 6px 20px #0000000a}
+#root .caregiver-page .care-token :is(span,code){color:#111!important}
+#root .caregiver-page .care-permissions{border-color:#999}
+#root .caregiver-page .care-permissions legend{color:#333}
+#root .caregiver-page :is(.care-permissions input,.care-check input){accent-color:#111}
+#root .caregiver-page .care-grant{border-color:#ddd}
+#root .caregiver-page button:not(:disabled){background:#fff!important;color:#111!important;border:1px solid #111!important}
+#root .caregiver-page button:hover:not(:disabled){background:#f1f1f1!important}
+#root .caregiver-page .care-grant button+button{margin-left:8px}
+
+/* Overview */
+#root .home-dashboard{background:#f5f7fa;color:#111}
+#root .home-dashboard-inner{max-width:1320px}
+#root .home-dashboard-heading{background:#fff;border:1px solid #ddd;box-shadow:0 8px 28px #0000000b;padding:40px;min-height:220px}
+#root .home-dashboard-heading :is(h1,h1 span){color:#111!important}
+#root .home-dashboard-heading p{color:#50545b}
+#root .home-dashboard :is(.home-kicker,.home-card-label){color:#444!important}
+#root .home-dashboard .home-kicker-dot{background:#111;box-shadow:0 0 0 4px #11111116}
+#root .home-dashboard .home-monitor-button{background:#111!important;color:#fff!important;border:1px solid #111!important}
+#root .home-dashboard .home-heading-art svg{stroke:#555;filter:none}
+#root .home-dashboard .home-art-ring{border-color:#d2d2d2}
+#root .home-dashboard .home-art-caption{color:#777}
+#root .home-dashboard :is(.home-dashboard-loading,.home-dashboard-error){background:#fff!important;color:#222!important;border:1px solid #ccc!important}
+#root .home-dashboard .home-summary-card{background:#fff;border:1px solid #ddd;box-shadow:0 6px 24px #0000000a}
+#root .home-dashboard .home-summary-card:hover{border-color:#555;box-shadow:0 12px 28px #00000014}
+#root .home-dashboard .home-summary-card strong{color:#111}
+#root .home-dashboard .home-summary-card small{color:#555}
+#root .home-dashboard :is(.home-card-icon,.home-shortcut-icon){background:#f1f1f1!important;color:#333!important;border-color:#ddd!important}
+#root .home-dashboard :is(.home-card-icon i,.home-card-arrow,.home-shortcut-arrow){color:#444!important}
+#root .home-dashboard .home-next{background:#fff;border:1px solid #ddd;box-shadow:0 6px 24px #0000000a}
+#root .home-dashboard .home-next nav a{background:#fafafa!important;border:1px solid #ddd!important;color:#111!important}
+#root .home-dashboard .home-next nav a:hover{background:#f0f0f0!important;border-color:#777!important}
+#root .home-dashboard .home-next nav a span{color:#111!important}
