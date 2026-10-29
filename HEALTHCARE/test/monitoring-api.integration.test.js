@@ -51,6 +51,15 @@ test('offline backfill, markers, clinician review, caregiver scopes, diagnostics
       const response = await fetch(`${base}${path}`, { method, headers: { 'Content-Type': 'application/json', ...(userId ? { Authorization: `Bearer ${token(userId)}` } : {}) }, body: body === undefined ? undefined : JSON.stringify(body) });
       return { status: response.status, data: await response.json() };
     };
+    const simulationId=randomUUID();
+    assert.equal((await request('/ecg/simulations','POST',{id:simulationId,startedAt:new Date().toISOString(),durationSeconds:2},patient)).status,201);
+    const simulationRead=await request(`/ecg/simulations/${simulationId}`,'GET',undefined,patient);
+    assert.equal(simulationRead.data.run.waveform_chunks.length,2);
+    assert.equal(simulationRead.data.run.waveform_chunks[0].samples.length,250);
+    assert.equal(simulationRead.data.run.simulated_bp[0].source,'simulated');
+    assert.equal((await request(`/ecg/simulations/${simulationId}`,'GET',undefined,caregiver)).status,404);
+    assert.equal((await request('/ecg/simulations','POST',{id:randomUUID(),startedAt:new Date().toISOString(),durationSeconds:301},patient)).status,400);
+    await pool.query('delete from ecg_simulation_runs where id=$1',[simulationId]);
     assert.equal((await request('/care-communications/conversations', 'GET', undefined, patient)).data.conversations.length, 1);
     assert.equal((await request(`/care-communications/appointments/${appointmentId}/messages`, 'GET', undefined, caregiver)).status, 403);
     assert.equal((await request(`/care-communications/appointments/${appointmentId}/messages`, 'POST', { body: 'I will bring my BP log.' }, patient)).status, 201);
