@@ -3,6 +3,7 @@
 import './App.css'
 import './glassTheme.css'
 import './ui/motion.css'
+import './pages/PublicWebsite.css'
 import { Routes, Route, useLocation, useParams, Navigate } from "react-router-dom";
 import Home from "./pages/Home"
 import Navbar from "./components/Layout/Navbar/Navbar";
@@ -17,6 +18,8 @@ import { getLoginUserDetails } from './redux/actions/authAction';
 import { isDemoSession } from './demo/demoSession';
 const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
+const PublicContact = lazy(() => import('./pages/PublicContact'));
+const PublicInformation = lazy(() => import('./pages/PublicInformation'));
 const Register = lazy(() => import('./pages/Auth/Register'));
 const ForgotPassword = lazy(() => import('./pages/Auth/ForgotPassword'));
 const Login = lazy(() => import('./pages/Auth/Login'));
@@ -114,8 +117,11 @@ function App() {
      <PageErrorBoundary key={pathname}><Suspense fallback={<PageLoading />}>
      <Routes>
       <Route path="/" element={<Home/>}/>
-      <Route path="/about" element={<About/>}/>
-      <Route path="/contact" element={<Contact/>}/>
+      <Route path="/about" element={user ? <About/> : <PublicInformation kind="about" />}/>
+      <Route path="/features" element={<PublicInformation kind="features" />}/>
+      <Route path="/how-it-works" element={<PublicInformation kind="how-it-works" />}/>
+      <Route path="/technology" element={<PublicInformation kind="technology" />}/>
+      <Route path="/contact" element={user ? <Contact/> : <PublicContact/>}/>
       <Route path="/register" element={<Register/>}/>
       <Route path="/forgot-password" element={<ForgotPassword/>}/>
       <Route path="/login" element={<Login/>}/>
@@ -158,7 +164,7 @@ function App() {
       
       </Routes>
       </Suspense></PageErrorBoundary>
-      {!user && pathname === "/" && <Footer/>}
+      {!user && ["/", "/features", "/how-it-works", "/technology", "/about", "/contact", "/doctors", "/subscription"].includes(pathname) && <Footer/>}
     </>
   )
 }

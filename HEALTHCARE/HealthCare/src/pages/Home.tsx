@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import API from '../Api/API';
@@ -6,6 +6,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 import type { RootState } from '../redux/store';
 import type { Appointment, RecordingSession, HealthMeasurement } from '../types/domain';
 import './Home.css';
+import PublicHome from './PublicHome';
 
 type Plan = { id: string; target_hours: number; recorded_hours: number | string; review_due_at: string; doctor_name?: string };
 type Health = { events: unknown[]; medications: unknown[]; measurements: HealthMeasurement[] };
@@ -15,26 +16,6 @@ type Summary = { next: Visit | null; health: Health | null; recordings: Recordin
 export default function Home() {
   const { user, demo } = useSelector((state: RootState) => state.auth);
   const { locale, tr } = useLanguage();
-  const heartArt = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (user || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let frame = 0;
-    const update = () => {
-      if (frame) return;
-      frame = requestAnimationFrame(() => {
-        const art = heartArt.current;
-        if (art) {
-          const progress = Math.min(1, Math.max(0, window.scrollY / Math.max(window.innerHeight, 1)));
-          art.style.setProperty('--heart-scroll-scale', String(1 + progress * 0.35));
-          art.style.setProperty('--heart-scroll-y', `${progress * -65}px`);
-        }
-        frame = 0;
-      });
-    };
-    window.addEventListener('scroll', update, { passive: true });
-    update();
-    return () => { window.removeEventListener('scroll', update); if (frame) cancelAnimationFrame(frame); };
-  }, [user]);
   const [summary, setSummary] = useState<Summary | null>(null);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -67,23 +48,7 @@ export default function Home() {
     return () => { active = false; };
   }, [user, demo]);
 
-  if (!user) return <main className="home-public">
-    <div className="home-public-content">
-      <span className="home-kicker">HEARTLINE</span>
-      <h1>{tr('Your care,')} <em>{tr('in one place.')}</em></h1>
-      <p>{tr('Keep your health history, ECG recordings, appointments, and care plans together.')}</p>
-      <div className="home-public-actions">
-        <Link className="hl-button" to="/register">{tr('Sign up')} <span aria-hidden="true">↗</span></Link>
-        <Link className="hl-button hl-button--soft" to="/login">{tr('Sign in')}</Link>
-      </div>
-      <div className="home-public-foot"><span>{tr('ECG records')}</span><span>{tr('Appointments')}</span><span>{tr('Care plans')}</span></div>
-    </div>
-    <div className="home-public-art home-heart-art" ref={heartArt} aria-hidden="true">
-      <div className="heart-orbit heart-orbit-one" /><div className="heart-orbit heart-orbit-two" />
-      <div className="heart-scroll"><div className="heart-beat"><img src="/anatomical-heart.png" className="home-heart" alt="" /></div></div>
-      <div className="home-public-art-label">{tr('A clearer record of your care.')}</div>
-    </div>
-  </main>;
+  if (!user) return <PublicHome />;
 
   const latestRecording = summary?.recordings?.[0];
   const latestBp = (kind: HealthMeasurement['kind']) => summary?.health?.measurements

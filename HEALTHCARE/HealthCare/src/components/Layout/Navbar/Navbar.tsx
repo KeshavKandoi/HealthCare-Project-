@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../../redux/slice/authSlice';
@@ -8,10 +8,11 @@ import { useLanguage, type LanguageKey } from '../../../i18n/LanguageContext';
 import { endAccountSession } from '../../../Api/API';
 import './Navbar.css';
 
-const publicLinks = [['/', 'Product'], ['/about', 'How it works'], ['/doctors', 'Doctors'], ['/contact', 'Contact'], ['/subscription', 'Holter plans']];
+const publicLinks = [['/', 'Home'], ['/features', 'Features'], ['/how-it-works', 'How It Works'], ['/technology', 'Technology'], ['/doctors', 'Doctors'], ['/subscription', 'Plans'], ['/about', 'About'], ['/contact', 'Contact']];
 const patientLinks: [string, LanguageKey, string][] = [['/', 'overview', 'fa-house'], ['/ecg-monitor', 'monitor', 'fa-heart-pulse'], ['/my-health', 'health', 'fa-notes-medical'], ['/appointments', 'appointments', 'fa-calendar-check'], ['/devices', 'devices', 'fa-microchip'], ['/care-plans', 'plans', 'fa-clipboard-list'], ['/caregivers', 'family', 'fa-people-roof'], ['/device-support', 'support', 'fa-screwdriver-wrench']];
 
 export default function Navbar() {
+  const menuToggle = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,5 +35,5 @@ export default function Navbar() {
     {open && <button className="app-overlay" onClick={close} aria-label="Close navigation" />}
   </>;
 
-  return <header className="public-header"><nav className="public-nav" aria-label="Main navigation"><NavLink to="/" className="app-logo" onClick={close}>♥ <span>Heartline</span></NavLink><button className="app-menu" onClick={() => setOpen(!open)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open}><i className={open ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'} /></button><div className={`public-links ${open ? 'is-open' : ''}`}>{publicLinks.map(([path, label]) => <NavLink key={path} to={path} onClick={close}>{tr(label)}</NavLink>)}<NavLink to="/login" onClick={close}>{tr('Sign in')}</NavLink><NavLink to="/register" className="public-cta hl-button" onClick={close}>{tr('Get started')}</NavLink>{languageSelector}</div></nav></header>;
+  return <header className="public-header cinematic-nav" onKeyDown={event => { if (event.key === 'Escape') { close(); menuToggle.current?.focus(); } }}><nav className="public-nav" aria-label="Main navigation"><NavLink to="/" className="app-logo" onClick={close}>♥ <span>Heartline</span></NavLink><button ref={menuToggle} className="app-menu" onClick={() => setOpen(!open)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} aria-controls="public-menu">{open ? '✕' : '☰'}</button><div id="public-menu" className={`public-menu-content ${open ? 'is-open' : ''}`}><div className="public-links">{publicLinks.map(([path, label]) => <NavLink key={path} to={path} end={path === '/'} onClick={close}>{tr(label)}</NavLink>)}</div><div className="public-auth"><NavLink to="/login" onClick={close}>Log In</NavLink><NavLink to="/register" className="public-cta" onClick={close}>Sign Up ↗</NavLink></div></div></nav></header>;
 }
