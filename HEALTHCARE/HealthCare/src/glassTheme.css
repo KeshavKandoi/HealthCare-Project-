@@ -212,3 +212,11 @@ body,#root{background:var(--heartline-page);color:var(--heartline-ink)}
 
 #root .pw-shell .pw-tabs button:hover, #root .pw-shell .pw-tabs button:focus-visible { background: #dce8fa; color: #111 !important; }
 #root .pw-shell .pw-tabs button.active:hover { color: #111 !important; }
+/* My Health actions and caregiver invitation */
+#root .my-health-page button:not(.pw-tabs button),
+#root .care-shell button.care-invite-button{background:#fff!important;color:#111!important;border:1px solid #111!important;border-radius:9px;min-height:44px;font-weight:600;transition:background .2s ease,box-shadow .2s ease}
+#root .my-health-page button:not(.pw-tabs button):hover:not(:disabled),
+#root .care-shell button.care-invite-button:hover:not(:disabled){background:#f1f1f1!important;box-shadow:0 3px 10px #00000018}
+#root .my-health-page button:not(.pw-tabs button):disabled,
+#root .care-shell button.care-invite-button:disabled{background:#f4f4f4!important;color:#777!important;border-color:#aaa!important;cursor:not-allowed}
+#root .my-health-page button:focus-visible,#root .care-shell button.care-invite-button:focus-visible{outline:3px solid #315bb4;outline-offset:3px}
