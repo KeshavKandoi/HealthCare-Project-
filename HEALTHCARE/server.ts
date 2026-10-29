@@ -17,6 +17,7 @@ import planInquiryRoutes from "./routes/planInquiryRoutes.js"
 import monitoringRoutes from "./routes/monitoringRoutes.js"
 import bpAlertRoutes from "./routes/bpAlertRoutes.js"
 import careCommunicationRoutes, { careAppointment } from "./routes/careCommunicationRoutes.js"
+import { backofficeRouter } from "./routes/backofficeRoutes.js"
 import { startBpAlertWorker } from "./lib/bpAlerts.js"
 import { authenticateSocket } from "./middlewares/ecgAuth.js"
 
@@ -72,6 +73,7 @@ app.use("/api/v1/plan-inquiries", planInquiryRoutes)
 app.use("/api/v1/monitoring", monitoringRoutes)
 app.use("/api/v1/bp-alerts", bpAlertRoutes)
 app.use("/api/v1/care-communications", careCommunicationRoutes)
+app.use("/api/v1/backoffice", backofficeRouter(state => io.emit("backoffice:waveform", state)))
 
 app.get("/healthz", async (_req: unknown,res: {json(body:object):void;status(code:number):{json(body:object):void}}) => { try { await (await import("./config/db.js")).getPool().query("select 1"); res.json({status:"ok",database:"ok"}); } catch { res.status(503).json({status:"unavailable",database:"unavailable"}); } });
 

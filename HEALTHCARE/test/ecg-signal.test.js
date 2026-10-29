@@ -50,3 +50,28 @@ test('v2 seeded waveform is deterministic, varies with seed, and BP/HR rise then
  assert.ok(peaks.length>20);
  for(let i=1;i<peaks.length;i++){const bpm=60*250/(peaks[i]-peaks[i-1]);const t=80+(peaks[i]+peaks[i-1])/500;assert.ok(Math.abs(bpm-scenarioVitals(t,config).bpm)<1)}
 });
+
+test('backoffice modes are deterministic and normal stays identical to resting-v2',()=>{
+ const config={scenario:'resting-v2',seed:20261029};
+ for(const second of [0,45,105,230])assert.deepEqual(simulationPacket(second,{...config,mode:'normal'}),simulationPacket(second,config));
+ for(const mode of ['post-workout','heavy-breathing']){
+  assert.deepEqual(simulationPacket(30,{...config,mode}),simulationPacket(30,{...config,mode}));
+  assert.notDeepEqual(simulationPacket(30,{...config,mode}),simulationPacket(30,config));
+ }
+});
+test('post-workout keeps a high heart rate whose R-R timing matches the reported BPM',()=>{
+ const config={scenario:'resting-v2',seed:20261029,mode:'post-workout'};
+ for(let t=0;t<600;t++){const v=scenarioVitals(t,config);assert.ok(v.bpm>130&&v.bpm<160);assert.ok(v.systolic>140&&v.systolic>v.diastolic)}
+ const values=Array.from({length:10},(_,i)=>simulationPacket(i+60,config)).flat();
+ const peaks=[];for(let i=1;i<values.length-1;i++)if(values[i]>.7&&values[i]>=values[i-1]&&values[i]>values[i+1])peaks.push(i);
+ assert.ok(peaks.length>=22);
+ for(let i=1;i<peaks.length;i++){const bpm=60*250/(peaks[i]-peaks[i-1]);const t=60+(peaks[i]+peaks[i-1])/500;assert.ok(Math.abs(bpm-scenarioVitals(t,config).bpm)<1.5)}
+});
+test('heavy breathing swings heart rate with each breath and moves the baseline',()=>{
+ const config={scenario:'resting-v2',seed:20261029};
+ const bpm=Array.from({length:30},(_,t)=>scenarioVitals(t,{...config,mode:'heavy-breathing'}).bpm);
+ assert.ok(Math.max(...bpm)-Math.min(...bpm)>18);
+ const mean=bpm.reduce((sum,v)=>sum+v,0)/bpm.length;assert.ok(mean>95&&mean<115);
+ const spread=mode=>{const means=Array.from({length:12},(_,t)=>simulationPacket(t+20,{...config,mode}).reduce((sum,v)=>sum+v,0)/250);return Math.max(...means)-Math.min(...means)};
+ assert.ok(spread('heavy-breathing')>.2);assert.ok(spread('normal')<.1);
+});

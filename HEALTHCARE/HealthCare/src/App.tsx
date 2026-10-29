@@ -50,6 +50,7 @@ const MonitoringPlans = lazy(() => careOperations().then(module => ({ default: m
 const FamilyAccess = lazy(() => careOperations().then(module => ({ default: module.FamilyAccess })));
 const DeviceSupport = lazy(() => careOperations().then(module => ({ default: module.DeviceSupport })));
 const ClinicianECG = lazy(() => careOperations().then(module => ({ default: module.ClinicianECG })));
+const Backoffice = lazy(() => import('./pages/Backoffice/Backoffice'));
 
 class PageErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -112,7 +113,8 @@ function App() {
 
   return (
     <>
-    <Navbar/>
+    {/* The backoffice has its own console header and no patient navigation. */}
+    {!pathname.startsWith('/backoffice') && <Navbar/>}
     <Toaster/>
      <PageErrorBoundary key={pathname}><Suspense fallback={<PageLoading />}>
      <Routes>
@@ -152,6 +154,7 @@ function App() {
       <Route path="/devices" element={protectedPage(<ECGDevices />)} />
       <Route path="/ecg-history" element={protectedPage(<ECGHistory />)} />
       <Route path="/ecg-history/:sessionId" element={protectedPage(<ECGHistory />)} />
+      <Route path="/backoffice" element={<Backoffice />} />
 
 
 

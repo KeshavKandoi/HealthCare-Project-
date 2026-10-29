@@ -24,3 +24,12 @@
 .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
 #root .ecg-new .ecg-code { color: #111 !important; }
+
+/* Backoffice "Off": the waveform area keeps its place on the ECG paper, with a flat dashed trace and no signal. */
+.ecg-leads-off { position: relative; display: grid; place-items: center; min-height: 340px; margin: 20px 0; padding: 28px 16px; overflow: hidden; border: 1px solid #d9c3c6; border-radius: 10px; background-color: #fff8f7; background-image: linear-gradient(#e9a7b04d 1px, transparent 1px), linear-gradient(90deg, #e9a7b04d 1px, transparent 1px), linear-gradient(#f7dce0 1px, transparent 1px), linear-gradient(90deg, #f7dce0 1px, transparent 1px); background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px; }
+.ecg-leads-off::before { content: ""; position: absolute; inset: 50% 0 auto; border-top: 2px dashed #b79ea3; }
+.ecg-leads-off-card { position: relative; display: grid; justify-items: center; gap: 8px; max-width: 360px; padding: 22px 24px; text-align: center; background: #fff; border: 1px solid #e3c9cd; border-radius: 16px; box-shadow: 0 12px 32px #6b1f2a14; }
+.ecg-leads-off-icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: #fdecee; color: #b4232f !important; font-size: 22px; }
+#root .ecg-new .ecg-leads-off h3 { margin: 4px 0 0; font-size: 1.3rem; letter-spacing: -.02em; color: #8c1d29; }
+#root .ecg-new .ecg-leads-off p { margin: 0; color: #6b5357; line-height: 1.5; }
+@media (max-width: 520px) { .ecg-leads-off { min-height: 250px; } .ecg-leads-off-card { padding: 18px; } }

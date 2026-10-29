@@ -1,5 +1,5 @@
 import express from 'express';
-import {simulationPacket, simulationRate, scenarioVitals, simulationSeed} from '../lib/ecgSimulation.js';
+import {simulationPacket, simulationRate, scenarioVitals, simulationSeed, isSignalMode} from '../lib/ecgSimulation.js';
 import { randomUUID, createHash } from 'node:crypto';
 
 // This router must be mounted AFTER patientAuth. Client identity is never read from the body.
@@ -25,9 +25,11 @@ export function manualEcgRouter(pool, emit = () => {}) {
     }catch(e){await client.query('rollback');throw e}finally{client.release()}
   }));
   router.post('/manual/simulated/:id/packets',wrap(async(req,res)=>{
-    const {sequence,samples,firstSampleAt,sampleRateHz,scenario,source,seed}=req.body||{};
-    const expected=Number.isInteger(sequence)&&sequence>=0&&sequence<3600?simulationPacket(sequence,{scenario,seed}):[];
-    if(!/^[0-9a-f-]{36}$/i.test(req.params.id)||!Number.isInteger(sequence)||sequence<0||sequence>=3600||sampleRateHz!==simulationRate||!['resting-v1','resting-v2'].includes(scenario)||(scenario==='resting-v2'&&seed!==simulationSeed)||source!=='simulated'||!Array.isArray(samples)||samples.length!==250||!samples.every((v,i)=>Number.isFinite(v)&&Math.abs(v-expected[i])<1e-10))return res.status(400).json({message:'Invalid versioned simulation packet'});
+    const {sequence,samples,firstSampleAt,sampleRateHz,scenario,source,seed,mode='normal'}=req.body||{};
+    // The backoffice mode only reshapes resting-v2; samples must still match the declared mode exactly.
+    const validMode=isSignalMode(mode)&&(scenario==='resting-v2'||mode==='normal');
+    const expected=validMode&&Number.isInteger(sequence)&&sequence>=0&&sequence<3600?simulationPacket(sequence,{scenario,seed,mode}):[];
+    if(!/^[0-9a-f-]{36}$/i.test(req.params.id)||!Number.isInteger(sequence)||sequence<0||sequence>=3600||sampleRateHz!==simulationRate||!['resting-v1','resting-v2'].includes(scenario)||(scenario==='resting-v2'&&seed!==simulationSeed)||!validMode||source!=='simulated'||!Array.isArray(samples)||samples.length!==250||!samples.every((v,i)=>Number.isFinite(v)&&Math.abs(v-expected[i])<1e-10))return res.status(400).json({message:'Invalid versioned simulation packet'});
     const client=await pool().connect();
     try{
       await client.query('begin');
@@ -38,14 +40,15 @@ export function manualEcgRouter(pool, emit = () => {}) {
       if(Date.parse(firstSampleAt)!==time||time>Date.now()+1000){await client.query('rollback');return res.status(400).json({message:'Invalid simulation clock'})}
       const digest=createHash('sha256').update(JSON.stringify({firstSampleAt,samples})).digest('hex');
       const prior=await client.query('select sha256 from ecg_recording_chunks where session_id=$1 and sequence=$2',[session.id,sequence]);
-      const vitals=scenarioVitals(sequence,{scenario,seed}), receivedAt=new Date().toISOString();
-      const batch={sessionId:session.id,deviceId:session.device_id,sequence,firstSampleAt,sampleRateHz:250,samples,units:'mV',source:'simulated',scenario,seed,receivedAt,...vitals};
+      const vitals=scenarioVitals(sequence,{scenario,seed,mode}), receivedAt=new Date().toISOString();
+      const batch={sessionId:session.id,deviceId:session.device_id,sequence,firstSampleAt,sampleRateHz:250,samples,units:'mV',source:'simulated',scenario,seed,mode,receivedAt,...vitals};
       if(prior.rows.length){await client.query('rollback');return prior.rows[0].sha256===digest?res.json({batch,duplicate:true}):res.status(409).json({message:'Conflicting duplicate'})}
-      if(session.status!=='recording'||sequence!==Number(session.last_sequence)+1){await client.query('rollback');return res.status(409).json({message:'Unexpected sequence or completed session',expectedSequence:Number(session.last_sequence)+1})}
+      // Sequences are elapsed seconds. A forward gap is a leads-off interval and stays a gap; it is never filled.
+      if(session.status!=='recording'||sequence<=Number(session.last_sequence)){await client.query('rollback');return res.status(409).json({message:'Unexpected sequence or completed session',expectedSequence:Number(session.last_sequence)+1})}
       await client.query('insert into ecg_recording_chunks(session_id,sequence,first_sample_at,sample_count,samples,sha256) values($1,$2,$3,250,$4,$5)',[session.id,sequence,firstSampleAt,JSON.stringify(samples),digest]);
       await client.query('update ecg_recording_sessions set last_sequence=$2,sample_count=sample_count+250,last_sample_at=$3 where id=$1',[session.id,sequence,new Date(time+996)]);
       await client.query('update devices set last_seen_at=$2 where id=$1',[session.device_id,receivedAt]);
-      await client.query("insert into ecg_session_events(id,session_id,event,details) values($1,$2,'simulated_vitals',$3)",[randomUUID(),session.id,JSON.stringify({sequence,firstSampleAt,scenario,seed,source,...vitals})]);
+      await client.query("insert into ecg_session_events(id,session_id,event,details) values($1,$2,'simulated_vitals',$3)",[randomUUID(),session.id,JSON.stringify({sequence,firstSampleAt,scenario,seed,mode,source,...vitals})]);
       await client.query('commit');emit(req.patientId,batch);res.status(201).json({batch});
     }catch(e){await client.query('rollback');throw e}finally{client.release()}
   }));

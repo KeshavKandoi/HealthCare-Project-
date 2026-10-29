@@ -22,7 +22,7 @@ async function passwordHash(password) {
   const derived = await scrypt(password, salt, 64);
   return `scrypt:${salt}:${derived.toString('hex')}`;
 }
-async function passwordMatches(password, stored) {
+export async function passwordMatches(password, stored) {
   if (typeof password !== 'string' || password.length > 1024 || typeof stored !== 'string') return false;
   const [algorithm, salt, hash] = stored.split(':');
   if (algorithm !== 'scrypt' || !/^[a-f0-9]{32}$/.test(salt || '') || !/^[a-f0-9]{128}$/.test(hash || '')) return false;

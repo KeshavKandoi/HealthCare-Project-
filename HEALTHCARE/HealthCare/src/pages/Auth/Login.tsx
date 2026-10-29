@@ -6,6 +6,7 @@ import type { AppDispatch } from '../../redux/store';
 import { login } from '../../redux/actions/authAction';
 import { logout } from '../../redux/slice/authSlice';
 import { leaveDemoSession } from '../../demo/demoSession';
+import { signInToBackoffice } from '../../backoffice/backoffice';
 import './Auth.css';
 import { useLanguage } from '../../i18n/LanguageContext';
 
@@ -24,13 +25,19 @@ export default function Login() {
     setSubmitting(true);
     setNeedsVerification(false);
     try {
+      // The backoffice credentials open the operator console and leave any patient session untouched.
+      if (await signInToBackoffice(email, password)) {
+        toast.success('Signed in to the backoffice');
+        navigate('/backoffice');
+        return;
+      }
       leaveDemoSession();
       dispatch(logout());
       await dispatch(login({ email: email.trim(), password })).unwrap();
       toast.success(tr('Login successful'));
       navigate(localStorage.getItem('heartline.onboardingEmail') === email.trim().toLowerCase() ? '/my-health?setup=1' : '/');
     } catch (error) {
-      const message = typeof error === 'string' ? error : 'Login failed';
+      const message = typeof error === 'string' ? error : error instanceof Error ? error.message : 'Login failed';
       setNeedsVerification(/unconfirmed email|email not verified/i.test(message));
       toast.error(message);
     } finally {
