@@ -4,7 +4,7 @@ import API from '../../Api/API';
 import { parseStreamInput } from './streamInput';
 import type { ECGBatch } from '../../types/domain';
 
-const example = '{"packets":300,"values":[80,90,100,110,100,90,80,85,95,105],"bpm":75}';
+const example = '{"packets":1,"values":[80,90,100,110,100,90,80,85,95,105],"bpm":75}';
 
 type Props = { onStarted: (deviceId: string) => void; onBatch: (batch: ECGBatch) => void; onFinished: () => void };
 export default function ManualStream({ onStarted, onBatch, onFinished }: Props) {
@@ -48,7 +48,7 @@ export default function ManualStream({ onStarted, onBatch, onFinished }: Props) 
     <div className="ecg-panel-head"><div><h2>Manual connection</h2><p>Paste your packet JSON or supported terminal loop, then start streaming.</p></div><span className="manual-stream-badge">Simulated data</span></div>
     <label htmlFor="manual-packets">Packet input</label>
     <textarea id="manual-packets" spellCheck={false} value={input} disabled={busy} onChange={e=>setInput(e.target.value)} />
-    <p className="manual-stream-help">Packets are sent to your account once per second. Keep this page open. This feed supplies ECG values and heart rate, not blood pressure.</p>
+    <p className="manual-stream-help">Packets are sent to your account once per second. Keep this page open. This is a 10-sample/s raw test feed, not hardware ECG. Reusing the same values repeats that pattern; it cannot create P–QRS–T detail.</p>
     <div className="ecg-actions"><button disabled={busy} onClick={()=>void start()} className="ecg-primary">{busy?'Streaming…':'Connect and start'}</button><button disabled={!busy} onClick={()=>{run.current.stopped=true;setStatus('Disconnecting…')}}>Stop stream</button><button disabled={busy} onClick={()=>setInput(example)}>Use example</button></div>
     <div className="manual-stream-status" role="status"><strong>{status}</strong><span>{sent} packets saved</span><span>{bpm === null ? '—' : bpm} BPM</span></div>
     {error && <p role="alert" className="ecg-banner">{error}</p>}

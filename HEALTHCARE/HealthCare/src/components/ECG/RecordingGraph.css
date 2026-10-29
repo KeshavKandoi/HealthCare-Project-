@@ -5,3 +5,13 @@
 .recording-times { display:flex; justify-content:space-between; gap:12px; font-size:.85rem; }
 .recording-timeline { display:block; margin-top:20px; font-weight:600; }
 .recording-timeline input { display:block; width:100%; margin:10px 0; }
+.recording-surface { touch-action: pan-y; cursor: grab; outline-offset: 3px; }
+.recording-surface:active { cursor: grabbing; }
+.recording-surface .recording-canvas { touch-action: pan-y; }
+.recording-caption { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; margin-top: 18px; font-size: .85rem; }
+#root .recording-caption, #root .recording-calibration, #root .recording-times { color: #252a33; }
+#root .recording-quality { color: #6b4818; font-size: .9rem; }
+.recording-calibration { font-size: .82rem; }
+.recording-controls button, .recording-controls select { min-height: 42px; }
+@media (max-width:600px) { .recording-controls label { width:100%; justify-content:space-between; } .recording-times { font-size:.7rem; } }
+.recording-surface .recording-canvas { display:block; width:100%; height:300px; border-radius:8px; }
