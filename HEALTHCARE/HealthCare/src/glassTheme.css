@@ -193,3 +193,15 @@ body,#root{background:var(--heartline-page);color:var(--heartline-ink)}
 #root .profile-page .modal-box-ds button{background:#fff!important;color:#111!important;border:1px solid #111!important}
 #root .page-error-card :is(h1,p){color:#111!important}
 #root .page-error-card button{margin-top:20px;padding:11px 18px;background:#fff;color:#111;border:1px solid #111;border-radius:9px;cursor:pointer}
+#root .password-settings-page { padding: clamp(24px, 5vw, 72px); display: flex; justify-content: center; align-items: flex-start; }
+#root .password-settings-card { width: min(100%, 560px); padding: clamp(24px, 4vw, 40px); background: #fff; color: #111; border: 1px solid #111; border-radius: 20px; box-shadow: 0 16px 40px rgba(31, 58, 91, .08); }
+#root .password-settings-card h1 { color: #111; font-size: clamp(28px, 4vw, 38px); margin: 10px 0; }
+#root .password-settings-card p { color: #333; line-height: 1.6; margin-bottom: 28px; }
+#root .password-settings-kicker { color: #315bb5; font-size: 12px; font-weight: 700; letter-spacing: .12em; }
+#root .password-settings-card form { display: flex; flex-direction: column; gap: 10px; }
+#root .password-settings-card label { color: #111; font-weight: 600; margin-top: 8px; }
+#root .password-settings-card input { width: 100%; min-height: 48px; padding: 12px 14px; color: #111; background: #fff; border: 1px solid #111; border-radius: 8px; }
+#root .password-settings-card input:focus-visible { outline: 3px solid #aac5f2; outline-offset: 2px; }
+#root .password-settings-card form button { min-height: 48px; margin-top: 16px; border: 1px solid #173c87; border-radius: 8px; background: #315bb5; color: #fff; font-weight: 700; cursor: pointer; }
+#root .password-settings-card form button:disabled { opacity: .65; cursor: wait; }
+#root .password-settings-back { margin-top: 22px; padding: 0; border: 0; background: transparent; color: #1b459a; font-weight: 600; cursor: pointer; }
