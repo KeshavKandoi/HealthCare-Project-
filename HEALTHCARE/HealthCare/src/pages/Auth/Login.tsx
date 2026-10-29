@@ -4,8 +4,8 @@ import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../redux/store';
 import { login } from '../../redux/actions/authAction';
-import { logout, startDemo } from '../../redux/slice/authSlice';
-import { enterDemoSession, leaveDemoSession } from '../../demo/demoSession';
+import { logout } from '../../redux/slice/authSlice';
+import { leaveDemoSession } from '../../demo/demoSession';
 import './Auth.css';
 import { useLanguage } from '../../i18n/LanguageContext';
 
@@ -38,12 +38,6 @@ export default function Login() {
     }
   }
 
-  function handleDemoSignIn() {
-    enterDemoSession();
-    dispatch(startDemo());
-    navigate('/');
-  }
-
   return <div className="auth-container memora-auth"><div className="memora-auth-content"><div className="memora-brand">♥ Heartline</div><div className="card">
     <h2>{tr('Login')}</h2>
     <p>{tr('Please enter your email and password')}</p>
@@ -55,6 +49,5 @@ export default function Login() {
       {needsVerification && <p className="mt-3"><NavLink to="/register" onClick={() => sessionStorage.setItem('pendingSignupEmail', email.trim())}>Verify email or resend code</NavLink></p>}
       <p className="mt-3">{tr('New here?')} <NavLink to="/register">{tr('Create an account')}</NavLink></p>
     </form>
-    <div className="demo-signin"><span>{tr('or')}</span><button className="hl-button hl-button--soft" type="button" onClick={handleDemoSignIn}>{tr('Continue as demo patient')}</button><p>{tr('Open the patient workspace without creating an account. All changes stay in this tab.')}</p></div>
   </div><p className="memora-auth-foot">Your heart health, together.</p></div></div>;
 }

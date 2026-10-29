@@ -25,6 +25,7 @@ export default function Footer() {
           <div><h2>{tr(workspace ? 'Support' : 'Heartline')}</h2>
             <Link to={workspace ? '/device-support' : '/about'}>{tr(workspace ? 'Device support' : 'About')}</Link>
             <Link to="/contact">{tr('Contact')}</Link>
+            <Link to="/register">{tr('Create an account')}</Link>
             <Link to={workspace ? '/user/profile' : '/login'}>{tr(workspace ? 'Account settings' : 'Sign in')}</Link>
           </div>
         </nav>

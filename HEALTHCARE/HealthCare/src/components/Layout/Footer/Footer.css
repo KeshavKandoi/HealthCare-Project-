@@ -15,3 +15,6 @@
 @media(max-width:1050px){.site-footer--workspace{margin-left:0}}
 @media(max-width:660px){.site-footer{padding:0 21px}.site-footer-inner{padding-top:35px}.site-footer-top{grid-template-columns:1fr;gap:28px;padding-bottom:30px}.site-footer-links{gap:18px}.site-footer-bottom{flex-direction:column;gap:5px}}
 @media(prefers-reduced-motion:reduce){.site-footer-links a{transition:none}}
+#root .site-footer:not(.site-footer--workspace) { background:#090d14; color:#d5dde8; border-color:#303b49; }
+#root .site-footer:not(.site-footer--workspace) :is(h2,a,p,span) { color:#d5dde8 !important; }
+#root .site-footer:not(.site-footer--workspace) .site-footer-bottom { border-color:#303b49; }

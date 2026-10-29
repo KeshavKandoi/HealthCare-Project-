@@ -5,8 +5,6 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../redux/store';
 import { register } from '../../redux/actions/authAction';
-import { startDemo } from '../../redux/slice/authSlice';
-import { enterDemoSession } from '../../demo/demoSession';
 import './Auth.css';
 import { useLanguage } from '../../i18n/LanguageContext';
 import API from '../../Api/API';
@@ -75,12 +73,6 @@ export default function Register() {
     }
   }
 
-  function handleDemoSignIn() {
-    enterDemoSession();
-    dispatch(startDemo());
-    navigate('/');
-  }
-
   return <div className="auth-container memora-auth"><div className="memora-auth-content"><div className="memora-brand">♥ Heartline</div><div className="card">
     <h2>{awaitingCode ? 'Verify your email' : tr('Create an account')}</h2>
     <p>{awaitingCode ? `Enter the six digit code sent to ${email.trim()}.` : tr('Please enter your details to register')}</p>
@@ -97,6 +89,5 @@ export default function Register() {
       <button className="hl-button" type="submit" disabled={submitting || !name || !email || !password} style={{ width: '100%' }}>{tr(submitting ? 'Creating account…' : 'Register')}</button>
       <p className="mt-3">{tr('Already have an account?')} <NavLink to="/login">{tr('Sign in')}</NavLink></p>
     </form>}
-    {!awaitingCode && <div className="demo-signin"><span>{tr('or')}</span><button className="hl-button hl-button--soft" type="button" onClick={handleDemoSignIn}>{tr('Continue as demo patient')}</button><p>{tr('No account or email key needed. Your demo changes stay in this tab.')}</p></div>}
   </div><p className="memora-auth-foot">Your heart health, together.</p></div></div>;
 }

@@ -4,3 +4,8 @@
 /* Keep the fixed drawer's original width; reserve exactly that space for content. */
 @media(min-width:1051px){body:has(.app-sidebar) #root>main,body:has(.app-sidebar) #root>div>main{margin-left:238px;width:calc(100% - 238px);max-width:none;min-width:0}}
 @media(max-width:1050px){body:has(.app-sidebar) #root>main,body:has(.app-sidebar) #root>div>main{margin-left:0;width:100%;min-width:0}}
+#root .public-header { background:#0b1018 !important; border-color:#303b49 !important; }
+#root .public-header :is(.app-logo,.public-links a) { color:#f5f7fb !important; }
+#root .public-header .public-cta { background:#f5f7fb !important; border-color:#f5f7fb !important; color:#111722 !important; }
+#root .public-header .language-selector { background:#141c27; border:1px solid #697789; color:#fff; }
+@media(max-width:790px){#root .public-links.is-open { background:#0b1018 !important; }}

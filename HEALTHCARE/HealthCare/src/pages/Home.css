@@ -19,3 +19,15 @@
 @media(max-width:1200px){.home-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-next{grid-template-columns:1fr}.home-next h2{max-width:none}}
 @media(max-width:650px){.home-dashboard{padding:24px 16px 60px}.home-dashboard-heading{min-height:230px;display:block;margin-bottom:30px;padding:27px 24px}.home-heading-copy{max-width:100%}.home-heading-art{right:-80px;opacity:.22;width:210px}.home-dashboard-heading h1{font-size:2.35rem}.home-dashboard-heading p{max-width:260px;font-size:14px}.home-monitor-button{margin-top:20px}.home-section-heading h2{font-size:20px}.home-section-hint{display:none}.home-summary-grid{gap:10px}.home-summary-card{min-height:172px;padding:16px}.home-card-top{margin-bottom:17px}.home-card-icon{width:35px;height:35px}.home-summary-card strong{font-size:1.55rem}.home-summary-card small{font-size:11px}.home-next{gap:22px;padding:23px;margin-top:22px}.home-next nav{grid-template-columns:1fr}.home-next nav a{min-height:58px;flex-direction:row;align-items:center;justify-content:flex-start}.home-next nav a .home-shortcut-arrow{position:static;margin-left:auto}}
 @media(max-width:390px){.home-summary-grid{grid-template-columns:1fr 1fr}.home-summary-card{padding:14px}.home-summary-card .home-card-label{font-size:9px}}
+
+/* Public landing page */
+#root .home-public { background: radial-gradient(ellipse at 78% 25%, #192333 0, #0b1018 43%, #07090d 100%) !important; color: #f5f7fb; }
+#root .home-public h1 { color: #f8fafc !important; }
+#root .home-public h1 em { color: #a7c8fb !important; }
+#root .home-public-content > p { color: #bdc8d5 !important; }
+#root .home-public .home-kicker { color: #a7c8fb !important; }
+#root .home-public-foot span { color: #d3dce8 !important; border-color: #536476; }
+#root .home-public-art { background: radial-gradient(circle at center,#263c59,#111b2a 60%,#0c121c) !important; border-color:#465a72; }
+#root .home-public-art-label { color:#d3dce8 !important; }
+#root .home-public-actions .hl-button { background:#f5f7fb !important; color:#111722 !important; border:1px solid #f5f7fb !important; }
+#root .home-public-actions .hl-button--soft { background:transparent !important; color:#f5f7fb !important; border-color:#8b9aad !important; }
