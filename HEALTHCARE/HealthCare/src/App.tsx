@@ -51,7 +51,7 @@ const ClinicianECG = lazy(() => careOperations().then(module => ({ default: modu
 class PageErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
-  render() { return this.state.failed ? <main className="session-loading"><div><h1>Page could not load</h1><p>The application may have updated while this tab was open.</p><button onClick={() => window.location.reload()}>Reload page</button></div></main> : this.props.children; }
+  render() { return this.state.failed ? <main className="session-loading"><div className="session-loading-card page-error-card" role="alert"><h1>Page could not load</h1><p>There was a problem opening this page. Please reload and try again.</p><button onClick={() => window.location.reload()}>Reload page</button></div></main> : this.props.children; }
 }
 
 function PageLoading({ session = false }: { session?: boolean }) {
@@ -82,7 +82,9 @@ function App() {
   const { pathname } = useLocation()
   const { user, demo } = useSelector((state: RootState) => state.auth)
   const [restoring, setRestoring] = useState(true)
-  const protectedPage = (element: ReactElement) => restoring ? <PageLoading session /> : user ? element : <Navigate to="/login" replace />
+  const [restoreError, setRestoreError] = useState(false)
+  const [restoreAttempt, setRestoreAttempt] = useState(0)
+  const protectedPage = (element: ReactElement) => restoring ? <PageLoading session /> : restoreError ? <main className="session-loading"><div className="session-loading-card" role="alert"><h1>Unable to connect</h1><p>We couldn't check your session. Please check your connection and try again.</p><button onClick={() => { setRestoreError(false); setRestoring(true); setRestoreAttempt(value => value + 1); }}>Try again</button></div></main> : user ? element : <Navigate to="/login" replace />
 
   useEffect(() => {
     let appData: {token?: string; refreshToken?: string; user?: {_id?: string}} | null;
@@ -93,11 +95,17 @@ function App() {
       queueMicrotask(() => setRestoring(false));
       return;
     }
-    dispatch(getLoginUserDetails(appData.user._id)).unwrap().catch(() => {
-      localStorage.removeItem('appData');
-      dispatch(logout());
-    }).finally(() => setRestoring(false));
-  }, [dispatch]);
+    let active = true;
+    dispatch(getLoginUserDetails(appData.user._id)).unwrap().catch((error: unknown) => {
+      if (!active) return;
+      const message = typeof error === 'string' ? error : '';
+      if (!localStorage.getItem('appData') || /authentication required|invalid token|session expired|unauthorized/i.test(message)) {
+        localStorage.removeItem('appData');
+        dispatch(logout());
+      } else setRestoreError(true);
+    }).finally(() => { if (active) setRestoring(false); });
+    return () => { active = false; };
+  }, [dispatch, restoreAttempt]);
 
   return (
     <>
@@ -105,7 +113,7 @@ function App() {
     <Toaster/>
      <PageErrorBoundary key={pathname}><Suspense fallback={<PageLoading />}>
      <Routes>
-      <Route path="/" element={restoring ? <PageLoading session /> : <Home/>}/>
+      <Route path="/" element={<Home/>}/>
       <Route path="/about" element={<About/>}/>
       <Route path="/contact" element={<Contact/>}/>
       <Route path="/register" element={<Register/>}/>

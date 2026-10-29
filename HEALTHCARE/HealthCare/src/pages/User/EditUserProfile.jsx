@@ -43,27 +43,27 @@ const EditUserProfile = ({ isOpen, onClose }) => {
         </div>
 
         <div className="modal-body-ds">
-          {user?.image
+          {typeof user?.image === 'string' && user.image
             ? <img src={user.image.startsWith('data:') ? user.image : `data:image/jpeg;base64,${user.image}`} alt="Profile" className="avatar-ds" style={{ marginBottom: 16, alignSelf: 'center' }} />
             : <div className="avatar-ds profile-avatar-fallback" aria-label="Profile avatar" style={{ marginBottom: 16, alignSelf: 'center' }}>{user?.name?.charAt(0)?.toUpperCase() || 'P'}</div>}
 
-          <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Profile Photo</label>
+          <label className="profile-edit-label">Profile Photo</label>
           <input type="file" accept="image/*" className="file-input-ds" onChange={(e) => setImage(e.target.files[0])} />
 
-          <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Name</label>
+          <label className="profile-edit-label">Name</label>
           <input type="text" className="input-ds" name="name" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
 
-          <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Gender</label>
+          <label className="profile-edit-label">Gender</label>
           <select className="input-ds" value={gender} onChange={(e) => setgender(e.target.value)}>
             <option value="">Select gender</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
 
-          <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Phone</label>
+          <label className="profile-edit-label">Phone</label>
           <input type="tel" className="input-ds" placeholder="Phone number" value={phone} onChange={(e) => setPhone(e.target.value)} />
 
-          <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Address</label>
+          <label className="profile-edit-label">Address</label>
           <input type="text" className="input-ds" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} style={{ marginBottom: 0 }} />
         </div>
 

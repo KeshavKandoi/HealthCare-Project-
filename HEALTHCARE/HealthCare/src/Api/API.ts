@@ -41,9 +41,9 @@ API.interceptors.response.use(undefined, async error => {
     (error.config as typeof error.config & { _retried?: boolean })._retried = true;
     error.config.headers.Authorization = `Bearer ${renewed.token}`;
     return API.request(error.config);
-  } catch {
-    localStorage.removeItem('appData');
-    throw error;
+  } catch (refreshError) {
+    if (axios.isAxiosError(refreshError) && [401, 403].includes(refreshError.response?.status || 0)) localStorage.removeItem('appData');
+    throw refreshError;
   }
 });
 

@@ -54,7 +54,7 @@ export const loadToken = createAsyncThunk<string | null>('auth/loadToken', () =>
 export const getLoginUserDetails = createAsyncThunk<{ user: PatientAccount }, string>(
   'user/getLoginUserDetails', async (id, thunkApi) => {
     try {
-      const { data } = await API.get<{ user: PatientAccount }>(`/user/get-login-user/${id}`);
+      const { data } = await API.get<{ user: PatientAccount }>(`/user/get-login-user/${id}`, { timeout: 15000 });
       return data;
     } catch (error) {
       return thunkApi.rejectWithValue(errorMessage(error, 'Could not load user'));

@@ -12,8 +12,8 @@ import { moveSpotlight } from '../ui/spotlight';
 type PlanId = 'holter-device' | 'holter-care';
 type Inquiry = { id: string; plan_id: PlanId; status: string; created_at: string };
 const plans: { id: PlanId; label: string; price: string; suffix: string; description: string; items: string[] }[] = [
-  { id:'holter-device', label:'Holter device', price:'₹39,900', suffix:'proposed one-time price', description:'Own the recorder and manage your clinical follow-up independently.', items:['Holter recorder and starter accessories','App pairing, recording timeline and technical reports','Symptom markers and health history','Device setup guidance','Doctor appointments charged separately'] },
-  { id:'holter-care', label:'Holter + care', price:'₹69,900', suffix:'proposed first-year package', description:'Device ownership with one year of supported monitoring and planned clinician access.', items:['Everything in Holter device','Four remote cardiology reviews during year one, subject to confirmed availability','One year of device maintenance and service support','One year of Heartline app access and sync services','Chat and video around confirmed appointments'] },
+  { id:'holter-device', label:'Holter device', price:'₹4,999', suffix:'proposed one-time price', description:'Own the recorder and manage your clinical follow-up independently.', items:['Holter recorder and starter accessories','App pairing, recording timeline and technical reports','Symptom markers and health history','Device setup guidance','Doctor appointments charged separately'] },
+  { id:'holter-care', label:'Holter + care', price:'₹7,999', suffix:'proposed first-year package', description:'Device ownership with one year of supported monitoring and planned clinician access.', items:['Everything in Holter device','Four remote cardiology reviews during year one, subject to confirmed availability','One year of device maintenance and service support','One year of Heartline app access and sync services','Chat and video around confirmed appointments'] },
 ];
 export default function Subscription(){
   const signedIn = useSelector((state: RootState) => Boolean(state.auth.user));
