@@ -35,9 +35,13 @@
 .companion-suggestions button { padding: 10px 12px; border: 1px solid var(--c-border); border-radius: 12px; background: #fff; color: var(--c-ink); font: inherit; font-size: 13.5px; text-align: left; cursor: pointer; }
 .companion-suggestions button:hover { border-color: #9fb9e3; background: var(--c-soft); }
 
+.companion-row { display: flex; flex-direction: column; gap: 4px; }
+.companion-row.is-user { align-items: flex-end; }
+.companion-row.is-bot { align-items: flex-start; }
+.companion-meta { color: #8396ab !important; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; }
 .companion-bubble { max-width: 85%; padding: 10px 13px; border-radius: 16px; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
-.companion-bubble.is-user { align-self: flex-end; border-bottom-right-radius: 5px; background: var(--c-accent); color: #fff; }
-.companion-bubble.is-bot { align-self: flex-start; border: 1px solid var(--c-border); border-bottom-left-radius: 5px; background: #fff; color: var(--c-ink); }
+.companion-bubble.is-user { border-bottom-right-radius: 5px; background: var(--c-accent); color: #fff; }
+.companion-bubble.is-bot { border: 1px solid var(--c-border); border-bottom-left-radius: 5px; background: #fff; color: var(--c-ink); }
 .companion-tag { display: block; margin-bottom: 4px; font-size: 12px; opacity: .85; }
 .companion-typing { display: flex; gap: 5px; padding: 14px; }
 .companion-typing span { width: 7px; height: 7px; border-radius: 50%; background: #9fb3c8; animation: companion-dot 1s infinite ease-in-out; }
@@ -46,14 +50,17 @@
 
 .companion-compose { padding: 10px 12px 12px; border-top: 1px solid var(--c-border); background: #fff; }
 .companion-error, .companion-notice { margin: 0 0 8px; padding: 8px 10px; border-radius: 10px; font-size: 12.5px; line-height: 1.45; }
-.companion-error { background: #fdecee; color: #8c1d29 !important; }
+.companion-error { display: flex; align-items: flex-start; gap: 8px; background: #fdecee; color: #8c1d29 !important; }
+.companion-error span { flex: 1; }
+.companion-error button { border: 0; background: none; color: #8c1d29; font-size: 17px; line-height: 1; cursor: pointer; }
 .companion-notice { background: var(--c-soft); color: var(--c-muted) !important; }
 .companion-file { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 6px 8px 6px 10px; border: 1px solid var(--c-border); border-radius: 10px; font-size: 12.5px; }
+.companion-file img { width: 36px; height: 36px; border-radius: 7px; object-fit: cover; }
 .companion-file span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .companion-file button { border: 0; background: none; color: var(--c-muted); font-size: 18px; line-height: 1; cursor: pointer; }
 .companion-form { display: flex; align-items: flex-end; gap: 4px; padding: 4px; border: 1px solid var(--c-border); border-radius: 14px; background: #fff; }
 .companion-form:focus-within { border-color: #8faee6; box-shadow: 0 0 0 3px rgba(52, 88, 173, .12); }
-#root .companion textarea { flex: 1; min-width: 0; max-height: 120px; min-height: 40px; padding: 10px 4px; resize: none; border: 0 !important; border-radius: 0; background: transparent !important; box-shadow: none !important; color: var(--c-ink) !important; font: inherit; font-size: 14px; line-height: 1.4; }
+#root .companion textarea { flex: 1; min-width: 0; max-height: 120px; min-height: 40px; padding: 10px 4px; resize: none; border: 0 !important; border-radius: 0; background: transparent !important; box-shadow: none !important; color: var(--c-ink) !important; font: inherit; font-size: 14px; line-height: 1.4; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #c3d0de transparent; }
 #root .companion textarea::placeholder { color: #8396ab !important; }
 .companion-send { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border: 0; border-radius: 11px; background: var(--c-accent); color: #fff; font-size: 15px; cursor: pointer; }
 .companion-send:hover:not(:disabled) { background: var(--c-accent-dark); }

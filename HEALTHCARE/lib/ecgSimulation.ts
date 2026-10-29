@@ -3,7 +3,7 @@ export const simulationRate = 250;
 export const simulationScenario = 'resting-v2';
 export const simulationSeed = 20261029;
 // Backoffice-selected demonstration modes. 'off' means leads disconnected: no samples are generated.
-export const waveformModes = ['normal','off','post-workout','heavy-breathing'] as const;
+export const waveformModes = ['normal','off','post-workout','heavy-breathing','high-bp'] as const;
 export type WaveformMode = typeof waveformModes[number];
 export type SignalMode = Exclude<WaveformMode,'off'>;
 export const isWaveformMode = (value:unknown):value is WaveformMode => waveformModes.includes(value as WaveformMode);
@@ -29,6 +29,10 @@ const profiles:Record<SignalMode,Profile>={
  'heavy-breathing':{initialRate:104,rate:t=>104+13*Math.sin(breathing(t)+.6)+2*Math.sin(2*Math.PI*t/37),jitter:.006,shape:{p:.12,r:1,t:.26},st:0,gain:t=>1+.14*Math.sin(breathing(t)-.4),
   baseline:(t,n,seed)=>{const b=breathing(t);return .2*Math.sin(b)+.03*Math.sin(2*b)+.01*Math.sin(t/7)+.025*Math.max(0,Math.sin(b))**2*noise(seed,n,11)},
   pressure:t=>({systolic:131+3*Math.sin(t/11)+2*Math.sin(t/4.3),diastolic:85+2*Math.sin(t/13)})},
+ // Hypertensive reading (about 170/105 mmHg) with a steady sinus rhythm and slightly taller QRS.
+ 'high-bp':{initialRate:86,rate:t=>86+3*Math.sin(2*Math.PI*t/23)+1.5*Math.sin(t/11),jitter:.007,shape:{p:.13,r:1.12,t:.3},st:0,gain:()=>1,
+  baseline:t=>.01*Math.sin(t*2*Math.PI/4.5)+.004*Math.sin(t/8),
+  pressure:t=>({systolic:172+4*Math.sin(t/23)+1.5*Math.sin(t/7),diastolic:106+2.5*Math.sin(t/29)})},
 };
 type Beat={time:number;rr:number;p:number;r:number;t:number;tw:number};
 const schedules=new Map<string,Beat[]>();

@@ -13,7 +13,11 @@ export const waveformModeOptions: { mode: WaveformMode; label: string; summary: 
   { mode: 'off', label: 'Off', summary: 'Leads are not connected', detail: 'The waveform disappears from the live panel.' },
   { mode: 'post-workout', label: 'High heart rate', summary: 'After a workout', detail: 'Fast rhythm around 135–155 BPM with raised blood pressure.' },
   { mode: 'heavy-breathing', label: 'Heavy breathing', summary: 'Deep, rapid breaths', detail: 'Heart rate rises and falls with each breath; the baseline wanders.' },
+  { mode: 'high-bp', label: 'High blood pressure', summary: 'Hypertensive reading', detail: 'About 170/105 mmHg. Sends a test alert by email, SMS and voice call.' },
 ];
+
+type TestAlertDelivery = { status: string; detail: string | null };
+export type TestAlertResult = { recorded: boolean; reason?: string; deliveries?: Record<'email' | 'sms' | 'voice', TestAlertDelivery> };
 
 // Kept apart from the patient client: no patient token, demo adapter, or patient refresh on 401.
 const client = axios.create({ baseURL: API.defaults.baseURL, timeout: 120000 });
@@ -57,8 +61,8 @@ export async function fetchWaveformState(): Promise<WaveformState> {
   return data;
 }
 
-export async function saveWaveformMode(mode: WaveformMode): Promise<WaveformState & { persisted: boolean }> {
-  const { data } = await client.put<WaveformState & { persisted: boolean }>('/backoffice/waveform', { mode }, authorized());
+export async function saveWaveformMode(mode: WaveformMode): Promise<WaveformState & { persisted: boolean; testAlert?: TestAlertResult }> {
+  const { data } = await client.put<WaveformState & { persisted: boolean; testAlert?: TestAlertResult }>('/backoffice/waveform', { mode }, authorized());
   return data;
 }
 

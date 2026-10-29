@@ -48,6 +48,11 @@ export default function Backoffice() {
       setLive(state); setUnreachable(false);
       toast.success(`Live waveform: ${label(mode)}`);
       if (!state.persisted) toast('Applied until the server restarts. Database storage is unavailable.', { icon: '⚠️' });
+      if (state.testAlert) {
+        const sending = state.testAlert.deliveries && Object.entries(state.testAlert.deliveries).filter(([, delivery]) => delivery.status === 'pending').map(([channel]) => channel === 'voice' ? 'call' : channel === 'sms' ? 'SMS' : channel);
+        if (state.testAlert.recorded && sending?.length) toast.success(`Test alert sending: ${sending.join(', ')}. Track it on BP alerts.`, { duration: 6000 });
+        else toast(state.testAlert.reason || 'Test alert recorded, but no delivery channel is configured on the server.', { icon: '⚠️', duration: 6000 });
+      }
     } catch (error) {
       if (isUnauthorized(error)) return signOut('Your backoffice session has ended. Please sign in again.');
       toast.error('Could not update the live waveform. Please try again.');

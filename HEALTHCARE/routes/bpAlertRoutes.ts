@@ -2,6 +2,7 @@ import { express } from '../serverDependencies.js';
 import { getPool } from '../config/db.js';
 import { patientAuth } from '../middlewares/ecgAuth.js';
 import { bpVerificationConfigured, bpEmailConfigured, bpVoiceConfigured, bpSmsConfigured, startPhoneVerification, checkPhoneVerification } from '../lib/bpAlerts.js';
+import { testAlerts } from '../lib/bpTestAlerts.js';
 
 const router = express.Router();
 router.use(patientAuth);
@@ -79,6 +80,13 @@ router.delete('/caregiver/grants/:id/phone', wrap(async (req, res) => {
   if (!result.rows[0]) return fail(res, 404, 'Invitation unavailable');
   await getPool().query("update bp_alert_events set status='expired' where grant_id=$1 and status='pending'", [req.params.id]);
   res.json({ removed: true });
+}));
+
+// Backoffice High blood pressure test alerts, shown only to the account configured as their recipient.
+router.get('/test-alerts', wrap(async (req, res) => {
+  const { rows } = await getPool().query("select data->>'email' email from app_users where id=$1", [req.patientId]);
+  const alerts = rows[0]?.email ? await testAlerts.listFor(rows[0].email) : null;
+  res.json(alerts ? { authorized: true, alerts } : { authorized: false, alerts: [] });
 }));
 
 export default router;

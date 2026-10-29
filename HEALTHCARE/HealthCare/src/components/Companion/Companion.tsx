@@ -32,6 +32,7 @@ export default function Companion({ userId }: { userId: string | null }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
+  const [preview, setPreview] = useState('');
   // A different account never sees the previous conversation; the panel stays open across sign-in.
   const [owner, setOwner] = useState(userId);
   if (owner !== userId) { setOwner(userId); setChat([]); setMessage(''); setImage(null); setError(''); setNotice(''); }
@@ -40,6 +41,14 @@ export default function Companion({ userId }: { userId: string | null }) {
   useEffect(() => onCompanionOpen(() => setOpen(true)), []);
   useEffect(() => { if (open) input.current?.focus(); }, [open]);
   useEffect(() => { log.current?.scrollTo({ top: log.current.scrollHeight }); }, [chat, loading, open]);
+  useEffect(() => {
+    if (!image) return;
+    const url = URL.createObjectURL(image);
+    setPreview(url);
+    return () => { URL.revokeObjectURL(url); setPreview(''); };
+  }, [image]);
+  // The input grows with the question, up to a few lines.
+  useEffect(() => { const el = input.current; if (!el) return; el.style.height = 'auto'; el.style.height = `${Math.min(el.scrollHeight, 120)}px`; }, [message, open]);
 
   const close = () => { setOpen(false); launcher.current?.focus(); };
   const clearImage = () => { setImage(null); if (file.current) file.current.value = ''; };
@@ -97,16 +106,16 @@ export default function Companion({ userId }: { userId: string | null }) {
             <p>Hi! Ask about heart health, ECG terms, or how to prepare for a conversation with your doctor.</p>
             <div className="companion-suggestions">{suggestions.map(item => <button type="button" key={item} onClick={() => { setMessage(item); input.current?.focus(); }}>{item}</button>)}</div>
           </div>}
-          {chat.map((item, index) => <div key={index} className={`companion-bubble is-${item.sender}`}>
+          {chat.map((item, index) => <div key={index} className={`companion-row is-${item.sender}`}><span className="companion-meta">{item.sender === 'user' ? 'YOU' : 'COMPANION · AI'}</span><div className={`companion-bubble is-${item.sender}`}>
             {item.hasImage && <span className="companion-tag"><i className="fa-solid fa-image" aria-hidden="true" /> Image attached</span>}
             {item.sender === 'bot' ? formatted(item.text) : item.text}
-          </div>)}
+          </div></div>)}
           {loading && <div className="companion-bubble is-bot companion-typing" role="status" aria-label="Companion is typing"><span /><span /><span /></div>}
         </div>
         <div className="companion-compose">
-          {error && <p className="companion-error" role="alert">{error}</p>}
+          {error && <div className="companion-error" role="alert"><span>{error}</span><button type="button" onClick={() => setError('')} aria-label="Dismiss error">×</button></div>}
           {notice && <p className="companion-notice" role="status">{notice}</p>}
-          {image && <div className="companion-file"><i className="fa-solid fa-image" aria-hidden="true" /><span>{image.name}</span><button type="button" onClick={clearImage} aria-label="Remove image">×</button></div>}
+          {image && <div className="companion-file">{preview ? <img src={preview} alt="Selected attachment preview" /> : <i className="fa-solid fa-image" aria-hidden="true" />}<span>{image.name}</span><button type="button" onClick={clearImage} aria-label="Remove image">×</button></div>}
           <form className="companion-form" onSubmit={send}>
             <button type="button" className="companion-icon" onClick={() => file.current?.click()} aria-label="Attach image" title="Attach image"><i className="fa-solid fa-paperclip" aria-hidden="true" /></button>
             <input ref={file} type="file" accept="image/png,image/jpeg,image/webp" onChange={selectImage} hidden />

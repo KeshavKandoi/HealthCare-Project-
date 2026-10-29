@@ -40,7 +40,9 @@ function requireBackoffice(req: any, res: any, next: () => void) {
   next();
 }
 /** Backoffice sign-in and the shared live-waveform mode followed by every simulated monitor. */
-export function backofficeRouter(emit: (state: WaveformState) => void = () => {}, pool: () => Pool = getPool) {
+export function backofficeRouter(emit: (state: WaveformState) => void = () => {}, pool: () => Pool = getPool,
+  // Runs once each time the mode changes into a new value, e.g. to send High blood pressure test alerts.
+  onModeEntered: (state: WaveformState) => Promise<unknown> = async () => null) {
   const router = express.Router();
   const attempts = new Map<string, { count: number; until: number }>();
   const loginLimit = (req: any, res: any, next: () => void) => {
@@ -76,8 +78,8 @@ export function backofficeRouter(emit: (state: WaveformState) => void = () => {}
   // Public read for monitors. It exposes only the demonstration mode.
   router.get('/waveform', wrap(async (_req, res) => res.set('Cache-Control', 'no-store').json(await current())));
   router.put('/waveform', requireBackoffice, wrap(async (req, res) => {
-    if (!isWaveformMode(req.body?.mode)) return fail(res, 400, 'Choose normal, off, post-workout or heavy-breathing');
-    await current();
+    if (!isWaveformMode(req.body?.mode)) return fail(res, 400, 'Choose normal, off, post-workout, heavy-breathing or high-bp');
+    const previous = (await current()).mode;
     state = { mode: req.body.mode, updatedAt: new Date().toISOString() };
     let persisted = true;
     try {
@@ -85,7 +87,12 @@ export function backofficeRouter(emit: (state: WaveformState) => void = () => {}
         on conflict(key) do update set value=excluded.value,updated_at=excluded.updated_at`, [JSON.stringify({ mode: state.mode }), state.updatedAt]);
     } catch { persisted = false; }
     emit(state);
-    res.json({ ...state, persisted });
+    let effect: unknown = null;
+    if (state.mode !== previous) {
+      try { effect = await onModeEntered(state); }
+      catch (error) { console.error('Backoffice mode action failed', error); effect = { recorded: false, reason: 'The alert could not be recorded. Please try again.' }; }
+    }
+    res.json({ ...state, persisted, ...(effect ? { testAlert: effect } : {}) });
   }));
   return router;
 }
