@@ -1,10 +1,52 @@
 import express from 'express';
+import {simulationPacket, simulationRate, scenarioVitals} from '../lib/ecgSimulation.js';
 import { randomUUID, createHash } from 'node:crypto';
 
 // This router must be mounted AFTER patientAuth. Client identity is never read from the body.
 export function manualEcgRouter(pool, emit = () => {}) {
   const router = express.Router();
   const wrap = fn => (req, res, next) => Promise.resolve(fn(req, res)).catch(next);
+  router.post('/manual/simulated/start', wrap(async(req,res)=>{
+    const client=await pool().connect();
+    try {
+      await client.query('begin');
+      await client.query('select pg_advisory_xact_lock(hashtext($1))',[`manual:${req.patientId}`]);
+      const {rows}=await client.query("select d.id from devices d join patient_device_assignments a on a.device_id=d.id where a.patient_id=$1 and a.unpaired_at is null and d.model='Simulated Holter resting-v1' and d.is_simulated and d.sample_rate_hz=250 and d.units='mV' limit 1",[req.patientId]);
+      const deviceId=rows[0]?.id||randomUUID();
+      if(!rows.length){
+        await client.query("insert into devices(id,model,sample_rate_hz,units,status,is_simulated) values($1,'Simulated Holter resting-v1',250,'mV','paired',true)",[deviceId]);
+        await client.query('insert into patient_device_assignments(device_id,patient_id) values($1,$2)',[deviceId,req.patientId]);
+      }
+      await client.query("update ecg_recording_sessions set status='completed',ended_at=coalesce(last_sample_at,started_at) where device_id=$1 and patient_id=$2 and status in ('recording','interrupted')",[deviceId,req.patientId]);
+      const id=randomUUID(), startedAt=new Date().toISOString();
+      await client.query("insert into ecg_recording_sessions(id,patient_id,device_id,status,started_at,sample_rate_hz,units,target_hours,is_simulated) values($1,$2,$3,'recording',$4,250,'mV',24,true)",[id,req.patientId,deviceId,startedAt]);
+      await client.query('commit');res.status(201).json({id,deviceId,startedAt,sampleRateHz:250,scenario:'resting-v1',source:'simulated'});
+    }catch(e){await client.query('rollback');throw e}finally{client.release()}
+  }));
+  router.post('/manual/simulated/:id/packets',wrap(async(req,res)=>{
+    const {sequence,samples,firstSampleAt,sampleRateHz,scenario,source}=req.body||{};
+    const expected=Number.isInteger(sequence)&&sequence>=0&&sequence<3600?simulationPacket(sequence):[];
+    if(!/^[0-9a-f-]{36}$/i.test(req.params.id)||!Number.isInteger(sequence)||sequence<0||sequence>=3600||sampleRateHz!==simulationRate||scenario!=='resting-v1'||source!=='simulated'||!Array.isArray(samples)||samples.length!==250||!samples.every((v,i)=>Number.isFinite(v)&&Math.abs(v-expected[i])<1e-10))return res.status(400).json({message:'Invalid resting-v1 simulation packet'});
+    const client=await pool().connect();
+    try{
+      await client.query('begin');
+      const {rows}=await client.query("select s.* from ecg_recording_sessions s join devices d on d.id=s.device_id where s.id=$1 and s.patient_id=$2 and s.is_simulated and d.model='Simulated Holter resting-v1' for update of s",[req.params.id,req.patientId]);
+      const session=rows[0];if(!session){await client.query('rollback');return res.status(404).json({message:'Session unavailable'})}
+      const time=new Date(session.started_at).getTime()+sequence*1000;
+      if(Date.parse(firstSampleAt)!==time||time>Date.now()+1000){await client.query('rollback');return res.status(400).json({message:'Invalid simulation clock'})}
+      const digest=createHash('sha256').update(JSON.stringify({firstSampleAt,samples})).digest('hex');
+      const prior=await client.query('select sha256 from ecg_recording_chunks where session_id=$1 and sequence=$2',[session.id,sequence]);
+      const vitals=scenarioVitals(sequence), receivedAt=new Date().toISOString();
+      const batch={sessionId:session.id,deviceId:session.device_id,sequence,firstSampleAt,sampleRateHz:250,samples,units:'mV',source:'simulated',scenario,receivedAt,...vitals};
+      if(prior.rows.length){await client.query('rollback');return prior.rows[0].sha256===digest?res.json({batch,duplicate:true}):res.status(409).json({message:'Conflicting duplicate'})}
+      if(session.status!=='recording'||sequence!==Number(session.last_sequence)+1){await client.query('rollback');return res.status(409).json({message:'Unexpected sequence or completed session',expectedSequence:Number(session.last_sequence)+1})}
+      await client.query('insert into ecg_recording_chunks(session_id,sequence,first_sample_at,sample_count,samples,sha256) values($1,$2,$3,250,$4,$5)',[session.id,sequence,firstSampleAt,JSON.stringify(samples),digest]);
+      await client.query('update ecg_recording_sessions set last_sequence=$2,sample_count=sample_count+250,last_sample_at=$3 where id=$1',[session.id,sequence,new Date(time+996)]);
+      await client.query('update devices set last_seen_at=$2 where id=$1',[session.device_id,receivedAt]);
+      await client.query("insert into ecg_session_events(id,session_id,event,details) values($1,$2,'simulated_vitals',$3)",[randomUUID(),session.id,JSON.stringify({sequence,firstSampleAt,scenario,source,...vitals})]);
+      await client.query('commit');emit(req.patientId,batch);res.status(201).json({batch});
+    }catch(e){await client.query('rollback');throw e}finally{client.release()}
+  }));
   router.post('/manual/start', wrap(async (req, res) => {
     const client = await pool().connect();
     try {

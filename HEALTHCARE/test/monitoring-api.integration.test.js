@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {simulationPacket,scenarioVitals} from '../dist/lib/ecgSimulation.js';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
@@ -51,6 +52,26 @@ test('offline backfill, markers, clinician review, caregiver scopes, diagnostics
       const response = await fetch(`${base}${path}`, { method, headers: { 'Content-Type': 'application/json', ...(userId ? { Authorization: `Bearer ${token(userId)}` } : {}) }, body: body === undefined ? undefined : JSON.stringify(body) });
       return { status: response.status, data: await response.json() };
     };
+    const manual=await request('/ecg/manual/simulated/start','POST',{},patient);
+    assert.equal(manual.status,201);assert.equal(manual.data.sampleRateHz,250);
+    const manualStart=new Date(Date.now()-20000).toISOString();
+    await pool.query('update ecg_recording_sessions set started_at=$2 where id=$1',[manual.data.id,manualStart]);
+    let firstPacket;
+    for(let sequence=0;sequence<10;sequence++){
+      const packet={sequence,samples:simulationPacket(sequence),firstSampleAt:new Date(Date.parse(manualStart)+sequence*1000).toISOString(),sampleRateHz:250,source:'simulated',scenario:'resting-v1'};
+      const uploaded=await request(`/ecg/manual/simulated/${manual.data.id}/packets`,'POST',packet,patient);
+      assert.equal(uploaded.status,201,JSON.stringify(uploaded.data));assert.deepEqual(uploaded.data.batch.samples,simulationPacket(sequence));
+      assert.equal(uploaded.data.batch.systolic,scenarioVitals(sequence).systolic);
+      if(!sequence)firstPacket=packet;
+    }
+    assert.equal((await request(`/ecg/manual/simulated/${manual.data.id}/packets`,'POST',firstPacket,patient)).data.duplicate,true);
+    assert.equal((await request(`/ecg/manual/simulated/${manual.data.id}/packets`,'POST',firstPacket,caregiver)).status,404);
+    const manualSaved=await request(`/ecg/sessions/${manual.data.id}`,'GET',undefined,patient);
+    assert.equal(Number(manualSaved.data.session.sample_count),2500);
+    assert.equal(manualSaved.data.session.units,'mV');assert.equal(manualSaved.data.session.is_simulated,true);
+    assert.deepEqual(manualSaved.data.chunks.flatMap(c=>c.samples),Array.from({length:10},(_,i)=>simulationPacket(i)).flat());
+    assert.equal(Date.parse(manualSaved.data.chunks[1].first_sample_at)-Date.parse(manualSaved.data.chunks[0].first_sample_at),1000);
+    assert.equal((await request(`/ecg/sessions/${manual.data.id}/stop`,'POST',{},patient)).status,200);
     const simulationId=randomUUID();
     assert.equal((await request('/ecg/simulations','POST',{id:simulationId,startedAt:new Date().toISOString(),durationSeconds:2},patient)).status,201);
     const simulationRead=await request(`/ecg/simulations/${simulationId}`,'GET',undefined,patient);

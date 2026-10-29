@@ -29,3 +29,10 @@ ESP32 + AD8232 is the stated hardware. No firmware or physical capture was suppl
 
 ## Remaining acceptance work
 Physical-device acquisition and calibration need actual firmware/captures. A trained and independently evaluated BP model and validated automatic reference-data adapter are not present. Full-recording waveform overview, 24-hour stress tests, touch-device verification, and reconnection browser automation remain outstanding; the current timeline is a scrollbar, not a downsampled full-recording overview. Do not describe this as clinically validated or complete hardware acceptance.
+
+## Manual simulated Holter update
+Manual connection now defaults to `Simulated Holter resting-v1`, a new 250 Hz/mV simulated device profile. Old Browser stream devices and 10 Hz sessions are not edited. No schema migration is required for this change. The frontend sends the shared generator's complete 250-sample packets; the backend verifies scenario identity, samples, clock and ownership before storing. Sample timestamps equal session start + sequence seconds, with 4 ms spacing. Accepted responses supply simulated vitals; the last stored vitals also appear in ECG History. The renderer reads stored packets, not a separate animation.
+
+The isolated PostgreSQL integration test passed for ten packets / 2,500 samples. All stored samples equal the generator output exactly; BP matches scenarioVitals; duplicate retries are idempotent; another patient's upload is rejected. Physical ingestion regression tests passed in the same suite. Frontend build/typecheck passed. Production database and SMTP were not modified.
+
+Manual-to-automatic visual comparison in the signed-in application has not yet been completed for this update; do not treat the earlier automatic-only browser check as verification of this new manual UI.
