@@ -39,3 +39,28 @@
 @media(max-width:1050px){.aidoc-container{grid-template-columns:280px minmax(0,1fr)}.aidoc-sidebar{padding:32px 25px}.aidoc-sidebar h1{margin-top:80px;font-size:36px}}
 @media(max-width:760px){.aidoc-page{padding:0;min-height:calc(100dvh - 62px)}.aidoc-container{height:calc(100dvh - 62px);min-height:520px;display:flex;flex-direction:column;border:0;border-radius:0}.aidoc-sidebar{display:none}.aidoc-header{min-height:68px;padding:12px 16px}.aidoc-header-badge{font-size:8px}.aidoc-chat{padding:17px}.aidoc-composer-area{padding:10px 12px 13px}.aidoc-empty h3{font-size:22px}.aidoc-bubble{max-width:92%}}
 @media(prefers-reduced-motion:reduce){.aidoc-typing span{animation:none}.aidoc-page *{transition:none!important}}
+
+/* Light glass treatment for Heartline Companion. */
+#root .aidoc-page { background:linear-gradient(135deg,#e9edfa,#d7f0f2 75%,#e8f2f8); color:#172338; }
+#root .aidoc-container { background:rgba(255,255,255,.78); border:1px solid #c7d6e4; box-shadow:0 24px 65px #35557824; backdrop-filter:blur(18px); }
+#root .aidoc-sidebar { background:linear-gradient(150deg,rgba(255,255,255,.92),rgba(224,232,251,.75)); border-color:#d4deea; }
+#root .aidoc-sidebar :is(h1,p), #root .aidoc-sidebar-note { color:#172338; }
+#root .aidoc-sidebar h1 em, #root .aidoc-brand { color:#315bb4; }
+#root .aidoc-sidebar-note { border-color:#c4d3e1; }
+#root .aidoc-panel, #root .aidoc-composer-area { background:rgba(255,255,255,.83); color:#172338; }
+#root .aidoc-header, #root .aidoc-composer-area { border-color:#d6e0eb; }
+#root .aidoc-header h2, #root .aidoc-empty h3 { color:#172338; }
+#root .aidoc-header p, #root .aidoc-empty p, #root .aidoc-disclaimer, #root .aidoc-message-meta { color:#52657a; }
+#root .aidoc-header-badge { color:#425870 !important; border-color:#bacbda; }
+#root .aidoc-empty-icon, #root .aidoc-header-icon { background:#e9f0fc; color:#315bb4; border-color:#cbd9ee; }
+#root .aidoc-suggestions button { background:#f8fbff; color:#172338; border-color:#c7d7e6; }
+#root .aidoc-suggestions button:hover { background:#eaf2ff; border-color:#7899c5; }
+#root .aidoc-bubble.user { background:#315bb4; color:#fff; }
+#root .aidoc-bubble.bot { background:#f1f5fa; color:#172338; border-color:#d6e0eb; }
+#root .aidoc-input-bar { background:#fff; border-color:#aabed0; }
+#root .aidoc-text-input { color:#172338 !important; }
+#root .aidoc-text-input::placeholder { color:#65778a !important; }
+#root .aidoc-icon-btn { color:#405a72; }
+#root .aidoc-send-btn { background:#315bb4; color:#fff; }
+#root .aidoc-preview { background:#f1f5fa; border-color:#c7d7e6; }
+#root .aidoc-preview :is(strong,span,button) { color:#172338; }
