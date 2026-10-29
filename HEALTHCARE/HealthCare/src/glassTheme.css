@@ -67,7 +67,8 @@ body, #root { background: #c6e6ef; color: var(--heartline-ink); }
 #root .pw-shell :is(p,small,dt), #root .home-dashboard :is(p,small), #root .ecg-new :is(p,small),
 #root .care-shell :is(p,small), #root .doctors-page :is(p,small), #root .auth-container p,
 #root .session-loading-card p, #root .home-public p { color: var(--heartline-muted); }
-#root :is(.pw-shell,.home-dashboard,.ecg-new,.care-shell,.doctors-page) :is(a,.pw-eyebrow,.ecg-kicker,.home-kicker) { color: var(--heartline-accent)!important; }
+/* Text links take the accent; links styled as filled buttons keep their own white label. */
+#root :is(.pw-shell,.home-dashboard,.ecg-new,.care-shell,.doctors-page) :is(a:not(.hl-button,.home-monitor-button),.pw-eyebrow,.ecg-kicker,.home-kicker) { color: var(--heartline-accent)!important; }
 #root :is(.pw-shell,.ecg-new,.auth-container,.care-shell,.doctors-page) :is(input,textarea,select),
 #root .language-selector { background: rgba(255,255,255,.8)!important; color: #142b50!important; border: 1px solid #b5d2e2!important; }
 #root :is(input,textarea)::placeholder { color: #6a8199!important; }
@@ -76,6 +77,9 @@ body, #root { background: #c6e6ef; color: var(--heartline-ink); }
   background: #315bb4; border-color: #315bb4; color: #fff!important;
 }
 #root :is(.pw-shell,.ecg-new,.care-shell,.auth-container) button:hover:not(:disabled), #root .hl-button:hover { background:#244b9f; border-color:#244b9f; }
+/* Filled buttons are blue in this theme; keep their label white and the hover blue (overrides the older pink motion styles). */
+#root .hl-button:not(.hl-button--soft,.hl-button--danger,.hl-button--choice) { color:#fff!important; }
+#root .hl-button:not(.hl-button--soft,.hl-button--danger,.hl-button--choice):hover:not(:disabled) { background:#244b9f; }
 #root .pw-shell .pw-tabs button { background:transparent; color:#405d7d!important; border-color:transparent; }
 #root .pw-shell .pw-tabs button.active { color:#244b9f!important; border-bottom-color:#315bb4; }
 #root .ecg-new button:disabled { background:#e1e8ef; color:#64758a; border-color:#c6d5df; opacity:1; }

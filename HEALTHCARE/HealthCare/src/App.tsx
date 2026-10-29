@@ -16,6 +16,9 @@ import type { RootState, AppDispatch } from './redux/store';
 import { logout, startDemo } from './redux/slice/authSlice';
 import { getLoginUserDetails } from './redux/actions/authAction';
 import { isDemoSession } from './demo/demoSession';
+import Companion, { OpenCompanion } from './components/Companion/Companion';
+// Pages with their own focus where the floating Companion would only get in the way.
+const withoutCompanion = ['/backoffice', '/login', '/register', '/forgot-password'];
 const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
 const PublicContact = lazy(() => import('./pages/PublicContact'));
@@ -32,10 +35,8 @@ const AppointmentsDetails = lazy(() => import('./pages/User/AppointmentsDetails'
 const ResetPassword = lazy(() => import('./pages/User/ResetPassword'));
 const HealthMonitor = lazy(() => import('./pages/HealthMonitor'));
 const HealthHistory = lazy(() => import('./pages/HealthHistory'));
-const AiDoctor = lazy(() => import('./pages/AiDoctor'));
 const Subscription = lazy(() => import('./pages/Subscription'));
 const ECGDashboard = lazy(() => import('./pages/ECGDashboard'));
-const ECGDevices = lazy(() => import('./pages/ECGDevices'));
 const ECGHistory = lazy(() => import('./pages/ECGHistory'));
 const MyHealth = lazy(() => import('./pages/MyHealth'));
 const BloodPressureAlerts = lazy(() => import('./pages/BloodPressureAlerts'));
@@ -148,10 +149,10 @@ function App() {
       <Route path="/bp-alerts" element={protectedPage(<BloodPressureAlerts />)} />
       <Route path="/care-conversations" element={protectedPage(<CareCommunications />)} />
       <Route path="/device-support" element={protectedPage(<DeviceSupport />)} />
-      <Route path="/ai-doctor" element={protectedPage(<AiDoctor />)} />
+      <Route path="/ai-doctor" element={<OpenCompanion />} />
       <Route path="/subscription" element={<Subscription />} />
       <Route path="/ecg-monitor" element={protectedPage(<ECGDashboard />)} />
-      <Route path="/devices" element={protectedPage(<ECGDevices />)} />
+      <Route path="/devices" element={<Navigate to="/ecg-monitor" replace />} />
       <Route path="/ecg-history" element={protectedPage(<ECGHistory />)} />
       <Route path="/ecg-history/:sessionId" element={protectedPage(<ECGHistory />)} />
       <Route path="/backoffice" element={<Backoffice />} />
@@ -167,6 +168,7 @@ function App() {
       
       </Routes>
       </Suspense></PageErrorBoundary>
+      {!withoutCompanion.some(path => pathname.startsWith(path)) && <Companion userId={user?._id ?? null} />}
       {!user && ["/", "/features", "/how-it-works", "/technology", "/about", "/contact", "/doctors", "/subscription"].includes(pathname) && <Footer/>}
     </>
   )
